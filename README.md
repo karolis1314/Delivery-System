@@ -1,5 +1,6 @@
 ## List of collaborators
 Craig Cunningham A00254944
+Karolis Valatka A00252699
 
 ---
 
