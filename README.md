@@ -1,6 +1,8 @@
 ## List of collaborators
-Craig Cunningham A00254944
-Karolis Valatka A00252699
+Craig Cunningham A00254944<br>
+Karolis Valatka A00252699<br>
+Sean Calvey A00278612<br>
+
 
 ---
 
