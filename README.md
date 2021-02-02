@@ -1,6 +1,26 @@
 ## List of collaborators
-Craig Cunningham A00254944
-Karolis Valatka A00252699
+Craig Cunningham A00254944<br>
+Karolis Valatka A00252699<br>
+Sean Calvey A00278612<br>
+
+
+---
+
+## User Story
+
+---
+
+## Coding Etiquette
+
+1. When finished editing code, select all of the code, using CTRL+A, then press CTRL+SHIFT+F (May be 
+different for IntelliJ). The IDE will then automatically format the code for you to leave a clear and 
+consistent style across classes. If you want to use IntelliJ IDEA, please download the Eclipse code 
+formatter plugin.
+
+2. Try to use variables with meaning when writing your code, this helps when a peer is either editing or
+reviewing it, they will be able to understand it easier.
+
+3. Use the Object-Oriented Programming approach to classes.
 
 ---
 
