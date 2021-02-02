@@ -38,7 +38,10 @@ public class DeliveryAreaControllerTest extends TestCase {
         test number: 001
         objective: verify all partitions
         Test type: JUint
-        input: areaName =
+        input: areaName = area1, areaSize = 230
+        output: true
+
+
  */
     }
 
