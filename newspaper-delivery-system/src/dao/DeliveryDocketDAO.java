@@ -1,5 +1,6 @@
 package dao;
 
+import exceptions.DeliveryDocketException;
 import model.DeliveryDocket;
 
 import java.sql.*;
@@ -20,25 +21,23 @@ public class DeliveryDocketDAO {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://" + host + "/NEWSPAPER_DELIVERY_SYSTEM?" + "user=" + user + "&password=" + password);
-        } catch (Exception e) {
-            throw e;
+        } catch (Exception exception) {
+            throw new DeliveryDocketException("Delivery Docket database connection failed");
         }
     }
 
-    public boolean insertDeliveryDocket(DeliveryDocket deliveryDocket) throws SQLException {
-        boolean insertSucessfull = true;
-
+    public boolean insertDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
         try {
             preparedStatement = connect.prepareStatement("insert into NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS values (default, ?, ?, ?)");
             preparedStatement.setInt(1, deliveryDocket.getDeliveryDocketID());
             preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
             preparedStatement.setInt(3, deliveryDocket.getCustomerID());
             preparedStatement.executeUpdate();
-        } catch (SQLException sqlException) {
-            throw new SQLException("Delivery Docket insert failed");
+        } catch (Exception exception) {
+            throw new DeliveryDocketException("Delivery Docket DAO insert failed");
         }
 
-        return insertSucessfull;
+        return true;
     }
 
 }
