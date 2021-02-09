@@ -7,12 +7,12 @@ public class PublicationTest extends TestCase {
 
 	// Test #: 1
 	// Test Objective: Creating a publication.
-	// Inputs: pubName = "Cosmopolitan", "€10.50"
+	// Inputs: pubName = "A0025, Cosmopolitan", "€10.50"
 	// Expected Output: Publication Object created."
 
 	public void testPublication001() {
 		try {
-			Publication testObj = new Publication("Cosmopolitan", 10.50);
+			Publication testObj = new Publication("A002526", "Cosmopolitan", 10.50);
 
 			assertEquals("Cosmopolitan", testObj.getName());
 			assertEquals(10.50, testObj.getPrice());
@@ -76,6 +76,35 @@ public class PublicationTest extends TestCase {
 
 		} catch (PublicationException e) {
 			assertEquals("Publication price, must be below 100", e.getMessage());
+		}
+	}
+
+	// Test #: 6
+	// Test Objective: Publication Order id must be exactly 7 char.
+	// Inputs: "A00252"
+	// Expected Output: "Publication Order Id must be exactly 7 characters long, it can not be empty"
+
+	public void testValidateOrderId001() {
+		try {
+			Publication.validateOrderId("A00252");
+			fail("Expected exception.");
+
+		} catch (PublicationException e) {
+			assertEquals("Publication Order Id must be exactly 7 characters long, it can not be empty", e.getMessage());
+		}
+	}
+	// Test #: 7
+	// Test Objective: Publication Order id can not be empty.
+	// Inputs: " "
+	// Expected Output: "Publication Order Id must be exactly 7 characters long, it can not be empty"
+
+	public void testValidateOrderId002() {
+		try {
+			Publication.validateOrderId("A00252");
+			fail("Expected exception.");
+
+		} catch (PublicationException e) {
+			assertEquals("Publication Order Id must be exactly 7 characters long, it can not be empty", e.getMessage());
 		}
 	}
 
