@@ -1,15 +1,18 @@
-drop database if exists NEWSPAPER_DELIVERY_SYSTEM;
-create database NEWSPAPER_DELIVERY_SYSTEM;
-use NEWSPAPER_DELIVERY_SYSTEM;
+DROP DATABASE IF EXISTS NEWSPAPER_DELIVERY_SYSTEM;
+CREATE DATABASE NEWSPAPER_DELIVERY_SYSTEM;
+USE NEWSPAPER_DELIVERY_SYSTEM;
 
-drop table if exists DELIVERY_DOCKETS;
-create table if not exists DELIVERY_DOCKETS (
-	deliveryDocketID integer auto_increment not null primary key,
-    publicationID integer not null,
-    deliveryAreaID integer not null,
-    customerID integer not null
+DROP TABLE IF EXISTS DELIVERY_DOCKETS;
+CREATE TABLE IF NOT EXISTS DELIVERY_DOCKETS (
+	deliveryDocketID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    publicationID INTEGER NOT NULL,
+    deliveryAreaID INTEGER NOT NULL,
+    customerID INTEGER NOT NULL
 );
 
-insert into DELIVERY_DOCKETS values (default, 1, 1, 1);
+INSERT INTO DELIVERY_DOCKETS VALUES (DEFAULT, 1, 1, 1);
 
-select * from DELIVERY_DOCKETS;
+SELECT 
+    *
+FROM
+    DELIVERY_DOCKETS;

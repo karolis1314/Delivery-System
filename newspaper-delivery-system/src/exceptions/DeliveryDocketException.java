@@ -7,7 +7,7 @@ public class DeliveryDocketException extends Exception {
         this.errorMessage = errorMessage;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return this.errorMessage;
     }
 }
