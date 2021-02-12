@@ -37,6 +37,14 @@ public class DeliveryDocketControllerTest extends TestCase {
     */
 
     public void testCreateDeliveryDocket001() {
+        /*
+            Test Number: 001
+            Objective: Verify Delivery Docket created
+            Test Type: JUnit
+            Input: publicationID = 0, deliveryAreaID = 0, customerID = 0
+            Output: true
+        */
+
         try {
             DeliveryDocketController deliveryDocketController = new DeliveryDocketController();
 
@@ -47,6 +55,14 @@ public class DeliveryDocketControllerTest extends TestCase {
     }
 
     public void testCreateDeliveryDocket002() {
+        /*
+            Test Number: 002
+            Objective: Verify Delivery Docket creation failed
+            Test Type: JUnit
+            Input: publicationID = -1, deliveryAreaID = -1, customerID = -1
+            Output: false
+        */
+
         try {
             DeliveryDocketController deliveryDocketController = new DeliveryDocketController();
 

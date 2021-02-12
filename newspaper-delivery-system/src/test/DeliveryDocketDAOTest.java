@@ -44,7 +44,7 @@ public class DeliveryDocketDAOTest extends TestCase {
 
     public void testDeliveryDocketDAO002() {
         /*
-            Test Number: 001
+            Test Number: 002
             Objective: Connection to the Database has failed
             Test Type: JUnit and UAT
             Input: Database is off
