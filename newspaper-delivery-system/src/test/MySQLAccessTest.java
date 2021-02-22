@@ -1,5 +1,6 @@
-package controller;
+package test;
 
+import controller.MySQLAccess;
 import exceptions.PublicationException;
 import junit.framework.TestCase;
 import model.Publication;
