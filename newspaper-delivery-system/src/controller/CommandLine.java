@@ -16,6 +16,7 @@ public class CommandLine {
 		System.out.println("1. Create new publication");
 		System.out.println("2. Update existing publication");
 		System.out.println("3. Print publication table");
+		System.out.println("4. Delete publication");
 		System.out.println("0. Close the application");
 		System.out.println("|------------------------|");
 	}
@@ -101,6 +102,18 @@ public class CommandLine {
 						System.out.println("New Publication Added");
 					else
 						System.out.println("Failed: Publication not added");
+				}
+				else if(choice.equals("4")) {
+					// Update Publication Details
+					System.out.printf("Enter Publications Order Id which you want to delete: \n");
+					String publicationOrderId = in.next();
+					Publication pub = new Publication(publicationOrderId,"Deleted", 11.12);
+					// Insert Publication into the database
+					boolean insertResult = mysql.delete(pub);
+					if (insertResult == true)
+						System.out.println("Publication Deleted");
+					else
+						System.out.println("Failed: Publication not deleted");
 				}
 				else if(choice.equals("3")) {
 					//Retrieve ALL Publication Records
