@@ -130,7 +130,6 @@ public class CommandLine {
 				
 				else if(choice.equals("0")) {
 					running = false;
-					mysql.shutDownConnection();
 					System.out.println("Program will now close.");
 				}
 

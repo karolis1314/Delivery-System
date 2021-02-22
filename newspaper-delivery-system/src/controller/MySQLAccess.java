@@ -5,133 +5,244 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+import exceptions.DeliveryAreaException;
 import exceptions.PublicationException;
+import exceptions.SQLConnectionException;
+import model.DeliveryArea;
 import model.Publication;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MySQLAccess {
 
-	private Connection connect = null;
-	private Statement statement = null;
-	private PreparedStatement preparedStatement = null;
-	private ResultSet resultSet = null;
 
-	public MySQLAccess() throws Exception {
+    private Statement statement = null;
 
-		try {
-			connectToTheDatabase();
-		} catch (Exception e) {
-			System.out.print("Failed to connect DB Connection");
+    private ResultSet resultSet = null;
 
-		}
+    final private String host = "localhost:3306";
+    final private String user = "root";
+    final private String password = "admin";
 
-	}
-//Create the connection
-	public boolean connectToTheDatabase() throws PublicationException {
+    public MySQLAccess() throws SQLConnectionException {
+        Connection conn = null;
+        try {
+            openConnection();
+        } catch (Exception e) {
+            throw new SQLConnectionException("Database Connection failed");
+        } finally {
+            closeConnection(conn);
+        }
 
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/publication";
-			connect = DriverManager.getConnection(url, "root", "a00252699");
-			statement = connect.createStatement();
-			System.out.println("Connection Made.");
-			return true;
+    }
 
-		} catch (Exception e) {
-			throw new PublicationException("Connection failed.");
-		}
-	}
-//Insert the publication
-	public boolean insertNewPublication(Publication p) throws PublicationException {
+    //Create the connection
+    public Connection openConnection() throws SQLConnectionException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection("jdbc:mysql://" + host + "/newsagent2021?" + "user=" + user + "&password=" + password);
+        } catch (Exception e) {
+            throw new SQLConnectionException("Delivery Area DB connection Failed");
+        }
+    }
 
-		boolean insertSucessfull = true;
+    private void closeConnection(Connection connection) throws SQLConnectionException {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new SQLConnectionException("Delivery Area not closed!");
+            }
+        }
+    }
 
-		try {
+    //Insert the publication
+    public boolean insertNewPublication(Publication p) throws PublicationException, SQLConnectionException {
+        Connection conn = null;
+        boolean insertSucessfull = true;
 
-			preparedStatement = connect.prepareStatement(
-					"insert into publication (publication_order_id, publicationName, price_in_€)" + "values (?, ?, ?)");
-			preparedStatement.setString(1, p.getOrder_id());
-			preparedStatement.setString(2, p.getName());
-			preparedStatement.setDouble(3, p.getPrice());
-			preparedStatement.execute();
+        try {
+            conn = openConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "insert into publication (publication_order_id, publicationName, price_in_€)" + "values (?, ?, ?)");
+            ps.setString(1, p.getOrder_id());
+            ps.setString(2, p.getName());
+            ps.setDouble(3, p.getPrice());
+            ps.execute();
+        } catch (Exception e) {
+            insertSucessfull = false;
+            throw new PublicationException("Publication is not added.");
 
-		} catch (Exception e) {
-			insertSucessfull = false;
-			throw new PublicationException("Publication is not added.");
+        } finally {
+            closeConnection(conn);
+        }
 
-		}
+        return insertSucessfull;
 
-		return insertSucessfull;
+    }
 
-	}
+    public boolean updatePublication(Publication p) throws PublicationException, SQLConnectionException {
+        Connection conn = null;
+        boolean update = true;
 
-	public boolean updatePublication(Publication p) throws PublicationException {
+        try {
+            conn = openConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "update publication set publicationName= ?, price_in_€ = ? where publication_order_id = ? ");
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getPrice());
+            ps.setString(3, p.getOrder_id());
+            ps.execute();
 
-		boolean update = true;
+        } catch (Exception e) {
+            update = false;
+            throw new PublicationException("Publication is not updated.");
+        }finally {
+            closeConnection(conn);
+        }
 
-		try {
+        return update;
 
-			preparedStatement = connect.prepareStatement(
-					"update publication set publicationName= ?, price_in_€ = ? where publication_order_id = ? ");
-			preparedStatement.setString(1, p.getName());
-			preparedStatement.setDouble(2, p.getPrice());
-			preparedStatement.setString(3, p.getOrder_id());
-			preparedStatement.execute();
+    }
 
-		} catch (Exception e) {
-			update = false;
-			throw new PublicationException("Publication is not updated.");
-		}
+    public boolean delete(Publication p) throws PublicationException, SQLConnectionException {
+Connection conn = null;
+        boolean delete = true;
 
-		return update;
+        try {
+            conn = openConnection();
+            PreparedStatement ps = conn.prepareStatement("delete from publication where publication_order_id= ?");
+            ps.setString(1, p.getOrder_id());
+            ps.execute();
 
-	}
+        } catch (Exception e) {
+            delete = false;
+            throw new PublicationException("Publication is not deleted.");
+        } finally {
+            closeConnection(conn);
+        }
 
-	public boolean delete(Publication p) throws PublicationException {
+        return delete;
 
-		boolean delete = true;
+    }
 
-		try {
+    public ResultSet retrieveAllPublications() throws PublicationException, SQLConnectionException {
+        Connection conn = null;
+        try {
+            conn = openConnection();
+            statement = conn.createStatement();
+            resultSet = statement.executeQuery("select * from publication");
+        } catch (Exception e) {
+            resultSet = null;
+            throw new PublicationException("Date is not retrieved.");
+        }finally {
+            closeConnection(conn);
+        }
+        return resultSet;
+    }
 
-			preparedStatement = connect.prepareStatement("delete from publication where publication_order_id= ?");
-			preparedStatement.setString(1, p.getOrder_id());
-			preparedStatement.execute();
+    private void closeConnection(Connection connection) throws DeliveryAreaException {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new DeliveryAreaException("Delivery Area not closed!");
+            }
+        }
+    }
 
-		} catch (Exception e) {
-			delete = false;
-			throw new PublicationException("Publication is not deleted.");
-		}
+    public boolean insertDeliveryArea(DeliveryArea dea) throws DeliveryAreaException {
+        Connection conn = null;
+        try {
+            conn = openConnection();
+            preparedStatement = conn.prepareStatement("insert into newsagent2021.delivery_areas values (default, ?, ?)");
+            preparedStatement.setString(1, dea.getName());
+            preparedStatement.setInt(2, dea.getSize());
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            throw new DeliveryAreaException("Delivery Area DAO Insert failed");
+        } finally {
+            closeConnection(conn);
+        }
+        return true;
+    }
 
-		return delete;
+    public ArrayList<DeliveryArea> readAllDeliveryArea() throws DeliveryAreaException {
+        ArrayList<DeliveryArea> arr = new ArrayList<DeliveryArea>();
+        Connection con = null;
+        try {
+            con = openConnection();
+            statement = con.createStatement();
+            resultSet = statement.executeQuery("Select * from newsagent2021.delivery_areas");
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                int size = resultSet.getInt(3);
+                DeliveryArea deliveryArea = new DeliveryArea(id, name, size);
+                arr.add(deliveryArea);
+            }
+        } catch (Exception e) {
+            throw new DeliveryAreaException("Read all SQL Failed");
+        } finally {
+            closeConnection(con);
+        }
+        return arr;
+    }
 
-	}
+    public DeliveryArea readDeliveryAreaById(int id) throws DeliveryAreaException {
+        DeliveryArea da;
+        Connection con = null;
+        try {
+            con = openConnection();
+            PreparedStatement ps = con.prepareStatement("select * from newsagent2021.delivery_areas where id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String name = rs.getString("Aname");
+                int size = rs.getInt("size");
+                da = new DeliveryArea(id, name, size);
+                return da;
+            }
+        } catch (Exception e) {
+            throw new DeliveryAreaException("Delivery Area read by Id failed");
+        } finally {
+            closeConnection(con);
+        }
+        return null;
+    }
 
-	public ResultSet retrieveAllPublications() throws PublicationException {
+    public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
+        Connection con = null;
+        try {
+            con = openConnection();
+            PreparedStatement ps = con.prepareStatement("UPDATE newsagent2021.delivery_areas set  Aname = ? , size = ? where id = ?; ");
+            ps.setString(1, da.getName());
+            ps.setInt(2, da.getSize());
+            ps.setInt(3, da.getAreaId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new DeliveryAreaException("delivery Area update failed");
+        } finally {
+            closeConnection(con);
+        }
+        return true;
+    }
 
-		try {
-			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from publication");
-
-		} catch (Exception e) {
-			resultSet = null;
-			throw new PublicationException("Date is not retrieved.");
-		}
-		return resultSet;
-	}
-
-	public boolean shutDownConnection() throws PublicationException {
-		try {
-			connect.close();
-			System.out.println("Connection closed");
-			return true;
-
-		} catch (SQLException e) {
-			throw new PublicationException("Connection not closed.");
-
-		}
-
-	}
-
+    public boolean deleteDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
+        Connection conn = null;
+        try {
+            conn = openConnection();
+            PreparedStatement ps =  conn.prepareStatement("DELETE FROM newsagent2021.delivery_areas WHERE id = ?");
+            ps.setInt(1, da.getAreaId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new DeliveryAreaException("delivery Area delete failed");
+        } finally {
+            closeConnection(conn);
+        }
+        return true;
+    }
+}
 }
