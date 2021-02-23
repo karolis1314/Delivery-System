@@ -1,18 +1,14 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-
 import exceptions.DeliveryAreaException;
+import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
 import exceptions.SQLConnectionException;
 import model.DeliveryArea;
+import model.DeliveryDocket;
 import model.Publication;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class MySQLAccess {
@@ -22,7 +18,7 @@ public class MySQLAccess {
     private ResultSet resultSet = null;
     final private String host = "localhost:3306";
     final private String user = "root";
-    final private String password = "admin";
+    final private String password = "";
 
 
     public MySQLAccess() throws SQLConnectionException {
@@ -66,7 +62,7 @@ public class MySQLAccess {
         try {
             conn = openConnection();
             PreparedStatement ps = conn.prepareStatement(
-                    "insert into publication (publication_order_id, publicationName, price_in_€)" + "values (?, ?, ?)");
+                    "insert into publication (publication_order_id, publicationName, price_in_ï¿½)" + "values (?, ?, ?)");
             ps.setString(1, p.getOrder_id());
             ps.setString(2, p.getName());
             ps.setDouble(3, p.getPrice());
@@ -90,7 +86,7 @@ public class MySQLAccess {
         try {
             conn = openConnection();
             PreparedStatement ps = conn.prepareStatement(
-                    "update publication set publicationName= ?, price_in_€ = ? where publication_order_id = ? ");
+                    "update publication set publicationName= ?, price_in_ï¿½ = ? where publication_order_id = ? ");
             ps.setString(1, p.getName());
             ps.setDouble(2, p.getPrice());
             ps.setString(3, p.getOrder_id());
@@ -245,5 +241,119 @@ Connection conn = null;
             }
         }
         return true;
+    }
+
+    public boolean insertDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException, SQLConnectionException {
+        Connection connection = null;
+        try {
+            connection = openConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS VALUES (DEFAULT, ?, ?, ?);");
+            preparedStatement.setInt(1, deliveryDocket.getPublicationID());
+            preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
+            preparedStatement.setInt(3, deliveryDocket.getCustomerID());
+            preparedStatement.executeUpdate();
+        } catch (Exception exception) {
+            throw new DeliveryDocketException("Delivery Docket DAO insert failed");
+        } finally {
+            closeConnection(connection);
+        }
+        return true;
+    }
+
+    public DeliveryDocket getDeliveryDocketByID(int deliveryDocketID) throws DeliveryDocketException, SQLConnectionException {
+        Connection connection = null;
+        DeliveryDocket deliveryDocket;
+        try {
+            connection = openConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS WHERE DELIVERYDOCKETID = ?;");
+            preparedStatement.setInt(1, deliveryDocketID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int publicationID = resultSet.getInt("publicationID");
+                int deliveryAreaID = resultSet.getInt("deliveryAreaID");
+                int customerID = resultSet.getInt("customerID");
+
+                deliveryDocket = new DeliveryDocket(publicationID, deliveryAreaID, customerID);
+
+                return deliveryDocket;
+            }
+        } catch (Exception exception) {
+            throw new DeliveryDocketException("Delivery Docket DAO retrieval failed");
+        } finally {
+            closeConnection(connection);
+        }
+        return null;
+    }
+
+    public ArrayList<DeliveryDocket> readAllDeliveryDockets() throws DeliveryDocketException, SQLConnectionException {
+        ArrayList<DeliveryDocket> arr = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = openConnection();
+            statement = con.createStatement();
+            resultSet = statement.executeQuery("Select * from newsagent2021.DELIVERY_DOCKETS");
+            while (resultSet.next()) {
+                int deliveryDocketID = resultSet.getInt(1);
+                int publicationID = resultSet.getInt(2);
+                int deliveryAreaID = resultSet.getInt(3);
+                int customerID = resultSet.getInt(4);
+                DeliveryDocket deliveryDocket = new DeliveryDocket(deliveryDocketID, publicationID, deliveryAreaID, customerID);
+                arr.add(deliveryDocket);
+            }
+        } catch (Exception e) {
+            throw new DeliveryDocketException("Read all SQL Failed");
+        } finally {
+            closeConnection(con);
+        }
+        return arr;
+    }
+
+    public void updateDeliveryDocketByID(int deliveryDocketID, int publicationID, int deliveryAreaID, int customerID) throws DeliveryDocketException, SQLConnectionException {
+        Connection connection = null;
+        if (deliveryDocketID <= 0 || publicationID <= 0 || deliveryAreaID <= 0 || customerID <= 0) {
+            throw new DeliveryDocketException("Invalid Delivery Docket parameters");
+        } else {
+            try {
+                connection = openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS SET PUBLICATIONID = ? WHERE DELIVERYDOCKETID = ?;");
+                preparedStatement.setInt(1, publicationID);
+                preparedStatement.setInt(2, deliveryDocketID);
+                preparedStatement.executeUpdate();
+
+
+                preparedStatement = connection.prepareStatement("UPDATE NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS SET DELIVERYAREAID = ? WHERE DELIVERYDOCKETID = ?;");
+                preparedStatement.setInt(1, deliveryAreaID);
+                preparedStatement.setInt(2, deliveryDocketID);
+                preparedStatement.executeUpdate();
+
+                preparedStatement = connection.prepareStatement("UPDATE NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS SET CUSTOMERID = ? WHERE DELIVERYDOCKETID = ?;");
+                preparedStatement.setInt(1, customerID);
+                preparedStatement.setInt(2, deliveryDocketID);
+                preparedStatement.executeUpdate();
+            } catch (Exception exception) {
+                throw new DeliveryDocketException("Delivery Docket DAO update failed");
+            } finally {
+                closeConnection(connection);
+            }
+        }
+    }
+
+    public void deleteDeliveryDocketByID(int deliveryDocketID) throws DeliveryDocketException, SQLConnectionException {
+        Connection connection = null;
+        if (deliveryDocketID <= 0) {
+            throw new DeliveryDocketException("Invalid Delivery Docket ID");
+        } else {
+            try {
+                connection = openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS WHERE DELIVERYDOCKETID = ?;");
+                preparedStatement.setInt(1, deliveryDocketID);
+                preparedStatement.executeUpdate();
+            } catch (Exception exception) {
+                throw new DeliveryDocketException("Delivery Docket DAO delete failed");
+            } finally {
+                closeConnection(connection);
+            }
+        }
     }
 }

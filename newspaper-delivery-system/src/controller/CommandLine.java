@@ -2,6 +2,7 @@ package controller;
 
 import exceptions.DeliveryAreaException;
 import model.DeliveryArea;
+import model.DeliveryDocket;
 import model.Publication;
 import java.util.List;
 import java.util.Scanner;
@@ -68,6 +69,31 @@ public class CommandLine {
 
     }
 
+    private static boolean printDeliveryDocketTable(List<DeliveryDocket> deliveryDockets){
+
+        //Print The Contents of the Full Delivery Docket Table
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Table: Delivery Docket");
+        System.out.printf("%30s", " deliveryDocketID");
+        System.out.printf("%30s", " publicationID");
+        System.out.printf("%30s", "deliveryAreaID");
+        System.out.printf("%30s", "customerID");
+        System.out.println();
+
+        for (DeliveryDocket deliveryDocket : deliveryDockets) {
+            System.out.printf("%30s", deliveryDocket.getDeliveryDocketID());
+            System.out.printf("%30s", deliveryDocket.getPublicationID());
+            System.out.printf("%30s", deliveryDocket.getDeliveryAreaID());
+            System.out.printf("%30s", deliveryDocket.getCustomerID());
+            System.out.println();
+        }
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
+
+        return true;
+
+    }
+
     public static void main(String[] args) {
         // Create the Database Object
         try {
@@ -86,7 +112,7 @@ public class CommandLine {
                     String publicationOrderId = in.next();
                     System.out.printf("Enter Publications Name: \n");
                     String publicationName = in.next();
-                    System.out.printf("Enter Publication Price(€): \n");
+                    System.out.printf("Enter Publication Price(ï¿½): \n");
                     double pubcliationPrice = in.nextDouble();
 
                     Publication pub = new Publication(publicationOrderId, publicationName, pubcliationPrice);
@@ -102,7 +128,7 @@ public class CommandLine {
                     String publicationOrderId = in.next();
                     System.out.printf("Enter new Publications Name for " + publicationOrderId + ": \n");
                     String publicationName = in.next();
-                    System.out.printf("Enter new Publications Price(€) for " + publicationOrderId + ": \n");
+                    System.out.printf("Enter new Publications Price(ï¿½) for " + publicationOrderId + ": \n");
                     double pubcliationPrice = in.nextDouble();
 
                     Publication pub = new Publication(publicationOrderId, publicationName, pubcliationPrice);
@@ -154,10 +180,13 @@ public class CommandLine {
                     }
                     DeliveryArea deliveryArea = mysql.readDeliveryAreaById(id);
                     mysql.deleteDeliveryArea(deliveryArea);
- /* option 7 */ } else if (choice.equals("7")) {
+ /* option 9 */ } else if (choice.equals("9")) {
+                    List<DeliveryDocket> deliveryDockets = mysql.readAllDeliveryDockets();
+                    printDeliveryDocketTable(deliveryDockets);
+/* option 7 */ } else if (choice.equals("7")) {
                     List<DeliveryArea> deliveryAreas = mysql.readAllDeliveryArea();
                     printDeliveryAreaTable(deliveryAreas);
- /* option 0 */ } else if (choice.equals("0")) {
+/* option 0 */ } else if (choice.equals("0")) {
                     running = false;
                     System.out.println("Program will now close.");
                 }

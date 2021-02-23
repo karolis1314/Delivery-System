@@ -22,6 +22,11 @@ public class DeliveryDocket {
         this.customerID = customerID;
     }
 
+    public DeliveryDocket(int deliveryDocketID, int publicationID, int deliveryAreaID, int customerID) throws DeliveryDocketException {
+        this(publicationID, deliveryAreaID, customerID);
+        this.deliveryDocketID = deliveryDocketID;
+    }
+
     public int getDeliveryDocketID() {
         return deliveryDocketID;
     }
