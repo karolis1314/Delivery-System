@@ -1,6 +1,6 @@
 package controller;
 
-import dao.DeliveryAreaDAO;
+
 import exceptions.DeliveryAreaException;
 import model.DeliveryArea;
 
@@ -20,7 +20,7 @@ public class DeliveryAreaController {
             }
             try {
                 DeliveryArea dea = new DeliveryArea(name, size);
-                DeliveryAreaDAO areaDAO = new DeliveryAreaDAO();
+                MySQLAccess areaDAO = new MySQLAccess();
                 areaDAO.insertDeliveryArea(dea);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -29,8 +29,8 @@ public class DeliveryAreaController {
         }
 
 
-        public ArrayList<DeliveryArea> readAllDeliveryAreas () throws DeliveryAreaException {
-            DeliveryAreaDAO areaDAO = new DeliveryAreaDAO();
+        public ArrayList<DeliveryArea> readAllDeliveryAreas () throws Exception {
+            MySQLAccess areaDAO = new MySQLAccess();
             ArrayList arr = areaDAO.readAllDeliveryArea();
             if (arr.size() < 0) {
                 throw new DeliveryAreaException("Read all did not work");
@@ -38,8 +38,8 @@ public class DeliveryAreaController {
             return arr;
         }
 
-        public boolean updateDeliveryArea ( int id, String name,int size) throws DeliveryAreaException {
-            DeliveryAreaDAO areaDAO = new DeliveryAreaDAO();
+        public boolean updateDeliveryArea ( int id, String name,int size) throws Exception {
+            MySQLAccess areaDAO = new MySQLAccess();
             DeliveryArea da = new DeliveryArea(id, name, size);
             if (!areaDAO.updateDeliveryArea(da)) {
                 throw new DeliveryAreaException("Update is invalid");
@@ -48,8 +48,8 @@ public class DeliveryAreaController {
             return true;
         }
 
-        public boolean deleteDeliveryArea ( int id) throws DeliveryAreaException {
-            DeliveryAreaDAO areaDAO = new DeliveryAreaDAO();
+        public boolean deleteDeliveryArea ( int id) throws Exception {
+            MySQLAccess areaDAO = new MySQLAccess();
             if (areaDAO.readDeliveryAreaById(id) == null) {
                 throw new DeliveryAreaException("delivery Area Id is not in the Database");
             }

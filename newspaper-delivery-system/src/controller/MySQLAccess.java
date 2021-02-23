@@ -19,12 +19,11 @@ public class MySQLAccess {
 
 
     private Statement statement = null;
-
     private ResultSet resultSet = null;
-
     final private String host = "localhost:3306";
     final private String user = "root";
     final private String password = "admin";
+
 
     public MySQLAccess() throws SQLConnectionException {
         Connection conn = null;
@@ -44,9 +43,10 @@ public class MySQLAccess {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection("jdbc:mysql://" + host + "/newsagent2021?" + "user=" + user + "&password=" + password);
         } catch (Exception e) {
-            throw new SQLConnectionException("Delivery Area DB connection Failed");
+            throw new SQLConnectionException("database not connected");
         }
     }
+
 
     private void closeConnection(Connection connection) throws SQLConnectionException {
         if (connection != null) {
@@ -128,39 +128,37 @@ Connection conn = null;
 
     }
 
-    public ResultSet retrieveAllPublications() throws PublicationException, SQLConnectionException {
+    public ArrayList<Publication> retrieveAllPublications() throws PublicationException, SQLConnectionException {
+        ArrayList<Publication> publications = new ArrayList<>();
         Connection conn = null;
         try {
             conn = openConnection();
             statement = conn.createStatement();
             resultSet = statement.executeQuery("select * from publication");
+            while (resultSet.next()){
+                String id = resultSet.getString(2);
+                String name = resultSet.getString(3);
+                double price = resultSet.getDouble(4);
+                Publication publication = new Publication(id,name,price);
+                publications.add(publication);
+            }
         } catch (Exception e) {
-            resultSet = null;
+
             throw new PublicationException("Date is not retrieved.");
         }finally {
             closeConnection(conn);
         }
-        return resultSet;
+        return publications;
     }
 
-    private void closeConnection(Connection connection) throws DeliveryAreaException {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new DeliveryAreaException("Delivery Area not closed!");
-            }
-        }
-    }
-
-    public boolean insertDeliveryArea(DeliveryArea dea) throws DeliveryAreaException {
+    public boolean insertDeliveryArea(DeliveryArea dea) throws DeliveryAreaException, SQLConnectionException {
         Connection conn = null;
         try {
             conn = openConnection();
-            preparedStatement = conn.prepareStatement("insert into newsagent2021.delivery_areas values (default, ?, ?)");
-            preparedStatement.setString(1, dea.getName());
-            preparedStatement.setInt(2, dea.getSize());
-            preparedStatement.executeUpdate();
+            PreparedStatement  ps = conn.prepareStatement("insert into newsagent2021.delivery_areas values (default, ?, ?)");
+            ps.setString(1, dea.getName());
+            ps.setInt(2, dea.getSize());
+            ps.executeUpdate();
         } catch (Exception e) {
             throw new DeliveryAreaException("Delivery Area DAO Insert failed");
         } finally {
@@ -169,7 +167,7 @@ Connection conn = null;
         return true;
     }
 
-    public ArrayList<DeliveryArea> readAllDeliveryArea() throws DeliveryAreaException {
+    public ArrayList<DeliveryArea> readAllDeliveryArea() throws DeliveryAreaException, SQLConnectionException {
         ArrayList<DeliveryArea> arr = new ArrayList<DeliveryArea>();
         Connection con = null;
         try {
@@ -191,7 +189,7 @@ Connection conn = null;
         return arr;
     }
 
-    public DeliveryArea readDeliveryAreaById(int id) throws DeliveryAreaException {
+    public DeliveryArea readDeliveryAreaById(int id) throws DeliveryAreaException, SQLConnectionException {
         DeliveryArea da;
         Connection con = null;
         try {
@@ -213,7 +211,7 @@ Connection conn = null;
         return null;
     }
 
-    public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
+    public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException, SQLConnectionException {
         Connection con = null;
         try {
             con = openConnection();
@@ -240,9 +238,12 @@ Connection conn = null;
         } catch (Exception e) {
             throw new DeliveryAreaException("delivery Area delete failed");
         } finally {
-            closeConnection(conn);
+            try {
+                closeConnection(conn);
+            } catch (SQLConnectionException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
-}
 }
