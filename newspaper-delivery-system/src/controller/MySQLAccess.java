@@ -247,7 +247,7 @@ Connection conn = null;
         Connection connection = null;
         try {
             connection = openConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS VALUES (DEFAULT, ?, ?, ?);");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO newsagent2021.DELIVERY_DOCKETS VALUES (DEFAULT, ?, ?, ?);");
             preparedStatement.setInt(1, deliveryDocket.getPublicationID());
             preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
             preparedStatement.setInt(3, deliveryDocket.getCustomerID());
@@ -265,7 +265,7 @@ Connection conn = null;
         DeliveryDocket deliveryDocket;
         try {
             connection = openConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS WHERE DELIVERYDOCKETID = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM newsagent2021.DELIVERY_DOCKETS WHERE DELIVERYDOCKETID = ?;");
             preparedStatement.setInt(1, deliveryDocketID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -316,18 +316,18 @@ Connection conn = null;
         } else {
             try {
                 connection = openConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS SET PUBLICATIONID = ? WHERE DELIVERYDOCKETID = ?;");
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE newsagent2021.DELIVERY_DOCKETS SET PUBLICATIONID = ? WHERE DELIVERYDOCKETID = ?;");
                 preparedStatement.setInt(1, publicationID);
                 preparedStatement.setInt(2, deliveryDocketID);
                 preparedStatement.executeUpdate();
 
 
-                preparedStatement = connection.prepareStatement("UPDATE NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS SET DELIVERYAREAID = ? WHERE DELIVERYDOCKETID = ?;");
+                preparedStatement = connection.prepareStatement("UPDATE newsagent2021.DELIVERY_DOCKETS SET DELIVERYAREAID = ? WHERE DELIVERYDOCKETID = ?;");
                 preparedStatement.setInt(1, deliveryAreaID);
                 preparedStatement.setInt(2, deliveryDocketID);
                 preparedStatement.executeUpdate();
 
-                preparedStatement = connection.prepareStatement("UPDATE NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS SET CUSTOMERID = ? WHERE DELIVERYDOCKETID = ?;");
+                preparedStatement = connection.prepareStatement("UPDATE newsagent2021.DELIVERY_DOCKETS SET CUSTOMERID = ? WHERE DELIVERYDOCKETID = ?;");
                 preparedStatement.setInt(1, customerID);
                 preparedStatement.setInt(2, deliveryDocketID);
                 preparedStatement.executeUpdate();
@@ -346,7 +346,7 @@ Connection conn = null;
         } else {
             try {
                 connection = openConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM NEWSPAPER_DELIVERY_SYSTEM.DELIVERY_DOCKETS WHERE DELIVERYDOCKETID = ?;");
+                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM newsagent2021.DELIVERY_DOCKETS WHERE DELIVERYDOCKETID = ?;");
                 preparedStatement.setInt(1, deliveryDocketID);
                 preparedStatement.executeUpdate();
             } catch (Exception exception) {

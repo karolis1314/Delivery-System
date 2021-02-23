@@ -1,6 +1,7 @@
 package controller;
 
 import exceptions.DeliveryAreaException;
+import exceptions.DeliveryDocketException;
 import model.DeliveryArea;
 import model.DeliveryDocket;
 import model.Publication;
@@ -14,14 +15,22 @@ public class CommandLine {
         // Present options to the user
         System.out.println("|------------------------|");
         System.out.println("Select desired option:");
+        System.out.println("|------------------------|");
         System.out.println("1. Create new publication");
         System.out.println("2. Update existing publication");
         System.out.println("3. Print publication table");
         System.out.println("4. Delete publication");
+        System.out.println("|------------------------|");
         System.out.println("5. Create new Delivery Area");
         System.out.println("6. Update Delivery Area");
         System.out.println("7. Print Delivery Area Table");
         System.out.println("8. Delete Delivery Area");
+        System.out.println("|------------------------|");
+        System.out.println("9. Print Delivery Docket Table");
+        System.out.println("10. Create Delivery Docket");
+        System.out.println("11. Update Delivery Docket");
+        System.out.println("12. Delete Delivery Docket");
+        System.out.println("|------------------------|");
         System.out.println("0. Close the application");
         System.out.println("|------------------------|");
     }
@@ -183,6 +192,51 @@ public class CommandLine {
  /* option 9 */ } else if (choice.equals("9")) {
                     List<DeliveryDocket> deliveryDockets = mysql.readAllDeliveryDockets();
                     printDeliveryDocketTable(deliveryDockets);
+/* option 10 */ } else if (choice.equals("10")) {
+                    System.out.print("Publication ID: ");
+                    int publicationID = in.nextInt();
+                    System.out.print("Delivery Area ID: ");
+                    int deliveryAreaID = in.nextInt();
+                    System.out.print("Customer ID: ");
+                    int customerID = in.nextInt();
+
+
+                    boolean result = mysql.insertDeliveryDocket(new DeliveryDocket(publicationID, deliveryAreaID, customerID));
+                    if (result == true)
+                        System.out.println("New Delivery Docket Added");
+                    else
+                        System.out.println("Failed: Delivery Docket not added");
+                    /* option 10 */ } else if (choice.equals("10")) {
+                    System.out.println("Publication ID: ");
+                    int publicationID = in.nextInt();
+                    System.out.println("Delivery Area ID: ");
+                    int deliveryAreaID = in.nextInt();
+                    System.out.println("Customer ID: ");
+                    int customerID = in.nextInt();
+
+
+                    boolean result = mysql.insertDeliveryDocket(new DeliveryDocket(publicationID, deliveryAreaID, customerID));
+                    if (result == true)
+                        System.out.println("New Delivery Docket Added");
+                    else
+                        System.out.println("Failed: Delivery Docket not added");
+/* option 11 */ } else if(choice.equals("11")){
+                    System.out.println("Enter Delivery Docket Id you want to update:");
+                    int id = in.nextInt();
+                    System.out.println("Change the Publication ID: ");
+                    int publicationID = in.nextInt();
+                    System.out.println("Change the Delivery Area ID: ");
+                    int deliveryAreaID = in.nextInt();
+                    System.out.println("Change the Customer ID: ");
+                    int customerID = in.nextInt();
+                    mysql.updateDeliveryDocketByID(id, publicationID, deliveryAreaID, customerID);
+/* option 12 */ }  else if(choice.equals("12")){
+                    System.out.println("Enter Delivery Docket Id you want to delete:");
+                    int id = in.nextInt();
+                    if (mysql.getDeliveryDocketByID(id) == null) {
+                        throw new DeliveryDocketException("Delivery Docket Id is not in the Database");
+                    }
+                    mysql.deleteDeliveryDocketByID(id);
 /* option 7 */ } else if (choice.equals("7")) {
                     List<DeliveryArea> deliveryAreas = mysql.readAllDeliveryArea();
                     printDeliveryAreaTable(deliveryAreas);
