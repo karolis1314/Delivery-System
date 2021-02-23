@@ -1,12 +1,8 @@
 package controller;
 
 import exceptions.DeliveryAreaException;
-import exceptions.PublicationException;
-import exceptions.SQLConnectionException;
 import model.DeliveryArea;
 import model.Publication;
-
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,10 +26,7 @@ public class CommandLine {
     }
 
 
-    private static boolean printPublicationTable(List<Publication> publications) throws Exception {
-
-        //Print The Contents of the Full Publication Table
-
+    private static boolean printPublicationTable(List<Publication> publications){
         System.out.println("------------------------------------------------------------------------------------------------------------------------------------");
         System.out.println("Table: Publication");
         System.out.printf("%30s", "Order Id");
@@ -52,7 +45,7 @@ public class CommandLine {
 
     }
 
-    private static boolean printDeliveryAreaTable(List<DeliveryArea> deliveryAreas) throws Exception {
+    private static boolean printDeliveryAreaTable(List<DeliveryArea> deliveryAreas){
 
         //Print The Contents of the Full Publication Table
 
@@ -75,24 +68,18 @@ public class CommandLine {
 
     }
 
-
     public static void main(String[] args) {
-
         // Create the Database Object
-
         try {
-
             MySQLAccess mysql = new MySQLAccess();
-
             // Configure System for Running
             Scanner in = new Scanner(System.in);
             boolean running = true;
-
             while (running == true) {
-
                 // Present list of functionality and get selection
                 listCmdGui();
                 String choice = in.next();
+// option 1
                 if (choice.equals("1")) {
                     // Get Publication Details
                     System.out.printf("Enter Publications Order Id: \n");
@@ -109,7 +96,7 @@ public class CommandLine {
                         System.out.println("New Publication Added");
                     else
                         System.out.println("Failed: Publication not added");
-                } else if (choice.equals("2")) {
+ /* option 2  */} else if (choice.equals("2")) {
                     // Update Publication Details
                     System.out.printf("Enter Publications Order Id which you want to update: \n");
                     String publicationOrderId = in.next();
@@ -125,7 +112,7 @@ public class CommandLine {
                         System.out.println("New Publication Added");
                     else
                         System.out.println("Failed: Publication not added");
-                } else if (choice.equals("4")) {
+/* option 4  */ } else if (choice.equals("4")) {
                     // Update Publication Details
                     System.out.printf("Enter Publications Order Id which you want to delete: \n");
                     String publicationOrderId = in.next();
@@ -136,22 +123,21 @@ public class CommandLine {
                         System.out.println("Publication Deleted");
                     else
                         System.out.println("Failed: Publication not deleted");
-                } else if (choice.equals("3")) {
+/* option 3  */ } else if (choice.equals("3")) {
                     //Retrieve ALL Publication Records
                     List<Publication> resT = mysql.retrieveAllPublications();
                     printPublicationTable(resT);
-                } else if (choice.equals("5")) {
+ /* option 5 */ } else if (choice.equals("5")) {
                     System.out.println("Enter Area Name: ");
                     String areaName = in.next();
                     System.out.println("Enter Size: ");
                     int areaSize = in.nextInt();
-                    DeliveryAreaController deliveryAreaController = new DeliveryAreaController();
-                    boolean result = deliveryAreaController.createDeliveryArea(areaName, areaSize);
+                    boolean result = mysql.insertDeliveryArea(new DeliveryArea(areaName,areaSize));
                     if (result == true)
                         System.out.println("New Publication Added");
                     else
                         System.out.println("Failed: Publication not added");
-                } else if(choice.equals("6")){
+ /* option 6 */ } else if(choice.equals("6")){
                     System.out.println("Enter Area Id you want to update:");
                     int id = in.nextInt();
                     System.out.println("Change the Area Name:");
@@ -160,7 +146,7 @@ public class CommandLine {
                     int size = in.nextInt();
                     DeliveryArea deliveryArea = new DeliveryArea(id,name,size);
                     mysql.updateDeliveryArea(deliveryArea);
-                }  else if(choice.equals("8")){
+ /* option 8 */ }  else if(choice.equals("8")){
                     System.out.println("Enter Area Id you want to delete:");
                     int id = in.nextInt();
                     if (mysql.readDeliveryAreaById(id) == null) {
@@ -168,10 +154,10 @@ public class CommandLine {
                     }
                     DeliveryArea deliveryArea = mysql.readDeliveryAreaById(id);
                     mysql.deleteDeliveryArea(deliveryArea);
-                } else if (choice.equals("7")) {
+ /* option 7 */ } else if (choice.equals("7")) {
                     List<DeliveryArea> deliveryAreas = mysql.readAllDeliveryArea();
                     printDeliveryAreaTable(deliveryAreas);
-                } else if (choice.equals("0")) {
+ /* option 0 */ } else if (choice.equals("0")) {
                     running = false;
                     System.out.println("Program will now close.");
                 }
