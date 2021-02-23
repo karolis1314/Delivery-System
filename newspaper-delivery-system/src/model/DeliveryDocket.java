@@ -57,22 +57,32 @@ public class DeliveryDocket {
     public static void validatePublicationID(int publicationID) throws DeliveryDocketException {
         // publicationID must not be negative or greater than the maximum integer value
 
-        if (publicationID < 0 || publicationID > Integer.MAX_VALUE) {
+        if (publicationID <= 0 || publicationID > Integer.MAX_VALUE) {
             throw new DeliveryDocketException("Invalid Publication ID");
         }
     }
 
     public static void validateDeliveryAreaID(int deliveryAreaID) throws DeliveryDocketException {
         // deliveryAreaID must not be negative or greater than the maximum integer value
-        if (deliveryAreaID < 0 || deliveryAreaID > Integer.MAX_VALUE) {
+        if (deliveryAreaID <= 0 || deliveryAreaID > Integer.MAX_VALUE) {
             throw new DeliveryDocketException("Invalid Delivery Area ID");
         }
     }
 
     public static void validateCustomerID(int customerID) throws DeliveryDocketException {
         // customerID must not be negative or greater than the maximum integer value
-        if (customerID < 0 || customerID > Integer.MAX_VALUE) {
+        if (customerID <= 0 || customerID > Integer.MAX_VALUE) {
             throw new DeliveryDocketException("Invalid Customer ID");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "DeliveryDocket{" +
+                "deliveryDocketID=" + deliveryDocketID +
+                ", publicationID=" + publicationID +
+                ", deliveryAreaID=" + deliveryAreaID +
+                ", customerID=" + customerID +
+                '}';
     }
 }
