@@ -16,9 +16,9 @@ import java.util.ArrayList;
 public class MySQLAccess {
 	private ResultSet resultSet = null;
 	private Statement statement = null;
-	final private String host = "localhost:6969";
+	final private String host = "localhost:3306";
 	final private String user = "root";
-	final private String password = "#Lekoso00";
+	final private String password = "";
 	
 	PreparedStatement pstmt=null;
 	private Connection con;
@@ -40,7 +40,7 @@ public class MySQLAccess {
 	public Connection openConnection() throws SQLConnectionException {
 		try {
 	
-			String url = "jdbc:mysql://localhost:6969/CUSTOMERS";
+			String url = "jdbc:mysql://localhost:3306/newsagent2021";
 		
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			return DriverManager.getConnection(url, user, password);
