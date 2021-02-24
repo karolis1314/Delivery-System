@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS DELIVERY_DOCKETS (
 );
 
 
-insert into delivery_areas VALUES (DEFAULT,'Area1',1523);
+insert into delivery_areas VALUES (DEFAULT,'Area1',150);
 
 INSERT INTO publication VALUES(DEFAULT,"A000001","Fobes",10.00);
 
@@ -39,3 +39,37 @@ SELECT
     *
 FROM
     DELIVERY_DOCKETS;
+
+    
+# Customers Table
+create table ADDRESS (
+    address_id int PRIMARY KEY AUTO_INCREMENT,
+    houseNumber int not null,
+    street VARCHAR(15) not null,
+    town varchar(20) not null,
+    city varchar(20) not null,
+    country varchar(20) not null
+);
+
+CREATE TABLE CUSTOMERS (
+	customer_id INT AUTO_INCREMENT PRIMARY KEY,
+	address_id INT NOT NULL,
+    firstName VARCHAR(20) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    mobileNumber VARCHAR(10) NOT NULL, 
+    FOREIGN KEY (address_id) REFERENCES ADDRESS (address_id)
+);
+
+INSERT INTO ADDRESS (address_id, houseNumber, street, town, city, country) VALUES
+(1, 22, 'Parnell St', 'Monksland', 'Westmeath', 'Ireland'),
+(2, 34, 'Church Rd', 'Roscommon', 'Westmeath', 'Ireland'),
+(3, 11, 'Kilmacoo', 'Athlone', 'Westmeath', 'Ireland');
+
+SELECT * FROM ADDRESS;
+
+INSERT INTO CUSTOMERS (customer_id, address_id, firstName, lastName, mobileNumber) VALUES
+(NULL, 2, 'Kevin', 'Jerome', '0834452321'),
+(NULL, 1, 'Tanguy', 'Ndombele', '0875567932'),
+(NULL, 3, 'Kieron', 'Pavloski', '0872945875');
+
+SELECT * FROM CUSTOMERS;
