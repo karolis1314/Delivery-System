@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+import exceptions.DeliveryAreaException;
 import exceptions.PublicationException;
 import model.DeliveryArea;
 import model.Publication;
@@ -123,7 +124,7 @@ public class MySQLAccess {
 	}
 
 
-	public boolean insertNewDeliveryArea(DeliveryArea da) throws PublicationException {
+	public boolean insertNewDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
 		boolean insertSucessfull = true;
 
@@ -137,13 +138,13 @@ public class MySQLAccess {
 
 		} catch (Exception e) {
 			insertSucessfull = false;
-			throw new PublicationException("Publication is not added.");
+			throw new DeliveryAreaException("DeliveryArea is not added.");
 
 		}
 		return insertSucessfull;
 	}
 
-	public boolean updateDeliveryArea (DeliveryArea  da) throws PublicationException {
+	public boolean updateDeliveryArea (DeliveryArea  da) throws DeliveryAreaException {
 
 		boolean update = true;
 
@@ -158,14 +159,14 @@ public class MySQLAccess {
 
 		} catch (Exception e) {
 			update = false;
-			throw new PublicationException("Publication is not updated.");
+			throw new DeliveryAreaException("DeliveryAreaE is not updated.");
 		}
 
 		return update;
 
 	}
 
-	public boolean delete(DeliveryArea da) throws PublicationException {
+	public boolean delete(DeliveryArea da) throws DeliveryAreaException {
 
 		boolean delete = true;
 
@@ -177,14 +178,14 @@ public class MySQLAccess {
 
 		} catch (Exception e) {
 			delete = false;
-			throw new PublicationException("Publication is not deleted.");
+			throw new DeliveryAreaException("DeliveryArea is not deleted.");
 		}
 
 		return delete;
 
 	}
 
-	public ResultSet retrieveAllDeliveryArea() throws PublicationException {
+	public ResultSet retrieveAllDeliveryArea() throws DeliveryAreaException {
 
 		try {
 			statement = connect.createStatement();
@@ -192,7 +193,7 @@ public class MySQLAccess {
 
 		} catch (Exception e) {
 			resultSet = null;
-			throw new PublicationException("Date is not retrieved.");
+			throw new DeliveryAreaException("DeliveryAreas is not retrieved.");
 		}
 		return resultSet;
 	}
