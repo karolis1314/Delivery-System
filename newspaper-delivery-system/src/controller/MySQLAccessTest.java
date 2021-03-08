@@ -1,4 +1,4 @@
-package test;
+package controller;
 
 import controller.MySQLAccess;
 import exceptions.DeliveryAreaException;
@@ -6,6 +6,8 @@ import exceptions.PublicationException;
 import junit.framework.TestCase;
 import model.DeliveryArea;
 import model.Publication;
+
+import java.sql.ResultSet;
 
 public class MySQLAccessTest extends TestCase {
 
@@ -174,11 +176,27 @@ public class MySQLAccessTest extends TestCase {
 	// Test Objective: Delete fail to publication
 	// Inputs: validated delivery area object
 	// Expected Output: "true"
-	public void testUpdateDeliveryArea(){
+	public void testUpdateDeliveryArea001(){
 		try {
 			MySQLAccess testObj = new MySQLAccess();
 			DeliveryArea da = new DeliveryArea(2,"Area 4", 12);
 			testObj.insertNewDeliveryArea(da);
+		} catch (DeliveryAreaException e){
+			fail();
+		} catch (Exception e){
+			fail();
+		}
+	}
+	// Test #: 12
+	// Test Objective: Delete fail to publication
+	// Inputs: validated delivery area object
+	// Expected Output: "true"
+	public void testRetrieveAllDeliveryArea001(){
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			ResultSet rs = testObj.retrieveAllDeliveryArea();
+
+			assertTrue(rs.next());
 		} catch (DeliveryAreaException e){
 			fail();
 		} catch (Exception e){
