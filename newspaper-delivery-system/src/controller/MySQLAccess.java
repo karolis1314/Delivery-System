@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import exceptions.PublicationException;
+import model.DeliveryArea;
 import model.Publication;
 
 import java.sql.ResultSet;
@@ -33,8 +34,8 @@ public class MySQLAccess {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/publication";
-			connect = DriverManager.getConnection(url, "root", "a00252699");
+			String url = "jdbc:mysql://localhost:3306/newsagent2021";
+			connect = DriverManager.getConnection(url, "root", "admin");
 			statement = connect.createStatement();
 			System.out.println("Connection Made.");
 			return true;
@@ -121,6 +122,80 @@ public class MySQLAccess {
 		return resultSet;
 	}
 
+
+	public boolean insertNewDeliveryArea(DeliveryArea da) throws PublicationException {
+
+		boolean insertSucessfull = true;
+
+		try {
+
+			preparedStatement = connect.prepareStatement(
+					"insert into delivery_areas  values (default , ?, ?);");
+			preparedStatement.setString(1, da.getName());
+			preparedStatement.setInt(2, da.getSize());
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			insertSucessfull = false;
+			throw new PublicationException("Publication is not added.");
+
+		}
+		return insertSucessfull;
+	}
+
+	public boolean updateDeliveryArea (DeliveryArea  da) throws PublicationException {
+
+		boolean update = true;
+
+		try {
+
+			preparedStatement = connect.prepareStatement(
+					"update delivery_areas set AName= ?, size = ? where id = ? ");
+			preparedStatement.setString(1, da.getName());
+			preparedStatement.setInt(2, da.getSize());
+			preparedStatement.setInt(3, da.getAreaId());
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			update = false;
+			throw new PublicationException("Publication is not updated.");
+		}
+
+		return update;
+
+	}
+
+	public boolean delete(DeliveryArea da) throws PublicationException {
+
+		boolean delete = true;
+
+		try {
+
+			preparedStatement = connect.prepareStatement("delete from delivery_areas where id = ?");
+			preparedStatement.setInt(1, da.getAreaId());
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			delete = false;
+			throw new PublicationException("Publication is not deleted.");
+		}
+
+		return delete;
+
+	}
+
+	public ResultSet retrieveAllDeliveryArea() throws PublicationException {
+
+		try {
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from delivery_areas");
+
+		} catch (Exception e) {
+			resultSet = null;
+			throw new PublicationException("Date is not retrieved.");
+		}
+		return resultSet;
+	}
 	public boolean shutDownConnection() throws PublicationException {
 		try {
 			connect.close();

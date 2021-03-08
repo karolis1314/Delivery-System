@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.Scanner;
 
+import model.DeliveryArea;
 import model.Publication;
 
 public class CommandLine {
@@ -33,14 +34,14 @@ public class CommandLine {
 		}
 		System.out.println();
 		while (rs.next()) {
-			int id = rs.getInt("id");
-			String order_id = rs.getString("publication_order_id");
-			String publication_name = rs.getString("publicationName");
-			String price = rs.getString("price_in_€");
+			int id = rs.getInt(1);
+			String order_id = rs.getString(2);
+			int publication_name = rs.getInt(3);
+
 			System.out.printf("%30s", id);
 			System.out.printf("%30s", order_id);
 			System.out.printf("%30s", publication_name);
-			System.out.printf("%30s", price);
+
 			System.out.println();
 		}// end while
 		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
@@ -71,16 +72,15 @@ public class CommandLine {
 				String choice = in.next();
 				if (choice.equals("1")) {
 					// Get Publication Details
-					System.out.printf("Enter Publications Order Id: \n");
-					String publicationOrderId = in.next();
+
 					System.out.printf("Enter Publications Name: \n");
 					String publicationName = in.next();
 					System.out.printf("Enter Publication Price(€): \n");
-					double pubcliationPrice = in.nextDouble();
+					int pubcliationPrice = in.nextInt();
 
-					Publication pub = new Publication(publicationOrderId,publicationName, pubcliationPrice);
+					DeliveryArea da = new DeliveryArea(publicationName,pubcliationPrice);
 					// Insert Publication Details into the database
-					boolean insertResult = mysql.insertNewPublication(pub);
+					boolean insertResult = mysql.insertNewDeliveryArea(da);
 					if (insertResult == true)
 						System.out.println("New Publication Added");
 					else
@@ -89,15 +89,15 @@ public class CommandLine {
 				else if(choice.equals("2")) {
 					// Update Publication Details
 					System.out.printf("Enter Publications Order Id which you want to update: \n");
-					String publicationOrderId = in.next();
+					int publicationOrderId = in.nextInt();
 					System.out.printf("Enter new Publications Name for "+publicationOrderId+": \n");
 					String publicationName = in.next();
 					System.out.printf("Enter new Publications Price(€) for "+publicationOrderId+": \n");
-					double pubcliationPrice = in.nextDouble();
+					int pubcliationPrice = in.nextInt();
 
-					Publication pub = new Publication(publicationOrderId,publicationName, pubcliationPrice);
+					DeliveryArea da = new DeliveryArea(publicationOrderId,publicationName,pubcliationPrice);
 					// Insert Publication into the database
-					boolean insertResult = mysql.updatePublication(pub);
+					boolean insertResult = mysql.updateDeliveryArea(da);
 					if (insertResult == true)
 						System.out.println("New Publication Added");
 					else
@@ -106,8 +106,8 @@ public class CommandLine {
 				else if(choice.equals("4")) {
 					// Update Publication Details
 					System.out.printf("Enter Publications Order Id which you want to delete: \n");
-					String publicationOrderId = in.next();
-					Publication pub = new Publication(publicationOrderId,"Deleted", 11.12);
+					int publicationOrderId = in.nextInt();
+					DeliveryArea pub = new DeliveryArea(publicationOrderId,"Deleted", 4);
 					// Insert Publication into the database
 					boolean insertResult = mysql.delete(pub);
 					if (insertResult == true)
@@ -117,7 +117,7 @@ public class CommandLine {
 				}
 				else if(choice.equals("3")) {
 					//Retrieve ALL Publication Records
-					ResultSet resT = mysql.retrieveAllPublications();
+					ResultSet resT = mysql.retrieveAllDeliveryArea();
 					if (resT == null) {
 						System.out.println("No Publication Records Found");
 					}

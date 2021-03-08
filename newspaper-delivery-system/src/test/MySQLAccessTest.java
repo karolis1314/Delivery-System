@@ -1,8 +1,10 @@
 package test;
 
 import controller.MySQLAccess;
+import exceptions.DeliveryAreaException;
 import exceptions.PublicationException;
 import junit.framework.TestCase;
+import model.DeliveryArea;
 import model.Publication;
 
 public class MySQLAccessTest extends TestCase {
@@ -150,5 +152,17 @@ public class MySQLAccessTest extends TestCase {
 			} catch (Exception e) {
 				assertEquals("Publication is not deleted.", e.getMessage());
 			}
+		}
+
+		public void testDeleteAreaDelivery001(){
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryArea da = new DeliveryArea(1,"null",12);
+			testObj.delete(da);
+		} catch (DeliveryAreaException e) {
+			fail();
+		} catch (Exception e){
+			fail();
+		}
 		}
 }
