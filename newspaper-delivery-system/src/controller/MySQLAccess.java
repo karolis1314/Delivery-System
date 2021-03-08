@@ -1,17 +1,11 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-
 import exceptions.DeliveryAreaException;
 import exceptions.PublicationException;
 import model.DeliveryArea;
 import model.Publication;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class MySQLAccess {
 
@@ -53,7 +47,7 @@ public class MySQLAccess {
 		try {
 
 			preparedStatement = connect.prepareStatement(
-					"insert into publication (publication_order_id, publicationName, price_in_€)" + "values (?, ?, ?)");
+					"insert into publication (publication_order_id, publicationName, price_in_ï¿½)" + "values (?, ?, ?)");
 			preparedStatement.setString(1, p.getOrder_id());
 			preparedStatement.setString(2, p.getName());
 			preparedStatement.setDouble(3, p.getPrice());
@@ -76,7 +70,7 @@ public class MySQLAccess {
 		try {
 
 			preparedStatement = connect.prepareStatement(
-					"update publication set publicationName= ?, price_in_€ = ? where publication_order_id = ? ");
+					"update publication set publicationName= ?, price_in_ï¿½ = ? where publication_order_id = ? ");
 			preparedStatement.setString(1, p.getName());
 			preparedStatement.setDouble(2, p.getPrice());
 			preparedStatement.setString(3, p.getOrder_id());
@@ -197,6 +191,80 @@ public class MySQLAccess {
 		}
 		return resultSet;
 	}
+
+	// Delivery Docket
+	public boolean insertDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
+
+		boolean insertSuccessful = true;
+
+		try {
+			preparedStatement = connect.prepareStatement(
+					"INSERT INTO DELIVERY_DOCKETS (publicationID, deliveryAreaID, customerID)" + "values (?, ?, ?)");
+			preparedStatement.setString(1, deliveryDocket.getPublicationID());
+			preparedStatement.setString(2, deliveryDocket.DeliveryAreaID());
+			preparedStatement.setDouble(3, deliveryDocket.CustomerID());
+			preparedStatement.execute();
+
+		} catch (Exception exception) {
+			insertSuccessful = false;
+			throw new DeliveryDocketException("Delivery Docket not added");
+
+		}
+
+		return insertSuccessful;
+	}
+
+	public boolean updateDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
+
+		boolean updateSuccessful = true;
+
+		try {
+			preparedStatement = connect.prepareStatement(
+					"UPDATE DELIVERY_DOCKETS SET publicationID = ?, deliveryAreaID = ?, customerID = ? WHERE deliveryDocketID = ? ");
+			preparedStatement.setString(1, deliveryDocket.getPublicationID());
+			preparedStatement.setString(2, deliveryDocket.DeliveryAreaID());
+			preparedStatement.setDouble(3, deliveryDocket.CustomerID());
+			preparedStatement.setString(4, deliveryDocket.getDeliveryDocketID());
+			preparedStatement.execute();
+
+		} catch (Exception exception) {
+			updateSuccessful = false;
+			throw new DeliveryDocketException("Delivery Docket not updated");
+		}
+
+		return updateSuccessful;
+	}
+
+	public boolean deleteDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
+
+		boolean deleteSuccessful = true;
+
+		try {
+			preparedStatement = connect.prepareStatement("DELETE FROM DELIVERY_DOCKETS WHERE publicationID = ?");
+			preparedStatement.setString(1, p.getDeliveryDocketID());
+			preparedStatement.execute();
+
+		} catch (Exception exception) {
+			deleteSuccessful = false;
+			throw new DeliveryDocketException("Delivery Docket not deleted");
+		}
+
+		return deleteSuccessful;
+	}
+
+	public ResultSet retrieveAllDeliveryDockets() throws PublicationException {
+
+		try {
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("SELECT * FROM DELIVERY_DOCKETS");
+
+		} catch (Exception exception) {
+			resultSet = null;
+			throw new DeliveryDocketException("Delivery Dockets not retrieved");
+		}
+		return resultSet;
+	}
+
 	public boolean shutDownConnection() throws PublicationException {
 		try {
 			connect.close();
