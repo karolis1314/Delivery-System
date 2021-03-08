@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-
 import exceptions.DeliveryAreaException;
 import exceptions.PublicationException;
 import model.DeliveryArea;
@@ -30,6 +29,7 @@ public class MySQLAccess {
 		}
 
 	}
+
 //Create the connection
 	public boolean connectToTheDatabase() throws PublicationException {
 
@@ -45,6 +45,7 @@ public class MySQLAccess {
 			throw new PublicationException("Connection failed.");
 		}
 	}
+
 //Insert the publication
 	public boolean insertNewPublication(Publication p) throws PublicationException {
 
@@ -123,15 +124,13 @@ public class MySQLAccess {
 		return resultSet;
 	}
 
-
 	public boolean insertNewDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
 		boolean insertSucessfull = true;
 
 		try {
 
-			preparedStatement = connect.prepareStatement(
-					"insert into delivery_areas  values (default , ?, ?);");
+			preparedStatement = connect.prepareStatement("insert into delivery_areas  values (default , ?, ?);");
 			preparedStatement.setString(1, da.getName());
 			preparedStatement.setInt(2, da.getSize());
 			preparedStatement.execute();
@@ -144,14 +143,13 @@ public class MySQLAccess {
 		return insertSucessfull;
 	}
 
-	public boolean updateDeliveryArea (DeliveryArea  da) throws DeliveryAreaException {
+	public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
 		boolean update = true;
 
 		try {
 
-			preparedStatement = connect.prepareStatement(
-					"update delivery_areas set AName= ?, size = ? where id = ? ");
+			preparedStatement = connect.prepareStatement("update delivery_areas set AName= ?, size = ? where id = ? ");
 			preparedStatement.setString(1, da.getName());
 			preparedStatement.setInt(2, da.getSize());
 			preparedStatement.setInt(3, da.getAreaId());
@@ -197,6 +195,7 @@ public class MySQLAccess {
 		}
 		return resultSet;
 	}
+
 	public boolean shutDownConnection() throws PublicationException {
 		try {
 			connect.close();
@@ -208,6 +207,61 @@ public class MySQLAccess {
 
 		}
 
+	}
+
+	// Customers DBAO
+	public boolean insertCustomerInfo(Customers cus) {
+		boolean insertSucessfull = true;
+		try {
+			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (DEFAULT, ?, ?, ?, ?)");
+			preparedStatement.setInt(1, cus.getId());
+			preparedStatement.setString(2, cus.getfName());
+			preparedStatement.setString(3, cus.getlName());
+			preparedStatement.setString(4, cus.getNumber());
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			insertSucessfull = false;
+			System.out.println("Failed to insert: " + e.getMessage());
+		}
+		return insertSucessfull;
+	}
+
+	public boolean deleteCustomerById(int cus_id) {
+		boolean deleteSucessfull = true;
+		try {
+			if (cus_id == -99)
+				preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS");
+			else
+				preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS WHERE CUSTOMER_ID=" + cus_id);
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			deleteSucessfull = false;
+		}
+		return deleteSucessfull;
+	}
+
+	public ResultSet displayCustomers() {
+		try {
+			resultSet = statement.executeQuery("SELECT * FROM CUSTOMERS");
+		} catch (Exception e) {
+			resultSet = null;
+		}
+		return resultSet;
+	}
+
+	public boolean updateCustomerDetails(String add, String fn, String ln, String num, int id) {
+		boolean updateSuccesful = false;
+		try {
+			String cmd = "update customers set" + " address='" + add + "', firstName= '" + fn + "', lastName= '" + ln
+					+ "', mobileNumber= '" + num + "' where customer_id=" + id;
+
+			statement.executeUpdate(cmd);
+			updateSuccesful = true;
+		} catch (Exception e) {
+			updateSuccesful = false;
+			System.out.println("Failed to update: " + e.getMessage());
+		}
+		return updateSuccesful;
 	}
 
 }
