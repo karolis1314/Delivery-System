@@ -289,11 +289,12 @@ public class MySQLAccess {
 	public boolean insertCustomerInfo(Customers cus) {
 		boolean insertSucessfull = true;
 		try {
-			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (DEFAULT, ?, ?, ?, ?)");
+			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?)");
 			preparedStatement.setInt(1, cus.getId());
-			preparedStatement.setString(2, cus.getfName());
-			preparedStatement.setString(3, cus.getlName());
-			preparedStatement.setString(4, cus.getNumber());
+			preparedStatement.setString(2, cus.getAddress());
+			preparedStatement.setString(3, cus.getfName());
+			preparedStatement.setString(4, cus.getlName());
+			preparedStatement.setString(5, cus.getNumber());
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			insertSucessfull = false;
