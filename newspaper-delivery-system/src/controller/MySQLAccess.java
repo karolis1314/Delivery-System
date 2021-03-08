@@ -1,8 +1,10 @@
 package controller;
 
 import exceptions.DeliveryAreaException;
+import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
 import model.DeliveryArea;
+import model.DeliveryDocket;
 import model.Publication;
 
 import java.sql.*;
@@ -200,9 +202,9 @@ public class MySQLAccess {
 		try {
 			preparedStatement = connect.prepareStatement(
 					"INSERT INTO DELIVERY_DOCKETS (publicationID, deliveryAreaID, customerID)" + "values (?, ?, ?)");
-			preparedStatement.setString(1, deliveryDocket.getPublicationID());
-			preparedStatement.setString(2, deliveryDocket.DeliveryAreaID());
-			preparedStatement.setDouble(3, deliveryDocket.CustomerID());
+			preparedStatement.setInt(1, deliveryDocket.getPublicationID());
+			preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
+			preparedStatement.setInt(3, deliveryDocket.getCustomerID());
 			preparedStatement.execute();
 
 		} catch (Exception exception) {
@@ -221,10 +223,10 @@ public class MySQLAccess {
 		try {
 			preparedStatement = connect.prepareStatement(
 					"UPDATE DELIVERY_DOCKETS SET publicationID = ?, deliveryAreaID = ?, customerID = ? WHERE deliveryDocketID = ? ");
-			preparedStatement.setString(1, deliveryDocket.getPublicationID());
-			preparedStatement.setString(2, deliveryDocket.DeliveryAreaID());
-			preparedStatement.setDouble(3, deliveryDocket.CustomerID());
-			preparedStatement.setString(4, deliveryDocket.getDeliveryDocketID());
+			preparedStatement.setInt(1, deliveryDocket.getPublicationID());
+			preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
+			preparedStatement.setInt(3, deliveryDocket.getCustomerID());
+			preparedStatement.setInt(4, deliveryDocket.getDeliveryDocketID());
 			preparedStatement.execute();
 
 		} catch (Exception exception) {
@@ -241,7 +243,7 @@ public class MySQLAccess {
 
 		try {
 			preparedStatement = connect.prepareStatement("DELETE FROM DELIVERY_DOCKETS WHERE publicationID = ?");
-			preparedStatement.setString(1, p.getDeliveryDocketID());
+			preparedStatement.setInt(1, deliveryDocket.getDeliveryDocketID());
 			preparedStatement.execute();
 
 		} catch (Exception exception) {
@@ -252,7 +254,7 @@ public class MySQLAccess {
 		return deleteSuccessful;
 	}
 
-	public ResultSet retrieveAllDeliveryDockets() throws PublicationException {
+	public ResultSet retrieveAllDeliveryDockets() throws DeliveryDocketException {
 
 		try {
 			statement = connect.createStatement();
