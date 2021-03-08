@@ -157,7 +157,43 @@ public class MySQLAccessTest extends TestCase {
 			}
 		}
 
-		public void testDeleteAreaDelivery001(){
+
+	// Test #: 11
+	// Test Objective: Delete fail to publication
+	// Inputs: validated delivery area object
+	// Expected Output: "true"
+	public void testInsertNewDeliveryArea001(){
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryArea da = new DeliveryArea("Area 4", 12);
+			testObj.insertNewDeliveryArea(da);
+		} catch (DeliveryAreaException e){
+			fail();
+		} catch (Exception e){
+			fail();
+		}
+	}
+	// Test #: 11
+	// Test Objective: Delete fail to publication
+	// Inputs: validated delivery area object
+	// Expected Output: "true"
+	public void testUpdateDeliveryArea(){
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryArea da = new DeliveryArea(2,"Area 4", 12);
+			testObj.insertNewDeliveryArea(da);
+		} catch (DeliveryAreaException e){
+			fail();
+		} catch (Exception e){
+			fail();
+		}
+	}
+
+
+
+
+
+	public void testDeleteAreaDelivery001(){
 		try {
 			MySQLAccess testObj = new MySQLAccess();
 			DeliveryArea da = new DeliveryArea(1,"null",12);
