@@ -197,7 +197,7 @@ public class MySQLAccessTest extends TestCase {
 		try {
 			MySQLAccess testObj = new MySQLAccess();
 			DeliveryArea da = new DeliveryArea(1,"null",12);
-			testObj.delete(da);
+			testObj.deleteDeliveryArea(da);
 		} catch (DeliveryAreaException e) {
 			fail();
 		} catch (Exception e){
