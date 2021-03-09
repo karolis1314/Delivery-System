@@ -196,7 +196,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         content.add(detailsPanel);
         content.add(dbContentsPanel);
 
-        setSize(982, 400);
+        setSize(982, 300);
         setVisible(true);
 
 

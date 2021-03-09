@@ -10,7 +10,7 @@ public class JDBCMainWindow extends JFrame implements ActionListener
 
 		public JDBCMainWindow() throws Exception {
 			// Sets the Window Title
-			super( "JDBC Assignment" ); 
+			super( "News Agent Delivery System" );
 			
 			//Setup fileMenu and its elements
 			JMenuBar menuBar=new JMenuBar();
@@ -25,11 +25,11 @@ public class JDBCMainWindow extends JFrame implements ActionListener
 			exitItem.addActionListener(this);
 
 			// Create an instance of our class JDBCMainWindowContent 
-			JDBCMainWindowContent aWindowContent = new JDBCMainWindowContent( "JDBC Assignment");
+			JDBCMainWindowContent aWindowContent = new JDBCMainWindowContent( "News Agent Delivery System");
 			// Add the instance to the main section of the window
 			getContentPane().add( aWindowContent );
 			
-			setSize( 1200, 600 );
+			setSize( 1200, 400 );
 			setVisible( true );
 		}
 		
