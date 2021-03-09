@@ -1,9 +1,11 @@
 package view;
 
 import controller.MySQLAccess;
+import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
+import model.Customers;
 import model.DeliveryArea;
 import model.DeliveryDocket;
 import model.Publication;
@@ -40,6 +42,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
     private JLabel label1 = new JLabel("Order ID:");
     private JLabel label2 = new JLabel("Name:");
     private JLabel label3 = new JLabel("Price:");
+    private JLabel label5 = new JLabel("Prefix:");
     private JLabel label4 = new JLabel("Mobile Number:");
 
 
@@ -48,6 +51,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
     private JTextField text2 = new JTextField(10);
     private JTextField text3 = new JTextField(10);
     private JTextField text4 = new JTextField(10);
+    private JTextField text5 = new JTextField(10);
 
 
     private static QueryTableModel TableModel = new QueryTableModel();
@@ -101,8 +105,10 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         detailsPanel.add(text2);
         detailsPanel.add(label3);
         detailsPanel.add(text3);
-        detailsPanel.add(label4);
+        detailsPanel.add(label5);
         detailsPanel.add(text4);
+        detailsPanel.add(label4);
+        detailsPanel.add(text5);
 
 
         insertButtonPublication.setSize(100, 30);
@@ -196,7 +202,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         content.add(detailsPanel);
         content.add(dbContentsPanel);
 
-        setSize(982, 300);
+        setSize(982, 700);
         setVisible(true);
 
 
@@ -220,6 +226,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         label4.setVisible(false);
         text3.setVisible(false);
         text4.setVisible(false);
+        label5.setVisible(false);
+        text5.setVisible(false);
 
 
     }
@@ -248,6 +256,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             text2.setText("");
             text3.setText("");
             text4.setText("");
+            text5.setText("");
 
         }
 
@@ -268,6 +277,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             text3.setVisible(true);
             text4.setVisible(true);
             text2.setVisible(true);
+            label5.setVisible(true);
+            text5.setVisible(true);
             deleteButtonDocket.setVisible(false);
             deleteButtonArea.setVisible(false);
             deleteButtonCustomer.setVisible(true);
@@ -302,6 +313,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             updateButtonArea.setVisible(true);
             updateButtonPublication.setVisible(false);
             updateButtonCust.setVisible(false);
+            label5.setVisible(false);
+            text5.setVisible(false);
 
         }
 
@@ -330,6 +343,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             updateButtonArea.setVisible(false);
             updateButtonPublication.setVisible(false);
             updateButtonCust.setVisible(false);
+            label5.setVisible(false);
+            text5.setVisible(false);
 
         }
         if (target == showPub) {
@@ -355,6 +370,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             updateButtonArea.setVisible(false);
             updateButtonPublication.setVisible(true);
             updateButtonCust.setVisible(false);
+            label5.setVisible(false);
+            text5.setVisible(false);
 
         }
         if (target == deleteButtonPublication) {
@@ -415,13 +432,32 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             }
 
         }
+        if (target == deleteButtonCustomer) {
+
+            try {
+                int id = Integer.parseInt(text.getText());
+                Customers c = new Customers(id, "deleted","deleted","deleted","083","2324545");
+                // Delete Area
+                boolean insertResult = mysql.deleteCustomerById(c);
+                if (insertResult == true)
+                    System.out.println("Customer Deleted");
+                else
+                    System.out.println("Failed: Customer not deleted");
+
+            } catch (CustomersException sqle) {
+                System.err.println("Error with  insert:\n" + sqle.toString());
+            } finally {
+                TableModel.refreshFromDBCustomer(stmt);
+            }
+
+        }
 
         if (target == insertButtonPublication) {
 
 
             try {
-                double price = Double.parseDouble(text3.getText());
-                Publication pub = new Publication(text1.getText(), text2.getText(), price);
+                double price = Double.parseDouble(text2.getText());
+                Publication pub = new Publication(text.getText(), text1.getText(), price);
                 // Insert Publication Details into the database
                 boolean insertResult = mysql.insertNewPublication(pub);
                 if (insertResult == true)
@@ -476,6 +512,24 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
                 System.err.println("Error with  insert:\n" + sqle.toString());
             } finally {
                 TableModel.refreshFromDBDeliveryDocket(stmt);
+            }
+        }
+        if (target == insertButtonCustomer) {
+
+            try {
+                int id = Integer.parseInt(text.getText());
+                Customers c = new Customers(id, text1.getText(),text2.getText(),text3.getText(),text4.getText(),text5.getText());
+                // Delete Area
+                boolean insertResult = mysql.insertCustomerInfo(c);
+                if (insertResult == true)
+                    System.out.println("Customer Added");
+                else
+                    System.out.println("Failed: Customer not Added");
+
+            } catch (CustomersException sqle) {
+                System.err.println("Error with  insert:\n" + sqle.toString());
+            } finally {
+                TableModel.refreshFromDBCustomer(stmt);
             }
         }
 
@@ -539,6 +593,25 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
                 System.err.println("Error with  insert:\n" + sqle.toString());
             } finally {
                 TableModel.refreshFromDBDeliveryDocket(stmt);
+            }
+        }
+
+        if (target == updateButtonCust) {
+
+            try {
+                int id = Integer.parseInt(text.getText());
+                Customers c = new Customers(id, text1.getText(),text2.getText(),text3.getText(),text4.getText(),text5.getText());
+                // Delete Area
+                boolean insertResult = mysql.updateCustomerDetails(c);
+                if (insertResult == true)
+                    System.out.println("Customer Updated");
+                else
+                    System.out.println("Failed: Customer not Updated");
+
+            } catch (CustomersException sqle) {
+                System.err.println("Error with  insert:\n" + sqle.toString());
+            } finally {
+                TableModel.refreshFromDBCustomer(stmt);
             }
         }
 
