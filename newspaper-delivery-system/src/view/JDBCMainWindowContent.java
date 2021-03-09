@@ -73,12 +73,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
     private JButton showArea = new JButton("Show Area");
     private JButton showDocket = new JButton("Show Doc");
 
-    private JButton numNoPenatlies = new JButton("Number Of Players With/No Penalties:");
-    private JTextField noPenTxt = new JTextField(12);
-    private JButton deletePenalties = new JButton("Delete on Penalties");
-    private JTextField deletePenTxt = new JTextField(12);
-    private JButton listOfRanks = new JButton("All Ranks On The Server");
-    private JButton euwHasEune = new JButton("List all EUW players on EUNE");
+
 
     public JDBCMainWindowContent(String aTitle) throws Exception {
         // setting up the GUI
@@ -94,7 +89,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
         // setup details panel and add the components to it
         detailsPanel = new JPanel();
-        detailsPanel.setLayout(new GridLayout(11, 2));
+        detailsPanel.setLayout(new GridLayout(12, 2));
         detailsPanel.setBackground(Color.lightGray);
         detailsPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "CRUD Actions"));
 
@@ -109,22 +104,6 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         detailsPanel.add(label4);
         detailsPanel.add(text4);
 
-
-        // setup details panel and add the components to it
-        exportButtonPanel = new JPanel();
-        exportButtonPanel.setLayout(new GridLayout(3, 2));
-        exportButtonPanel.setBackground(Color.lightGray);
-        exportButtonPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "Export Data"));
-        exportButtonPanel.add(numNoPenatlies);
-        exportButtonPanel.add(noPenTxt);
-        exportButtonPanel.add(deletePenalties);
-        exportButtonPanel.add(deletePenTxt);
-
-        exportButtonPanel.add(listOfRanks);
-        exportButtonPanel.add(euwHasEune);
-        exportButtonPanel.setSize(500, 200);
-        exportButtonPanel.setLocation(3, 300);
-        content.add(exportButtonPanel);
 
         insertButtonPublication.setSize(100, 30);
         insertButtonCustomer.setSize(100, 30);
@@ -183,11 +162,6 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         showArea.addActionListener(this);
         showDocket.addActionListener(this);
 
-        this.listOfRanks.addActionListener(this);
-        this.numNoPenatlies.addActionListener(this);
-        this.euwHasEune.addActionListener(this);
-        this.deletePenalties.addActionListener(this);
-
         content.add(insertButtonPublication);
         content.add(insertButtonCustomer);
         content.add(insertButtonDocket);
@@ -222,7 +196,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         content.add(detailsPanel);
         content.add(dbContentsPanel);
 
-        setSize(982, 645);
+        setSize(982, 400);
         setVisible(true);
 
 
@@ -341,11 +315,12 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             label.setText("Pub ID:");
             label1.setText("Area ID:");
             label2.setText("Customer ID:");
+            label3.setText("Docket ID:");
             label2.setVisible(true);
-            label3.setVisible(false);
+            label3.setVisible(true);
             text2.setVisible(true);
             label4.setVisible(false);
-            text3.setVisible(false);
+            text3.setVisible(true);
             text4.setVisible(false);
             deleteButtonDocket.setVisible(true);
             deleteButtonArea.setVisible(false);
@@ -385,7 +360,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         if (target == deleteButtonPublication) {
 
             try {
-                Publication pub = new Publication(text.getText(),"Deleted", 11.12);
+                Publication pub = new Publication(text.getText(), "Deleted", 11.12);
                 // Insert Publication into the database
                 boolean insertResult = mysql.delete(pub);
                 if (insertResult == true)
@@ -406,7 +381,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
             try {
                 int id = Integer.parseInt(text2.getText());
-                DeliveryArea da = new DeliveryArea(id,"Deleted", 120);
+                DeliveryArea da = new DeliveryArea(id, "Deleted", 120);
                 // Delete Area
                 boolean insertResult = mysql.deleteDeliveryArea(da);
                 if (insertResult == true)
@@ -424,14 +399,14 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
         if (target == deleteButtonDocket) {
 
             try {
-                int id = Integer.parseInt(text.getText());
+                int id = Integer.parseInt(text3.getText());
                 DeliveryDocket doc = new DeliveryDocket(id, id, id, id);
                 // Delete Area
                 boolean insertResult = mysql.deleteDeliveryDocket(doc);
                 if (insertResult == true)
-                    System.out.println("Area Deleted");
+                    System.out.println("Docket Deleted");
                 else
-                    System.out.println("Failed: Area not deleted");
+                    System.out.println("Failed: Docket not deleted");
 
             } catch (DeliveryDocketException sqle) {
                 System.err.println("Error with  insert:\n" + sqle.toString());
@@ -510,7 +485,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
             try {
                 double price = Double.parseDouble(text2.getText());
-               Publication pub =  new Publication(text.getText(), text1.getText(), price);
+                Publication pub = new Publication(text.getText(), text1.getText(), price);
                 // Insert Publication Details into the database
                 boolean insertResult = mysql.updatePublication(pub);
                 if (insertResult == true)
@@ -524,119 +499,48 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
                 TableModel.refreshFromDBPublication(stmt);
             }
         }
+        if (target == updateButtonArea) {
 
 
+            try {
+                int id = Integer.parseInt(text2.getText());
+                int size = Integer.parseInt(text1.getText());
+                DeliveryArea da = new DeliveryArea(id, text.getText(), size);
+                // Insert Publication Details into the database
+                boolean insertResult = mysql.updateDeliveryArea(da);
+                if (insertResult == true)
+                    System.out.println("Area Updated");
+                else
+                    System.out.println("Failed: to Update the Area");
 
-
-
-        if(target ==this.listOfRanks)
-
-    {
-
-        cmd = "select distinct currentRank from eune;";
-
-        try {
-            rs = stmt.executeQuery(cmd);
-            writeToFile(rs);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-
-    }
-
-//        if(target ==exportButton)
-//
-//    {
-//
-//        cmd = "select * from eune;";
-//
-//        try {
-//            rs = stmt.executeQuery(cmd);
-//            writeToFile(rs);
-//        } catch (Exception e1) {
-//            e1.printStackTrace();
-//        }
-//
-//    }
-
-        if(target ==this.euwHasEune)
-
-    {
-
-        cmd = "select distinct euw.userName, euw.currentRank\r\n" + "from euw\r\n" + "inner join eune\r\n"
-                + "on euw.uniqueAccountIdeune=eune.uniqueAccountId;";
-
-        try {
-            rs = stmt.executeQuery(cmd);
-            writeToFile(rs);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-
-    }
-
-        if(target ==this.numNoPenatlies)
-
-    {
-        String deptName = this.noPenTxt.getText();
-
-        cmd = "select * " + "from eune " + "where hasAnyPenalties = " + deptName + ";";
-
-        System.out.println(cmd);
-        try {
-            rs = stmt.executeQuery(cmd);
-            writeToFile(rs);
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-
-    }
-        if(target ==this.deletePenalties)
-
-    {
-
-        String deptName = this.deletePenTxt.getText();
-
-        cmd = "delete from eune where hasAnyPenalties = " + deptName + ";";
-
-        System.out.println(cmd);
-        try {
-            stmt.executeUpdate(cmd);
-            rs = stmt.executeQuery("select * from removed;");
-            writeToFile(rs);
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-
-    }
-
-}
-    ///////////////////////////////////////////////////////////////////////////
-
-    private void writeToFile(ResultSet rs) {
-        try {
-            System.out.println("In writeToFile");
-            FileWriter outputFile = new FileWriter("output.csv");
-            PrintWriter printWriter = new PrintWriter(outputFile);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int numColumns = rsmd.getColumnCount();
-
-            for (int i = 0; i < numColumns; i++) {
-                printWriter.print(rsmd.getColumnLabel(i + 1) + ",");
+            } catch (DeliveryAreaException sqle) {
+                System.err.println("Error with  insert:\n" + sqle.toString());
+            } finally {
+                TableModel.refreshFromDBDeliveryArea(stmt);
             }
-            printWriter.print("\n");
-            while (rs.next()) {
-                for (int i = 0; i < numColumns; i++) {
-                    printWriter.print(rs.getString(i + 1) + ",");
-                }
-                printWriter.print("\n");
-                printWriter.flush();
-            }
-            printWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        if (target == updateButtonDoc) {
+
+
+            try {
+                int id = Integer.parseInt(text3.getText());
+                int idp = Integer.parseInt(text.getText());
+                int idc = Integer.parseInt(text2.getText());
+                int ida = Integer.parseInt(text1.getText());
+                DeliveryDocket da = new DeliveryDocket(id, idp, ida, idc);
+                // Insert Publication Details into the database
+                boolean insertResult = mysql.updateDeliveryDocket(da);
+                if (insertResult == true)
+                    System.out.println("Docket Updated");
+                else
+                    System.out.println("Failed: to Update the Docket");
+
+            } catch (DeliveryDocketException sqle) {
+                System.err.println("Error with  insert:\n" + sqle.toString());
+            } finally {
+                TableModel.refreshFromDBDeliveryDocket(stmt);
+            }
+        }
+
     }
 }
