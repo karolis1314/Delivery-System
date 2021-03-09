@@ -1,4 +1,4 @@
-package test;
+package model;
 
 import exceptions.CustomersException;
 import junit.framework.TestCase;
