@@ -1,8 +1,16 @@
 package controller;
 
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+
+import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
+import model.Customers;
 import model.DeliveryArea;
 import model.DeliveryDocket;
 import model.Publication;
@@ -26,6 +34,7 @@ public class MySQLAccess {
 		}
 
 	}
+
 //Create the connection
 	public boolean connectToTheDatabase() throws PublicationException {
 
@@ -41,6 +50,7 @@ public class MySQLAccess {
 			throw new PublicationException("Connection failed.");
 		}
 	}
+
 //Insert the publication
 	public boolean insertNewPublication(Publication p) throws PublicationException {
 
@@ -119,15 +129,13 @@ public class MySQLAccess {
 		return resultSet;
 	}
 
-
 	public boolean insertNewDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
 		boolean insertSucessfull = true;
 
 		try {
 
-			preparedStatement = connect.prepareStatement(
-					"insert into delivery_areas  values (default , ?, ?);");
+			preparedStatement = connect.prepareStatement("insert into delivery_areas  values (default , ?, ?);");
 			preparedStatement.setString(1, da.getName());
 			preparedStatement.setInt(2, da.getSize());
 			preparedStatement.execute();
@@ -140,14 +148,13 @@ public class MySQLAccess {
 		return insertSucessfull;
 	}
 
-	public boolean updateDeliveryArea (DeliveryArea  da) throws DeliveryAreaException {
+	public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
 		boolean update = true;
 
 		try {
 
-			preparedStatement = connect.prepareStatement(
-					"update delivery_areas set AName= ?, size = ? where id = ? ");
+			preparedStatement = connect.prepareStatement("update delivery_areas set AName= ?, size = ? where id = ? ");
 			preparedStatement.setString(1, da.getName());
 			preparedStatement.setInt(2, da.getSize());
 			preparedStatement.setInt(3, da.getAreaId());
@@ -278,6 +285,69 @@ public class MySQLAccess {
 
 		}
 
+	}
+
+	// Customers DBAO
+	public boolean insertCustomerInfo(Customers cus) throws CustomersException {
+		boolean insertSucessfull = true;
+		try {
+			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?)");
+			preparedStatement.setInt(1, cus.getId());
+			preparedStatement.setString(2, cus.getAddress());
+			preparedStatement.setString(3, cus.getfName());
+			preparedStatement.setString(4, cus.getlName());
+			preparedStatement.setString(5, cus.getNumber());
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			insertSucessfull = false;
+            throw new CustomersException("Customer not inserted");
+		}
+		return insertSucessfull;
+	}
+
+	public boolean deleteCustomerById(Customers cus) throws CustomersException {
+        boolean deleteSuccessful = true;
+
+        try {
+            preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMER WHERE CUSTOMER_ID = ?");
+            preparedStatement.setInt(1, cus.getId());
+            preparedStatement.execute();
+
+        } catch (Exception exception) {
+            deleteSuccessful = false;
+            throw new CustomersException("Customer not deleted");
+        }
+
+        return deleteSuccessful;
+	}
+
+	public ResultSet displayCustomers() throws CustomersException {
+		try {
+            statement = connect.createStatement();
+			resultSet = statement.executeQuery("SELECT * FROM CUSTOMERS");
+		} catch (Exception e) {
+			resultSet = null;
+			throw new CustomersException("Cant get all customers");
+		}
+		return resultSet;
+	}
+
+	public boolean updateCustomerDetails(Customers cus) throws CustomersException {
+		boolean updateSuccesful = false;
+		try {
+            preparedStatement = connect.prepareStatement(
+                    "UPDATE CUSTOMRES SET ADDRESS = ?, FIRSTNAME = ?, LASTNAME = ?, MOBILENUMBER = ?  WHERE deliveryDocketID = ? ");
+            preparedStatement.setString(1, cus.getAddress());
+            preparedStatement.setString(2, cus.getfName());
+            preparedStatement.setString(3, cus.getlName());
+            preparedStatement.setString(4, cus.getNumber());
+            preparedStatement.setInt(5,cus.getId());
+            preparedStatement.execute();
+			updateSuccesful = true;
+		} catch (Exception e) {
+			throw new CustomersException("Customer not Updated");
+		}
+		return updateSuccesful;
 	}
 
 }
