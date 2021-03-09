@@ -32,7 +32,7 @@ public class MySQLAccess {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/newsagent2021";
-			connect = DriverManager.getConnection(url, "root", "admin");
+			connect = DriverManager.getConnection(url, "root", "");
 			statement = connect.createStatement();
 			System.out.println("Connection Made.");
 			return true;
