@@ -1,11 +1,10 @@
 package controller;
 
-import controller.MySQLAccess;
 import exceptions.DeliveryAreaException;
-import exceptions.PublicationException;
 import junit.framework.TestCase;
 import model.DeliveryArea;
 import model.Publication;
+
 
 import java.sql.ResultSet;
 

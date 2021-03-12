@@ -1,6 +1,5 @@
 package model;
 
-import exceptions.PublicationException;
 import exceptions.StaffException;
 import junit.framework.TestCase;
 

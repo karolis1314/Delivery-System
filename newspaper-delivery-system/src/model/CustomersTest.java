@@ -2,7 +2,6 @@ package model;
 
 import exceptions.CustomersException;
 import junit.framework.TestCase;
-import model.Customers;
 
 public class CustomersTest extends TestCase 
 {

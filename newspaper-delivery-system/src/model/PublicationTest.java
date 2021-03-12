@@ -2,7 +2,6 @@ package model;
 
 import exceptions.PublicationException;
 import junit.framework.TestCase;
-import model.Publication;
 
 public class PublicationTest extends TestCase {
 

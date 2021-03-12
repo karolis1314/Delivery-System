@@ -15,6 +15,7 @@ import model.DeliveryArea;
 import model.DeliveryDocket;
 import model.Publication;
 
+
 import java.sql.*;
 
 public class MySQLAccess {
@@ -41,7 +42,7 @@ public class MySQLAccess {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/newsagent2021";
-			connect = DriverManager.getConnection(url, "root", "a00252699");
+			connect = DriverManager.getConnection(url, "root", "admin");
 			statement = connect.createStatement();
 			System.out.println("Connection Made.");
 			return true;

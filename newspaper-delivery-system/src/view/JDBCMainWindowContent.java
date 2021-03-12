@@ -15,8 +15,6 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.sql.*;
 
 @SuppressWarnings("serial")
@@ -239,7 +237,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
             // Specify the DB Name
             String url = "jdbc:mysql://localhost:3306/newsagent2021";
             // Connect to DB using DB URL, Username and password
-            con = DriverManager.getConnection(url, "root", "a00252699");
+            con = DriverManager.getConnection(url, "root", "admin");
             // Create a generic statement which is passed to the TestInternalFrame1
             stmt = con.createStatement();
         } catch (Exception e) {

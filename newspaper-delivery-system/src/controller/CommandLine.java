@@ -1,8 +1,8 @@
 package controller;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.Scanner;
+
 
 import model.Publication;
 

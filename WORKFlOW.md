@@ -49,7 +49,7 @@ props are in order. Pull Requests are designed to encourage and capture this typ
 You can also continue to push to your branch in light of discussion and feedback about your commits. If 
 someone comments that you forgot to do something or if there is a bug in the code, you can fix it in your 
 branch and push up the change. GitHub will show your new commits and any additional feedback you may 
-receive in the unified Pull Request view.
+receive in the unified Pull Request viewD.
 
 ---
 
