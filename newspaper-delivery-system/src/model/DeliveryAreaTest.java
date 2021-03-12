@@ -2,6 +2,7 @@ package model;
 
 import exceptions.DeliveryAreaException;
 import junit.framework.TestCase;
+import model.DeliveryArea;
 
 public class DeliveryAreaTest extends TestCase {
 

@@ -1,8 +1,7 @@
-package test;
+package model;
 
 import exceptions.CustomersException;
 import junit.framework.TestCase;
-import model.Address;
 import model.Customers;
 
 public class CustomersTest extends TestCase 
@@ -343,134 +342,67 @@ public class CustomersTest extends TestCase
 		}	
 	}
 	
-	public void testCustomerAddress001()
-	{
-		try
-		{
-			Address.validateCustomerAddress(1 ,-7, "Bacon St", "Gort", "Galway", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected, invalid address number", e.getMessage());
-		}
-	}
-	public void testCustomerAddress002()
-	{
-		try
-		{
-			Address.validateCustomerAddress(10000, 5, "Ble", "Celbridge", "Kildare", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected, address too short.", e.getMessage());
-		}
-	}
-	public void testCustomerAddress003()
-	{
-		try
-		{
-			Address.validateCustomerAddress(100, 27, "Pryor rd", "Jushhdaloskshinggirdlibereslasd", "Dublin", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected address too long.", e.getMessage());
-		}
-	}
-	public void testCustomerAddress004()
-	{
-		try
-		{
-			Address.validateCustomerAddress(160, 100, "Valley Ct", "Athlone", "W3stmeath", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected: invalid characted detected in input field.", e.getMessage());
-		}
-	}
-	public void testCustomerAddress005()
-	{
-		try
-		{
-			Address.validateCustomerAddress(50, 100, "Valley Ct", "Athlone", "Westmeath", "Ir3land");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected-: Invalid character detected.", e.getMessage());
-		}
-	}
-	public void testCustomerAddress006()
-	{
-		try
-		{
-			boolean res = Address.validateCustomerAddress(4, 18, "Willow park", "Athlone", "Westmeath", "Ireland");
-			assertEquals(true,res);
-		}
-		catch(CustomersException e)
-		{
-			fail("Execptions not expected here.");
-		}
-	}	
-	public void testCustomerAddress007()
-	{
-		try
-		{
-			Address.validateCustomerAddress(0 ,75, "Broad St", "Killucen", "Westmeath", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected, invalid id", e.getMessage());
-		}
-	}
-	public void testCustomerAddress008()
-	{
-		try
-		{
-			Address.validateCustomerAddress(Integer.MIN_VALUE ,25, "Ballymahon rd", "Athlone", "Westmeath", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected, invalid id", e.getMessage());
-		}
-	}
-	public void testCustomerAddress009()
-	{
-		try
-		{
-			Address.validateCustomerAddress(10001 ,50, "Rockbrook", "Monsksland", "Westmeath", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected, invalid id", e.getMessage());
-		}
-	}
-	public void testCustomerAddress010()
-	{
-		try
-		{
-			Address.validateCustomerAddress(Integer.MAX_VALUE ,100, "WIllow Ave", "Athlone", "Westmeath", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected, invalid id", e.getMessage());
-		}
-	}
 	
-	
-	
+//	public void testCustomerAddress001()
+//	{
+//		/* 
+//		 	Object: 
+//		 	Inputs:	
+//		 	Output: 
+//		 	Envmnt: Junit3 
+//		*/
+//		
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}
+//	}
+//	public void testCustomerAddress002()
+//	{
+//		/* 
+//		 	Object: 
+//		 	Inputs:	
+//		 	Output: 
+//		 	Envmnt: Junit3 
+//		*/
+//		
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}
+//	}
+//	public void testCustomerAddress003()
+//	{
+//		/* 
+//		 	Object: 
+//		 	Inputs:	
+//		 	Output: 
+//		 	Envmnt: Junit3 
+//		*/
+//		
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}	
+//	}
+
 	public void testCustomerObject001()
 	{
 		try
 		{
-			new Customers(5, "Ja", "Frost", "083", "4341212");
+			new Customers(5, "Westmeath", "Ja", "Frost", "083", "4341212");
 			fail("Incorrect Details Entered");
 		}
 		catch(CustomersException e)
@@ -482,7 +414,7 @@ public class CustomersTest extends TestCase
 	{
 		try
 		{
-			Customers cus = new Customers(5, "Jack", "Frost", "083", "4456767");
+			Customers cus = new Customers(5, "Parnell", "Jack", "Frost", "083", "4456767");
 			assertEquals(5, cus.getId());
 			assertEquals("Jack", cus.getfName());
 			assertEquals("Frost", cus.getlName());
@@ -494,38 +426,7 @@ public class CustomersTest extends TestCase
 		}
 	}
 	
-	public void testAddress001()
-	{
-		try
-		{
-			new Address(10, 22, "Dub", "Athlone", "Westmeath", "Ireland");
-			fail("Exception expected");
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail expected", e.getMessage());
-		}
-		
-	}
-	public void testAddress002()
-	{
-		try
-		{
-			Address add = new Address(10, 22, "Dub rd", "Athlone", "Westmeath", "Ireland");
-			assertEquals(10, add.getAddress_id());
-			assertEquals(22, add.getNumber());
-			assertEquals("Dub rd", add.getStreet());
-			assertEquals("Athlone",add.getTown());
-			assertEquals("Westmeath", add.getCity());
-			assertEquals("Ireland", add.getCountry());
-			
-		}
-		catch(CustomersException e)
-		{
-			fail("No exception expected");
-		}
-	}
-	
+
 //	public void testDataBase001()
 //	{
 //		

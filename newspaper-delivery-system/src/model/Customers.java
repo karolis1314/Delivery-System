@@ -9,14 +9,15 @@ public class Customers
 	/*
 		The objective of this tests is to verify customer details before they can be added to database
 	*/
-	private int add_id;
-	private String fName,lName,number;
+	private int cus_id;
+	private String fName,lName,number, address;
 
-	public Customers(int add_id, String firstName, String lastName, String prefix, String digits) throws CustomersException
+	public Customers(int cus_id, String add, String firstName, String lastName, String prefix, String digits) throws CustomersException
 	{
 		try
 		{
-			validateCustomerId(add_id);
+			validateCustomerId(cus_id);
+			validateCustomerAddress(add);
 			validateCustomerName(firstName, lastName);
 			validateCustomerNumber(prefix, digits);
 		}
@@ -28,7 +29,8 @@ public class Customers
 		}
 		finally 
 		{
-			this.add_id=add_id;
+			this.cus_id=cus_id;
+			address=add;
 			fName=firstName; lName=lastName;
 			number = prefix+digits;
 		}
@@ -36,7 +38,7 @@ public class Customers
 	
 	public int getId() 
 	{
-		return add_id;
+		return cus_id;
 	}
 	public String getfName() 
 	{
@@ -50,6 +52,11 @@ public class Customers
 	public String getNumber()
 	{
 		return number;
+	}
+	
+	public String getAddress()
+	{
+		return address;
 	}
 	
 	public static boolean validateCustomerName(String firstName, String lastName) throws CustomersException
@@ -132,6 +139,22 @@ public class Customers
 				throw new CustomersException("Invalid or unknown network provider.");		
 		}
 		return res;
+	}
+	
+	public static boolean validateCustomerAddress(String address) throws CustomersException
+	{
+		if(address.length()<0)
+		{
+			throw new CustomersException("Address too short");
+		}
+		else if(address.length()>30)
+		{
+			throw new CustomersException("Address too long");
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
 
