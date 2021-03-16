@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import exceptions.PublicationException;
 import model.Customers;
+import model.Publication;
 
 public class QueryTableModel 
 {
@@ -52,6 +55,61 @@ public class QueryTableModel
 		return success;
 	}
 	
+	//Insert the publication
+	public boolean insertNewPublication(Publication p) throws PublicationException 
+	{
+		boolean insertSucessfull = true;
+		try
+		{
+			pstmt = con.prepareStatement("insert into publication (publication_order_id, publicationName, price_in_€)" + "values (?, ?, ?)");
+			pstmt.setString(1, p.getOrder_id());
+			pstmt.setString(2, p.getName());
+			pstmt.setDouble(3, p.getPrice());
+			pstmt.execute();
+		} 
+		catch (Exception e) 
+		{
+			insertSucessfull = false;
+			throw new PublicationException("Publication is not added.");
+		}
+		return insertSucessfull;
+	}
+	public boolean updatePublication(Publication p) throws PublicationException 
+	{
+		boolean update = true;
+		try 
+		{
+			pstmt = con.prepareStatement("update publication set publicationName= ?, price_in_ï¿½ = ? where publication_order_id = ? ");
+			pstmt.setString(1, p.getName());
+			pstmt.setDouble(2, p.getPrice());
+			pstmt.setString(3, p.getOrder_id());
+			pstmt.execute();
+		} 
+		catch (Exception e) 
+		{
+			update = false;
+			throw new PublicationException("Publication is not updated.");
+		}
+		return update;
+	}
+	public boolean delete(Publication p) throws PublicationException 
+	{
+		boolean delete = true;
+		try 
+		{
+			pstmt = con.prepareStatement("delete from publication where publication_order_id= ?");
+			pstmt.setString(1, p.getOrder_id());
+			pstmt.execute();
+		} 
+		catch (Exception e) 
+		{
+			delete = false;
+			throw new PublicationException("Publication is not deleted.");
+		}
+		return delete;
+	}
+	
+	//Customer Accesss
 	public boolean insertCustomerInfo(Customers cus) 
 	{
 		boolean insertSucessfull = true;	

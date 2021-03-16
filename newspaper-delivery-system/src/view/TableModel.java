@@ -44,13 +44,13 @@ class TableModel extends AbstractTableModel
 		return ((String[])modelData.elementAt(row))[col];
 	}
 
-	public void RefreshDatabase(String cmd, Statement stmt1)
+	public void RefreshDatabase(ResultSet r)
 	{
 		modelData = new Vector<String[]>();
-		command = cmd;stmt = stmt1;
+		rs = r;
+		
 		try
 		{
-			rs = stmt.executeQuery(command);
 			ResultSetMetaData meta = rs.getMetaData();
 
 			colCount = meta.getColumnCount(); 
@@ -74,7 +74,7 @@ class TableModel extends AbstractTableModel
 		}
 		catch(Exception e) 
 		{
-			System.out.println("Error with refreshFromDB: " + e.getMessage());
+			System.out.println("Error with RefreshDatabase: " + e.getMessage());
 		} 
 	}
 }

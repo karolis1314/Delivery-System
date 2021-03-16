@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -154,8 +155,38 @@ class NewsagentInterface extends JFrame
 		ResultSet rs = qtm.displayCustomers();
 		tm.RefreshDatabase(rs);
 		
+		for(int i=0; i<table.getRowCount(); i++)
+		{
+			table.setRowHeight(i, 20);
+		}
+		
+		table.getTableHeader().setPreferredSize(new Dimension(1, 25));
+		table.getTableHeader().setBackground(Color.CYAN);
+		
 		pnCus.add(sp);
 		return pnCus;
+	}
+	
+	JPanel Publications()
+	{
+		JPanel pnPub = new JPanel(null);
+		
+		JScrollPane sp  = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sp.setBounds(10, 10, 460, 300);
+		
+		ResultSet rs = qtm.displayCustomers();
+		tm.RefreshDatabase(rs);
+		
+		for(int i=0; i<table.getRowCount(); i++)
+		{
+			table.setRowHeight(i, 20);
+		}
+		
+		table.getTableHeader().setPreferredSize(new Dimension(1, 25));
+		table.getTableHeader().setBackground(Color.CYAN);
+		
+		pnPub.add(sp);
+		return pnPub;
 	}
 	
 	void nimbus()
