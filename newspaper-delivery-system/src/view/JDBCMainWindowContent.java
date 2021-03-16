@@ -181,11 +181,11 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
     public void initiate_db_conn() {
         try {
             // Load the JConnector Driver
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             // Specify the DB Name
-            String url = "jdbc:mysql://localhost:3306/newsagent2021";
+            String url = "jdbc:mysql://localhost:6969/customers";
             // Connect to DB using DB URL, Username and password
-            con = DriverManager.getConnection(url, "root", "a00252699");
+            con = DriverManager.getConnection(url, "root", "#Lekoso00");
             // Create a generic statement which is passed to the TestInternalFrame1
             stmt = con.createStatement();
         } catch (Exception e) {

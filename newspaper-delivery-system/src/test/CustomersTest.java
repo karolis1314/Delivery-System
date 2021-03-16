@@ -343,60 +343,79 @@ public class CustomersTest extends TestCase
 	}
 	
 	
-//	public void testCustomerAddress001()
-//	{
-//		/* 
-//		 	Object: 
-//		 	Inputs:	
-//		 	Output: 
-//		 	Envmnt: Junit3 
-//		*/
-//		
-//		try
-//		{
-//			
-//		}
-//		catch(CustomersException e)
-//		{
-//			
-//		}
-//	}
-//	public void testCustomerAddress002()
-//	{
-//		/* 
-//		 	Object: 
-//		 	Inputs:	
-//		 	Output: 
-//		 	Envmnt: Junit3 
-//		*/
-//		
-//		try
-//		{
-//			
-//		}
-//		catch(CustomersException e)
-//		{
-//			
-//		}
-//	}
-//	public void testCustomerAddress003()
-//	{
-//		/* 
-//		 	Object: 
-//		 	Inputs:	
-//		 	Output: 
-//		 	Envmnt: Junit3 
-//		*/
-//		
-//		try
-//		{
-//			
-//		}
-//		catch(CustomersException e)
-//		{
-//			
-//		}	
-//	}
+	public void testCustomerAddress001()
+	{
+		/* 
+		 	Object: 
+		 	Inputs:	
+		 	Output: 
+		 	Envmnt: Junit3 
+		*/
+		try
+		{
+			Customers.validateCustomerAddress("Leo");
+			fail("Exception Expected");
+		}
+		catch(CustomersException e)
+		{
+			assertEquals("Address length less than 4", e.getMessage());
+		}
+	}
+	public void testCustomerAddress002()
+	{
+		/* 
+		 	Object: 
+		 	Inputs:	
+		 	Output: 
+		 	Envmnt: Junit3 
+		*/
+		try
+		{
+			Customers.validateCustomerAddress("Absolutelymagesterialfromthelittlechombo");
+			fail("Exception Expected");
+		}
+		catch(CustomersException e)
+		{
+			assertEquals("Address length greather than 30", e.getMessage());
+		}
+	}
+	public void testCustomerAddress003()
+	{
+		/* 
+		 	Object: 
+		 	Inputs:	
+		 	Output: 
+		 	Envmnt: Junit3 
+		*/
+		try
+		{
+			Customers.validateCustomerAddress("Wil;ow");
+			fail("Exception Expected");
+		}
+		catch(CustomersException e)
+		{
+			assertEquals("Address contains invalid character", e.getMessage());
+		}	
+	}
+	
+	public void testCustomerAddress004()
+	{
+		/* 
+		 	Object: 
+		 	Inputs:	
+		 	Output: 
+		 	Envmnt: Junit3 
+		*/
+		try
+		{
+			boolean res = Customers.validateCustomerAddress("Willow");
+			assertEquals(res, true);
+		}
+		catch(CustomersException e)
+		{
+			fail("Exceptions not expected");
+		}	
+	}
 
 	public void testCustomerObject001()
 	{

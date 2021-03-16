@@ -143,7 +143,7 @@ public class Customers
 	
 	public static boolean validateCustomerAddress(String address) throws CustomersException
 	{
-		if(address.length()<0)
+		if(address.length()<4)
 		{
 			throw new CustomersException("Address too short");
 		}
