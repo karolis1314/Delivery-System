@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.ResultSet;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,12 +24,15 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import controller.QueryTableModel;
+
 @SuppressWarnings("serial")
 class NewsagentInterface extends JFrame
 {
 	private JButton btnLogin;
 	private JTextField txtUserName, txtUserPass;
 	
+	private QueryTableModel qtm = new QueryTableModel();
 	private TableModel tm = new TableModel();
 	private JTable table = new JTable(tm);
 	
@@ -43,10 +47,12 @@ class NewsagentInterface extends JFrame
 		ct = getContentPane();
 		ct.setBackground(Color.BLACK);
 		
-		setLayout(cl);
 		
-		ct.add(LoginPanel());	
+		setLayout(cl);
 	
+		ct.add(LoginPanel());
+		ct.add(MainMenu());
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 500);
 		setVisible(true);
@@ -107,7 +113,6 @@ class NewsagentInterface extends JFrame
 				if(e.getSource()==btnLogin)
 					if(txtUserName.getText().equals("root") && txtUserPass.getText().toString().equals("1234"))
 					{
-						qtm.
 						cl.next(ct);
 					}
 			}
@@ -123,11 +128,11 @@ class NewsagentInterface extends JFrame
 	JPanel MainMenu()
 	{
 		JPanel menuPanel = new JPanel(new BorderLayout());
-	
+		qtm.openConnection();
+		
 		JPanel pnPub = new JPanel();
 		JPanel pnArea = new JPanel();
 		JPanel pnDocket = new JPanel();
-		
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab("Customers", Customers());
@@ -146,6 +151,8 @@ class NewsagentInterface extends JFrame
 		JScrollPane sp  = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		sp.setBounds(10, 10, 460, 300);
 		
+		ResultSet rs = qtm.displayCustomers();
+		tm.RefreshDatabase(rs);
 		
 		pnCus.add(sp);
 		return pnCus;
