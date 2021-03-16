@@ -1,4 +1,4 @@
-package test;
+package model;
 
 import exceptions.PublicationException;
 import junit.framework.TestCase;

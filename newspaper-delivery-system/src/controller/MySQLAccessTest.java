@@ -1,10 +1,9 @@
 package controller;
 
-import controller.MySQLAccess;
 import exceptions.DeliveryAreaException;
-import exceptions.PublicationException;
 import junit.framework.TestCase;
 import model.DeliveryArea;
+import model.DeliveryDocket;
 import model.Publication;
 
 import java.sql.ResultSet;
@@ -204,10 +203,6 @@ public class MySQLAccessTest extends TestCase {
 		}
 	}
 
-
-
-
-
 	public void testDeleteAreaDelivery001(){
 		try {
 			MySQLAccess testObj = new MySQLAccess();
@@ -219,4 +214,65 @@ public class MySQLAccessTest extends TestCase {
 			fail();
 		}
 		}
+
+	public void testInsertDeliveryDocket001() {
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryDocket testObjDel = new DeliveryDocket(1, 1, 1);
+			assertEquals(true, testObj.insertDeliveryDocket(testObjDel));
+		} catch (Exception exception) {
+			fail();
+		}
+	}
+
+	public void testInsertDeliveryDocket002() {
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			testObj.insertDeliveryDocket(null);
+			fail();
+		} catch (Exception exception) {
+			assertEquals("Delivery Docket not added", exception.getMessage());
+		}
+	}
+
+	public void testUpdateDeliveryDocket001() {
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryDocket testObjDel = new DeliveryDocket(1, 1, 1);
+			assertEquals(true, testObj.updateDeliveryDocket(testObjDel));
+		} catch (Exception exception) {
+			fail();
+		}
+	}
+
+	public void testUpdateDeliveryDocket002() {
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryDocket testObjDel = new DeliveryDocket(0, 0, 0);
+			testObj.updateDeliveryDocket(testObjDel);
+		} catch (Exception exception) {
+			assertEquals("Invalid Delivery Docket object", exception.getMessage());
+		}
+	}
+
+	public void testDeleteDeliveryDocket001() {
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryDocket testObjDel = new DeliveryDocket(1, 1, 1);
+			assertEquals(true, testObj.deleteDeliveryDocket(testObjDel));
+		} catch (Exception exception) {
+			fail();
+
+		}
+	}
+
+	public void testDeleteDeliveryDocket002() {
+		try {
+			MySQLAccess testObj = new MySQLAccess();
+			DeliveryDocket testObjDel = new DeliveryDocket(0, 0, 0);
+			testObj.deleteDeliveryDocket(testObjDel);
+		} catch (Exception exception) {
+			assertEquals("Invalid Delivery Docket object", exception.getMessage());
+		}
+	}
 }

@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+
+import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
@@ -39,7 +41,7 @@ public class MySQLAccess {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/newsagent2021";
-			connect = DriverManager.getConnection(url, "root", "admin");
+			connect = DriverManager.getConnection(url, "root", "");
 			statement = connect.createStatement();
 			System.out.println("Connection Made.");
 			return true;
@@ -286,7 +288,7 @@ public class MySQLAccess {
 	}
 
 	// Customers DBAO
-	public boolean insertCustomerInfo(Customers cus) {
+	public boolean insertCustomerInfo(Customers cus) throws CustomersException {
 		boolean insertSucessfull = true;
 		try {
 			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?)");
@@ -298,45 +300,52 @@ public class MySQLAccess {
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			insertSucessfull = false;
-			System.out.println("Failed to insert: " + e.getMessage());
+            throw new CustomersException("Customer not inserted");
 		}
 		return insertSucessfull;
 	}
 
-	public boolean deleteCustomerById(int cus_id) {
-		boolean deleteSucessfull = true;
-		try {
-			if (cus_id == -99)
-				preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS");
-			else
-				preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS WHERE CUSTOMER_ID=" + cus_id);
-			preparedStatement.executeUpdate();
-		} catch (Exception e) {
-			deleteSucessfull = false;
-		}
-		return deleteSucessfull;
+	public boolean deleteCustomerById(Customers cus) throws CustomersException {
+        boolean deleteSuccessful = true;
+
+        try {
+            preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMER WHERE CUSTOMER_ID = ?");
+            preparedStatement.setInt(1, cus.getId());
+            preparedStatement.execute();
+
+        } catch (Exception exception) {
+            deleteSuccessful = false;
+            throw new CustomersException("Customer not deleted");
+        }
+
+        return deleteSuccessful;
 	}
 
-	public ResultSet displayCustomers() {
+	public ResultSet displayCustomers() throws CustomersException {
 		try {
+            statement = connect.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM CUSTOMERS");
 		} catch (Exception e) {
 			resultSet = null;
+			throw new CustomersException("Cant get all customers");
 		}
 		return resultSet;
 	}
 
-	public boolean updateCustomerDetails(String add, String fn, String ln, String num, int id) {
+	public boolean updateCustomerDetails(Customers cus) throws CustomersException {
 		boolean updateSuccesful = false;
 		try {
-			String cmd = "update customers set" + " address='" + add + "', firstName= '" + fn + "', lastName= '" + ln
-					+ "', mobileNumber= '" + num + "' where customer_id=" + id;
-
-			statement.executeUpdate(cmd);
+            preparedStatement = connect.prepareStatement(
+                    "UPDATE CUSTOMRES SET ADDRESS = ?, FIRSTNAME = ?, LASTNAME = ?, MOBILENUMBER = ?  WHERE deliveryDocketID = ? ");
+            preparedStatement.setString(1, cus.getAddress());
+            preparedStatement.setString(2, cus.getfName());
+            preparedStatement.setString(3, cus.getlName());
+            preparedStatement.setString(4, cus.getNumber());
+            preparedStatement.setInt(5,cus.getId());
+            preparedStatement.execute();
 			updateSuccesful = true;
 		} catch (Exception e) {
-			updateSuccesful = false;
-			System.out.println("Failed to update: " + e.getMessage());
+			throw new CustomersException("Customer not Updated");
 		}
 		return updateSuccesful;
 	}
