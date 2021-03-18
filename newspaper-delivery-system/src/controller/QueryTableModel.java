@@ -66,7 +66,7 @@ public class QueryTableModel
 		boolean insertSucessfull = true;
 		try
 		{
-			pstmt = con.prepareStatement("insert into publication (publication_order_id, publicationName, price_in_€)" + "values (?, ?, ?)");
+			pstmt = con.prepareStatement("insert into publication (publication_order_id, publicationName, price_in_euro)" + "values (?, ?, ?)");
 			pstmt.setString(1, p.getOrder_id());
 			pstmt.setString(2, p.getName());
 			pstmt.setDouble(3, p.getPrice());
@@ -75,7 +75,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			insertSucessfull = false;
-			throw new PublicationException("Publication is not added.");
+			throw new PublicationException(e.getMessage());
 		}
 		return insertSucessfull;
 	}
@@ -93,7 +93,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			update = false;
-			throw new PublicationException("Publication is not updated.");
+			throw new PublicationException(e.getMessage());
 		}
 		return update;
 	}
@@ -109,7 +109,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			delete = false;
-			throw new PublicationException("Publication is not deleted.");
+			throw new PublicationException(e.getMessage());
 		}
 		return delete;
 	}
@@ -122,7 +122,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			rs = null;
-			throw new PublicationException("Date is not retrieved.");
+			throw new PublicationException(e.getMessage());
 		}
 		return rs;
 	}
@@ -135,15 +135,16 @@ public class QueryTableModel
 		{
 			pstmt = con.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?)");
 			pstmt.setInt(1, cus.getId());
-			pstmt.setString(2, cus.getfName());
-			pstmt.setString(3, cus.getlName());
-			pstmt.setString(4, cus.getNumber());
+			pstmt.setString(2, cus.getAddress());
+			pstmt.setString(3, cus.getfName());
+			pstmt.setString(4, cus.getlName());
+			pstmt.setString(5, cus.getNumber());
 			pstmt.executeUpdate();
 		}
 		catch (Exception e) 
 		{
 			insertSucessfull = false;
-			throw new CustomersException("Failed to insert customers information into database");
+			throw new CustomersException("Failed to insert customer details: " + e.getMessage());
 		}
 		return insertSucessfull;
 	}
@@ -161,7 +162,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			deleteSucessfull = false;
-			throw new CustomersException("Failed to delete customers information from database");
+			throw new CustomersException("Failed to delete customer details: " + e.getMessage());
 		}
 		return deleteSucessfull;
 	}
@@ -174,7 +175,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			rs = null;
-			throw new CustomersException("Failed to retrieve customers information from database");
+			throw new CustomersException("Failed to display customers: " + e.getMessage());
 		}
 		return rs;
 	}
@@ -192,7 +193,7 @@ public class QueryTableModel
 		catch(Exception e)
 		{
 			updateSuccesful=false;
-			System.out.println("Failed to update: " + e.getMessage());
+			System.out.println("Failed to update customer details: " + e.getMessage());
 		}
 		return updateSuccesful;
 	}
