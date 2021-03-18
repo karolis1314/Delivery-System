@@ -6,12 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
+import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
 import model.Customers;
 import model.DeliveryArea;
+import model.DeliveryDocket;
 import model.Publication;
 
 public class QueryTableModel 
@@ -29,6 +30,7 @@ public class QueryTableModel
 		boolean success = false;
 		try
 		{
+			//Change password, port and sql connector to run on your machine. 
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:6969/newsagent2021";
 			con = DriverManager.getConnection(url, user, password);
@@ -58,7 +60,7 @@ public class QueryTableModel
 		return success;
 	}
 	
-	//Publication access
+	//Publication Access
 	public boolean insertNewPublication(Publication p) throws PublicationException 
 	{
 		boolean insertSucessfull = true;
@@ -131,7 +133,7 @@ public class QueryTableModel
 		boolean insertSucessfull = true;	
 		try
 		{
-			pstmt = con.prepareStatement("INSERT INTO CUSTOMERS VALUES (DEFAULT, ?, ?, ?, ?)");
+			pstmt = con.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?)");
 			pstmt.setInt(1, cus.getId());
 			pstmt.setString(2, cus.getfName());
 			pstmt.setString(3, cus.getlName());
@@ -176,8 +178,26 @@ public class QueryTableModel
 		}
 		return rs;
 	}
+	public boolean updateCustomerDetails(String add, String fn, String ln, String num, int id)
+	{
+		boolean updateSuccesful = false;
+		try
+		{
+			String cmd = "update customers set" + " address='" +add+ "', firstName= '" +fn
+					+ "', lastName= '" +ln+ "', mobileNumber= '" +num+ "' where customer_id=" + id;
+			
+			stmt.executeUpdate(cmd);
+			updateSuccesful=true;
+		}
+		catch(Exception e)
+		{
+			updateSuccesful=false;
+			System.out.println("Failed to update: " + e.getMessage());
+		}
+		return updateSuccesful;
+	}
 	
-	//Delivery Area access
+	//Delivery Area Access
 	public boolean insertNewDeliveryArea(DeliveryArea da) throws DeliveryAreaException
 	{
 		boolean insertSucessfull = true;
@@ -197,7 +217,6 @@ public class QueryTableModel
 		}
 		return insertSucessfull;
 	}
-
 	public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException
 	{
 		boolean update = true;
@@ -226,24 +245,19 @@ public class QueryTableModel
 			pstmt = con.prepareStatement("delete from delivery_areas where id = ?");
 			pstmt.setInt(1, da.getAreaId());
 			pstmt.execute();
-
 		}
 		catch (Exception e)
 		{
 			delete = false;
 			throw new DeliveryAreaException("DeliveryArea is not deleted.");
 		}
-
 		return delete;
-
 	}
-
 	public ResultSet retrieveAllDeliveryArea() throws DeliveryAreaException 
 	{
 		try 
 		{
 			rs = stmt.executeQuery("select * from delivery_areas");
-
 		}
 		catch (Exception e)
 		{
@@ -252,5 +266,58 @@ public class QueryTableModel
 		}
 		return rs;
 	}
+	
+	//Delivery Docket Access
+	public boolean updateDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException 
+	{
+		boolean updateSuccessful = true;
 
+		try 
+		{
+			pstmt = con.prepareStatement(
+					"UPDATE DELIVERY_DOCKETS SET publicationID = ?, deliveryAreaID = ?, customerID = ? WHERE deliveryDocketID = ? ");
+			pstmt.setInt(1, deliveryDocket.getPublicationID());
+			pstmt.setInt(2, deliveryDocket.getDeliveryAreaID());
+			pstmt.setInt(3, deliveryDocket.getCustomerID());
+			pstmt.setInt(4, deliveryDocket.getDeliveryDocketID());
+			pstmt.execute();
+
+		} 
+		catch (Exception exception)
+		{
+			updateSuccessful = false;
+			throw new DeliveryDocketException("Delivery Docket not updated");
+		}
+		return updateSuccessful;
+	}
+	public boolean deleteDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException 
+	{
+		boolean deleteSuccessful = true;
+		try 
+		{
+			pstmt = con.prepareStatement("DELETE FROM DELIVERY_DOCKETS WHERE publicationID = ?");
+			pstmt.setInt(1, deliveryDocket.getDeliveryDocketID());
+			pstmt.execute();
+
+		} 
+		catch (Exception exception)
+		{
+			deleteSuccessful = false;
+			throw new DeliveryDocketException("Delivery Docket not deleted");
+		}
+		return deleteSuccessful;
+	}
+	public ResultSet retrieveAllDeliveryDockets() throws DeliveryDocketException
+	{
+		try 
+		{
+			rs = stmt.executeQuery("SELECT * FROM DELIVERY_DOCKETS");
+		} 
+		catch (Exception exception)
+		{
+			rs = null;
+			throw new DeliveryDocketException("Delivery Dockets not retrieved");
+		}
+		return rs;
+	}
 }
