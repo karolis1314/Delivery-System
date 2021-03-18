@@ -39,6 +39,7 @@ public class QueryTableModel
 		}
 		catch(Exception e)
 		{
+			success=false;
 			System.out.println("Failed to connect: " + e.getMessage());
 		}
 		return success;
@@ -55,6 +56,7 @@ public class QueryTableModel
 		} 
 		catch (SQLException e)
 		{
+			success=false;
 			System.out.println(e.getMessage());
 		}
 		return success;
@@ -179,21 +181,25 @@ public class QueryTableModel
 		}
 		return rs;
 	}
-	public boolean updateCustomerDetails(String add, String fn, String ln, String num, int id)
+	public boolean updateCustomerDetails(String add, String fn, String ln, String num, int id) throws CustomersException
 	{
 		boolean updateSuccesful = false;
 		try
-		{
-			String cmd = "update customers set" + " address='" +add+ "', firstName= '" +fn
-					+ "', lastName= '" +ln+ "', mobileNumber= '" +num+ "' where customer_id=" + id;
+		{			
+			pstmt = con.prepareStatement("UPDATE CUSTOMERS SET ADDRESS=?, FIRSTNAME=?, LASTNAME=?, MOBILENUMBER=? WHERE CUSTOMER_ID = ?");
+			pstmt.setString(1, add);
+			pstmt.setString(2, fn);
+			pstmt.setString(3, ln);
+			pstmt.setString(4, num);
+			pstmt.setInt(5, id);
+			pstmt.executeUpdate();
 			
-			stmt.executeUpdate(cmd);
 			updateSuccesful=true;
 		}
 		catch(Exception e)
 		{
 			updateSuccesful=false;
-			System.out.println("Failed to update customer details: " + e.getMessage());
+			throw new CustomersException("Failed to update customer details: " + e.getMessage());
 		}
 		return updateSuccesful;
 	}
@@ -228,7 +234,6 @@ public class QueryTableModel
 			pstmt.setInt(2, da.getSize());
 			pstmt.setInt(3, da.getAreaId());
 			pstmt.execute();
-
 		} 
 		catch (Exception e) 
 		{
@@ -237,7 +242,6 @@ public class QueryTableModel
 		}
 		return update;
 	}
-
 	public boolean delete(DeliveryArea da) throws DeliveryAreaException 
 	{
 		boolean delete = true;
@@ -269,10 +273,28 @@ public class QueryTableModel
 	}
 	
 	//Delivery Docket Access
+	public boolean insertDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException 
+	{
+		boolean insertSuccessful = true;
+		try 
+		{
+			pstmt = con.prepareStatement(
+					"INSERT INTO DELIVERY_DOCKETS (publicationID, deliveryAreaID, customerID)" + "values (?, ?, ?)");
+			pstmt.setInt(1, deliveryDocket.getPublicationID());
+			pstmt.setInt(2, deliveryDocket.getDeliveryAreaID());
+			pstmt.setInt(3, deliveryDocket.getCustomerID());
+			pstmt.execute();
+		} 
+		catch (Exception e) 
+		{
+			insertSuccessful = false;
+			throw new DeliveryDocketException(e.getMessage());
+		}
+		return insertSuccessful;
+	}
 	public boolean updateDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException 
 	{
 		boolean updateSuccessful = true;
-
 		try 
 		{
 			pstmt = con.prepareStatement(
@@ -284,10 +306,10 @@ public class QueryTableModel
 			pstmt.execute();
 
 		} 
-		catch (Exception exception)
+		catch (Exception e)
 		{
 			updateSuccessful = false;
-			throw new DeliveryDocketException("Delivery Docket not updated");
+			throw new DeliveryDocketException(e.getMessage());
 		}
 		return updateSuccessful;
 	}
@@ -301,10 +323,10 @@ public class QueryTableModel
 			pstmt.execute();
 
 		} 
-		catch (Exception exception)
+		catch (Exception e)
 		{
 			deleteSuccessful = false;
-			throw new DeliveryDocketException("Delivery Docket not deleted");
+			throw new DeliveryDocketException(e.getMessage());
 		}
 		return deleteSuccessful;
 	}
@@ -314,10 +336,10 @@ public class QueryTableModel
 		{
 			rs = stmt.executeQuery("SELECT * FROM DELIVERY_DOCKETS");
 		} 
-		catch (Exception exception)
+		catch (Exception e)
 		{
 			rs = null;
-			throw new DeliveryDocketException("Delivery Dockets not retrieved");
+			throw new DeliveryDocketException(e.getMessage());
 		}
 		return rs;
 	}

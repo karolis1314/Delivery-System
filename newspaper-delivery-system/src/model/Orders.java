@@ -2,7 +2,7 @@ package model;
 
 import exceptions.CustomersException;
 
-public class CustomerSubscription 
+public class Orders 
 {
 	String subscriptionStart;
 	String subscriptionEnd;
@@ -10,7 +10,7 @@ public class CustomerSubscription
 	String dayDelivered;
 	String publication;
 	
-	public CustomerSubscription(String StartDate, String EndDate, String subItem, int limit, String day) throws CustomersException
+	public Orders(String StartDate, String EndDate, String subItem, int limit, String day) throws CustomersException
 	{
 		throw new CustomersException("No Tests Written");
 	}

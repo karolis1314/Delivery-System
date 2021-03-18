@@ -364,9 +364,16 @@ class NewsagentInterface extends JFrame
 		}
 		catch(Exception e)
 		{System.out.println(e.getMessage());}
-
+		
+		JPanel crud = new JPanel(new FlowLayout(0,1,5));
+		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		crud.setBounds(10, 320, 460, 100);
+		crud.setBackground(Color.RED);
+		
+		pnDA.add(crud);
 		return pnDA;
 	}
+	
 	
 	JPanel DeliveryDocket()
 	{
@@ -387,6 +394,12 @@ class NewsagentInterface extends JFrame
 		catch(Exception e)
 		{System.out.println(e.getMessage());}
 		
+		JPanel crud = new JPanel(new FlowLayout(0,1,5));
+		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		crud.setBounds(10, 320, 460, 100);
+		crud.setBackground(Color.RED);
+		
+		pnDD.add(crud);
 		return pnDD;
 	}
 	
