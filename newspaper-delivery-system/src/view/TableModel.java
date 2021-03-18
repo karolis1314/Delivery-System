@@ -14,11 +14,8 @@ class TableModel extends AbstractTableModel
 	private Vector<String[]> modelData; 
 	private int colCount;
 	private String[] headers=new String[0] ;
-	private Connection con;
-	private Statement stmt = null;
 	private String[] record;
 	private ResultSet rs = null;
-	private String command;
 	
 	void QueryTableModel()
 	{
@@ -48,7 +45,6 @@ class TableModel extends AbstractTableModel
 	{
 		modelData = new Vector<String[]>();
 		rs = r;
-		
 		try
 		{
 			ResultSetMetaData meta = rs.getMetaData();
