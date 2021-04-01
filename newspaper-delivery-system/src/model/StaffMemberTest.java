@@ -1,176 +1,231 @@
 package model;
 
+import exceptions.PublicationException;
 import exceptions.StaffException;
 import junit.framework.TestCase;
 
 public class StaffMemberTest extends TestCase {
 
-    // Test #: 1
-    // Test Objective: Creating a new Staff Member.
-    // Inputs: Staff Member = "Karolis, smartGuy", 1, 1
-    // Expected Output: Staff Member Object created."
 
-    public void testStaffMember001(){
-        try{
-            StaffMember testObj = new StaffMember("Karolis","smartGuy", 1, 1);
-            assertEquals("Karolis", testObj.getfName());
-            assertEquals("smartGuy", testObj.getlName());
-            assertEquals(1, testObj.getAreaId());
-            assertEquals(1, testObj.getDocketId());
+//	Test number: 1
+//  Objective: Create Staff Object.
+//  Test type: JUint
+//  Input: (1, "Karolis", "Valatka", "a00252699", 1);
+//  Output: No Faults.
 
-        }catch(StaffException e){
-            fail("Exception is not expected");
-
-        }
-    }
-
-    // Test #: 2
-    // Test Objective: Prevent empty first name.
-    // Inputs: "null"
-    // Expected Output: "Employee name, must be from 1 to 15 characters."
-
-    public void testValidateFirstName001() {
+    public void testStaffMember001() {
         try {
-            StaffMember.validateFirstName("");
-            fail("Expected exception.");
-
+            StaffMember test = new StaffMember(1, "Karolis", "Valatka", "a00252699", 1);
+            assertEquals(1, test.getStaffId());
+            assertEquals("Karolis", test.getfName());
+            assertEquals("Valatka", test.getlName());
+            assertEquals("a00252699", test.getPassword());
+            assertEquals(1, test.getAreaId());
         } catch (StaffException e) {
-            assertEquals("Employee name, must be from 1 to 15 characters.", e.getMessage());
+            fail("Exception not expected.");
         }
     }
 
-    // Test #: 3
-    // Test Objective: Prevent false first name.
-    // Inputs: "Ab"
-    // Expected Output: "Employee name, must be from 3 to 15 characters."
+//	Test number: 2
+//  Objective: Do not create Staff Object.
+//  Test type: JUint
+//  Input: (1, "", "Valatka", "a00252699", 1);
+//  Output: "Not a valid Staff Member."
 
-    public void testValidateFirstName002() {
+    public void testStaffMember002() {
         try {
-            StaffMember.validateFirstName("Ab");
-            fail("Expected exception.");
-
+            StaffMember test = new StaffMember(1, "", "Valatka", "a00252699", 1);
+            fail("Exception expected.");
         } catch (StaffException e) {
-            assertEquals("Employee name, must be from 3 to 15 characters.", e.getMessage());
+            assertEquals("Not a valid Staff Member.", e.getMessage());
         }
     }
-    // Test #: 4
-    // Test Objective: Prevent false first name.
-    // Inputs: "karolis karolis karolis karolis karolis karolis"
-    // Expected Output: "Employee name, must be from 3 to 15 characters."
 
-    public void testValidateFirstName003() {
+//	Test number: 3
+//  Objective: Correct name no errors.
+//  Test type: JUint
+//  Input: "Karolis"
+//  Output: No errors.
+
+    public void testValidateName001() {
         try {
-            StaffMember.validateFirstName("karolis karolis karolis karolis karolis karolis");
-            fail("Expected exception.");
-
+            StaffMember.validateName("Karolis");
         } catch (StaffException e) {
-            assertEquals("Employee name, must be from 3 to 15 characters.", e.getMessage());
+            fail("Exception not expected.");
         }
     }
 
-    // Test #: 5
-    // Test Objective: Prevent false Area Id
-    // Inputs: 0
-    // Expected Output: "Area Id can not equal or be less than 0."
+//	Test number: 4
+//  Objective: Empty name.
+//  Test type: JUint
+//  Input: ""
+//  Output: "Name can not be empty."
+
+    public void testValidateName002() {
+        try {
+            StaffMember.validateName("");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Name can not be empty.", e.getMessage());
+        }
+    }
+//	Test number: 5
+//  Objective: Name larger than 20 characters.
+//  Test type: JUint
+//  Input: "KarolisKarolisKarolisKarolisKarolis"
+//  Output: "Staff name can not be more than 20 characters."
+
+    public void testValidateName003() {
+        try {
+            StaffMember.validateName("KarolisKarolisKarolisKarolisKarolis");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Staff name can not be more than 20 characters.", e.getMessage());
+        }
+    }
+
+//	Test number: 6
+//  Objective:Last Name larger than 20 characters.
+//  Test type: JUint
+//  Input: "KarolisKarolisKarolisKarolisKarolis"
+//  Output: "Staff last name can not be more than 20 characters."
+
+    public void testValidateLastName001() {
+        try {
+            StaffMember.validateLastName("KarolisKarolisKarolisKarolisKarolis");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Staff last name can not be more than 20 characters.", e.getMessage());
+        }
+    }
+
+//	Test number: 7
+//  Objective:Last Name empty.
+//  Test type: JUint
+//  Input: ""
+//  Output: "Last name can not be empty."
+
+    public void testValidateLastName002() {
+        try {
+            StaffMember.validateLastName("");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Last name can not be empty.", e.getMessage());
+        }
+    }
+
+//	Test number: 8
+//  Objective:Valid last name.
+//  Test type: JUint
+//  Input: "Valatka"
+//  Output: No errors.
+
+    public void testValidateLastName003() {
+        try {
+            StaffMember.validateLastName("Valatka");
+        } catch (StaffException e) {
+            fail("Exception not expected.");
+        }
+    }
+
+//	Test number: 9
+//  Objective:Valid Password.
+//  Test type: JUint
+//  Input: "Valatka"
+//  Output: No errors.
+
+    public void testValidatePassword001() {
+        try {
+            StaffMember.validatePassword("Valatka");
+        } catch (StaffException e) {
+            fail("Exception not expected.");
+        }
+    }
+//	Test number: 10
+//  Objective: Empty password.
+//  Test type: JUint
+//  Input: ""
+//  Output: "Password must be between 6 and 20 characters"
+
+    public void testValidatePassword002() {
+        try {
+            StaffMember.validatePassword("");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Password must be between 6 and 20 characters", e.getMessage());
+        }
+    }
+//	Test number: 11
+//  Objective: 5 characters password.
+//  Test type: JUint
+//  Input: "abcde"
+//  Output: "Password must be between 6 and 20 characters"
+
+    public void testValidatePassword003() {
+        try {
+            StaffMember.validatePassword("abcde");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Password must be between 6 and 20 characters", e.getMessage());
+        }
+    }
+//	Test number: 12
+//  Objective: 21 characters password.
+//  Test type: JUint
+//  Input: "KarolisKarolisKarolisKarolisKarolisKarolis"
+//  Output: "Password must be between 6 and 20 characters"
+
+    public void testValidatePassword004() {
+        try {
+            StaffMember.validatePassword("KarolisKarolisKarolisKarolisKarolisKarolis");
+            fail("Exception expected.");
+        } catch (StaffException e) {
+            assertEquals("Password must be between 6 and 20 characters", e.getMessage());
+        }
+    }
+//	Test number: 13
+//  Objective: 0 area id
+//  Test type: JUint
+//  Input: 0
+//  Output: "Area ID can not be 0 or less than 0."
 
     public void testValidateAreaId001() {
         try {
             StaffMember.validateAreaId(0);
-            fail("Expected exception.");
-
+            fail("Exception expected.");
         } catch (StaffException e) {
-            assertEquals("Area Id can not equal or be less than 0.", e.getMessage());
+            assertEquals("Area ID can not be 0 or less than 0.", e.getMessage());
         }
     }
 
-    // Test #: 6
-    // Test Objective: Prevent false Area Id
-    // Inputs: -1
-    // Expected Output: "Area Id can not equal or be less than 0."
+//	Test number: 14
+//  Objective: -1 area id
+//  Test type: JUint
+//  Input: 0
+//  Output: "Area ID can not be 0 or less than 0."
 
     public void testValidateAreaId002() {
         try {
             StaffMember.validateAreaId(-1);
-            fail("Expected exception.");
-
+            fail("Exception expected.");
         } catch (StaffException e) {
-            assertEquals("Area Id can not equal or be less than 0.", e.getMessage());
+            assertEquals("Area ID can not be 0 or less than 0.", e.getMessage());
         }
     }
-    // Test #: 7
-    // Test Objective: Prevent false Area Id
-    // Inputs: 100
-    // Expected Output: "Area Id can not equal or be more than 100."
+
+//	Test number: 15
+//  Objective: Valid area ID.
+//  Test type: JUint
+//  Input: 1
+//  Output: No Errors.
 
     public void testValidateAreaId003() {
         try {
-            StaffMember.validateAreaId(100);
-            fail("Expected exception.");
-
+            StaffMember.validateAreaId(1);
         } catch (StaffException e) {
-            assertEquals("Area Id can not equal or be more than 100.", e.getMessage());
+            fail("Exception not expected.");
         }
     }
-    // Test #: 8
-    // Test Objective: Prevent false Area Id
-    // Inputs: 101
-    // Expected Output: "Area Id can not equal or be more than 100."
-
-    public void testValidateAreaId004() {
-        try {
-            StaffMember.validateAreaId(101);
-            fail("Expected exception.");
-
-        } catch (StaffException e) {
-            assertEquals("Area Id can not equal or be more than 100.", e.getMessage());
-        }
-    }
-
-    // Test #: 9
-    // Test Objective: Prevent empty last name.
-    // Inputs: ""
-    // Expected Output: "Employee last name, must be from 1 to 15 characters."
-
-    public void testValidateLastName001() {
-        try {
-            StaffMember.validateLastName("");
-            fail("Expected exception.");
-
-        } catch (StaffException e) {
-            assertEquals("Employee last name, must be from 1 to 15 characters.", e.getMessage());
-        }
-    }
-    // Test #: 10
-    // Test Objective: Prevent empty last name.
-    // Inputs: "Ab"
-    // Expected Output: "Employee last name, must be from 3 to 15 characters."
-
-    public void testValidateLastName002() {
-        try {
-            StaffMember.validateLastName("Ab");
-            fail("Expected exception.");
-
-        } catch (StaffException e) {
-            assertEquals("Employee last name, must be from 3 to 15 characters.", e.getMessage());
-        }
-    }
-    // Test #: 11
-    // Test Objective: Prevent empty last name.
-    // Inputs: "karolis karolis karolis karolis karolis karolis karolis"
-    // Expected Output: "Employee last name, must be from 3 to 15 characters."
-
-    public void testValidateLastName003() {
-        try {
-            StaffMember.validateLastName("karolis karolis karolis karolis karolis karolis karolis");
-            fail("Expected exception.");
-
-        } catch (StaffException e) {
-            assertEquals("Employee last name, must be from 3 to 15 characters.", e.getMessage());
-        }
-    }
-
-
-
 
 
 }
