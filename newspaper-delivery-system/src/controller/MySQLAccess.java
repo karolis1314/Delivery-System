@@ -6,14 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-import exceptions.CustomersException;
-import exceptions.DeliveryAreaException;
-import exceptions.DeliveryDocketException;
-import exceptions.PublicationException;
-import model.Customers;
-import model.DeliveryArea;
-import model.DeliveryDocket;
-import model.Publication;
+import exceptions.*;
+import model.*;
 
 
 import java.sql.*;
@@ -52,6 +46,7 @@ public class MySQLAccess {
 		}
 	}
 
+
 	//Insert the publication
 	public boolean insertNewPublication(Publication p) throws PublicationException {
 
@@ -60,10 +55,11 @@ public class MySQLAccess {
 		try {
 
 			preparedStatement = connect.prepareStatement(
-					"insert into publication (publication_order_id, publicationName, price_in_euro)" + "values (?, ?, ?)");
-			preparedStatement.setString(1, p.getOrder_id());
+					"insert into publication (frequencyInDays, publicationName, priceInEuro, stock)" + "values (?, ?, ?, ?)");
+			preparedStatement.setString(1, p.getFrequencyInDays());
 			preparedStatement.setString(2, p.getName());
 			preparedStatement.setDouble(3, p.getPrice());
+			preparedStatement.setInt(4, p.getStock());
 			preparedStatement.execute();
 
 		} catch (Exception e) {
@@ -75,6 +71,53 @@ public class MySQLAccess {
 		return insertSucessfull;
 
 	}
+	//Insert Staff
+	public boolean insertNewStaff(StaffMember s) throws StaffException {
+
+		boolean insertSucessfull = true;
+
+		try {
+
+			preparedStatement = connect.prepareStatement(
+					"insert into STAFF_MEMBER (firstName, lastName, staffPassword, areaID)" + "values (?, ?, ?, ?)");
+			preparedStatement.setString(1, s.getfName());
+			preparedStatement.setString(2, s.getlName());
+			preparedStatement.setString(3, s.getPassword());
+			preparedStatement.setInt(4, s.getAreaId());
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			insertSucessfull = false;
+			throw new StaffException("Staff member is not added.");
+
+		}
+
+		return insertSucessfull;
+
+	}
+	public boolean updateStaff(StaffMember s) throws StaffException {
+
+		boolean update = true;
+
+		try {
+
+			preparedStatement = connect.prepareStatement(
+					"update STAFF_MEMBER set firstName= ?, lastName = ?, staffPassword = ?, areaID = ? where staffID = ? ");
+			preparedStatement.setString(1, s.getfName());
+			preparedStatement.setString(2, s.getlName());
+			preparedStatement.setString(3, s.getPassword());
+			preparedStatement.setInt(4, s.getAreaId());
+			preparedStatement.setInt(5, s.getStaffId());
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			update = false;
+			throw new StaffException("Staff is not updated.");
+		}
+
+		return update;
+
+	}
 
 	public boolean updatePublication(Publication p) throws PublicationException {
 
@@ -83,10 +126,12 @@ public class MySQLAccess {
 		try {
 
 			preparedStatement = connect.prepareStatement(
-					"update publication set publicationName= ?, price_in_euro = ? where publication_order_id = ? ");
-			preparedStatement.setString(1, p.getName());
-			preparedStatement.setDouble(2, p.getPrice());
-			preparedStatement.setString(3, p.getOrder_id());
+					"update publication set frequencyInDays= ?, publicationName= ?, priceInEuro = ?, stock = ? where id = ? ");
+			preparedStatement.setString(1, p.getFrequencyInDays());
+			preparedStatement.setString(2, p.getName());
+			preparedStatement.setDouble(3, p.getPrice());
+			preparedStatement.setInt(4, p.getStock());
+			preparedStatement.setInt(5, p.getId());
 			preparedStatement.execute();
 
 		} catch (Exception e) {
@@ -98,19 +143,37 @@ public class MySQLAccess {
 
 	}
 
-	public boolean delete(Publication p) throws PublicationException {
+	public boolean deletePublication(Publication p) throws PublicationException {
 
 		boolean delete = true;
 
 		try {
 
-			preparedStatement = connect.prepareStatement("delete from publication where publication_order_id= ?");
-			preparedStatement.setString(1, p.getOrder_id());
+			preparedStatement = connect.prepareStatement("delete from publication where id= ?");
+			preparedStatement.setInt(1, p.getId());
 			preparedStatement.execute();
 
 		} catch (Exception e) {
 			delete = false;
 			throw new PublicationException("Publication is not deleted.");
+		}
+
+		return delete;
+
+	}
+	public boolean deleteStaff(StaffMember s) throws StaffException {
+
+		boolean delete = true;
+
+		try {
+
+			preparedStatement = connect.prepareStatement("delete from STAFF_MEMBER where staffID= ?");
+			preparedStatement.setInt(1, s.getStaffId());
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			delete = false;
+			throw new StaffException("Staff is not deleted.");
 		}
 
 		return delete;
@@ -125,10 +188,24 @@ public class MySQLAccess {
 
 		} catch (Exception e) {
 			resultSet = null;
-			throw new PublicationException("Date is not retrieved.");
+			throw new PublicationException("Publication is not retrieved.");
 		}
 		return resultSet;
 	}
+
+	public ResultSet retrieveAllStaff() throws StaffException {
+
+		try {
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from STAFF_MEMBER");
+
+		} catch (Exception e) {
+			resultSet = null;
+			throw new StaffException("Staff is not retrieved.");
+		}
+		return resultSet;
+	}
+
 
 	public boolean insertNewDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
