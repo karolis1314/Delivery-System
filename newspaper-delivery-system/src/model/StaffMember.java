@@ -4,63 +4,103 @@ package model;
 import exceptions.StaffException;
 
 public class StaffMember {
+    private int staffId;
     private String fName;
     private String lName;
+    private String password;
     private int areaId;
-    private int docketId;
+
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
+    }
 
     public String getfName() {
         return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
     }
 
     public String getlName() {
         return lName;
     }
 
+    public void setlName(String lName) {
+        this.lName = lName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public int getAreaId() {
         return areaId;
     }
 
-    public int getDocketId() {
-        return docketId;
-    }
-
-    public StaffMember(String fName, String lName, int areaId, int docketId) throws StaffException {
-        // Validate the inputs
-        try {
-            validateFirstName(fName);
-            validateLastName(lName);
-            validateAreaId(areaId);
-            validateDocketId(docketId);
-        } catch (StaffException e) {
-            throw e;
-        }
-        this.fName = fName;
-        this.lName = lName;
+    public void setAreaId(int areaId) {
         this.areaId = areaId;
-        this.docketId = docketId;
     }
 
-    public static void validateFirstName(String fName) throws StaffException {
-            if(fName.isEmpty()||fName.equals("")) {throw new StaffException("Employee name, must be from 1 to 15 characters.");}
-            if(fName.length() <=2 || fName.length() >15) {throw new StaffException("Employee name, must be from 3 to 15 characters.");}
+    public StaffMember(int id, String name, String last_name, String password, int areaId)throws StaffException{
+        try{
+            validateName(name);
+            validateLastName(last_name);
+            validatePassword(password);
+            validateAreaId(areaId);
+        }catch (StaffException e){
+            throw new StaffException("Not a valid Staff Member.");
+        }
+        this.staffId = id;
+        this.fName = name;
+        this.lName = last_name;
+        this.password = password;
+        this.areaId = areaId;
     }
 
-    public static void validateAreaId(int areaId) throws StaffException{
-        if(areaId <=0){throw new StaffException("Area Id can not equal or be less than 0.");}
-        if(areaId >=100){throw new StaffException("Area Id can not equal or be more than 100.");}
-
+    public static void validateName(String name)throws StaffException{
+        if(name.length() > 20){
+            throw new StaffException("Staff name can not be more than 20 characters.");
+        }
+        if(name.isEmpty() || name.equals("")){
+            throw  new StaffException("Name can not be empty.");
+        }
     }
 
-    public static void validateLastName(String lName) throws StaffException{
-        if(lName.isEmpty()||lName.equals("")) {throw new StaffException("Employee last name, must be from 1 to 15 characters.");}
-        if(lName.length() <=2 || lName.length() >15) {throw new StaffException("Employee last name, must be from 3 to 15 characters.");}
-
+    public static void validateLastName(String lastName)throws StaffException{
+        if(lastName.length() > 20){
+            throw new StaffException("Staff last name can not be more than 20 characters.");
+        }
+        if(lastName.isEmpty() || lastName.equals("")){
+            throw  new StaffException("Last name can not be empty.");
+        }
     }
 
-    public static void validateDocketId(int docketId) throws StaffException{
-
+    public static void validatePassword(String password)throws StaffException{
+        if(password.length() < 6 || password.length() > 20){
+            throw new StaffException("Password must be between 6 and 20 characters");
+        }
+        if(password.isEmpty()){
+            throw  new StaffException("Password can not be empty.");
+        }
     }
+
+    public static void validateAreaId(int id)throws StaffException{
+        if(id <= 0){
+            throw new StaffException("Area ID can not be 0 or less than 0.");
+        }
+    }
+
+
+
 
 
 
