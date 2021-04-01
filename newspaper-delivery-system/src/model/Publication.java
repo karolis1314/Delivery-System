@@ -3,9 +3,27 @@ package model;
 import exceptions.PublicationException;
 
 public class Publication {
-    private String order_id;
+    private int id;
+    private String frequencyInDays;
     private String name;
     private double price;
+    private int stock;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFrequencyInDays() {
+        return frequencyInDays;
+    }
+
+    public void setFrequencyInDays(String frequencyInDays) {
+        this.frequencyInDays = frequencyInDays;
+    }
 
     public String getName() {
         return name;
@@ -13,14 +31,6 @@ public class Publication {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(String order_id) {
-        this.order_id = order_id;
     }
 
     public double getPrice() {
@@ -31,49 +41,54 @@ public class Publication {
         this.price = price;
     }
 
-    public Publication(String order_id, String name, double price) throws PublicationException {
-        // Validate the inputs
+    public int getStock() {
+        return stock;
+    }
 
-        try {
-            validateOrderId(order_id);
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public Publication(int id, String frequencyInDays, String name, double price, int stock) throws PublicationException{
+        try{
+            validateFrequencyInDays(frequencyInDays);
             validateName(name);
             validatePrice(price);
-        } catch (PublicationException e) {
-            throw e;
+            validateStock(stock);
+        }catch (PublicationException e){
+            throw new PublicationException("Failed to create.");
         }
-        this.order_id = order_id;
+        this.id = id;
+        this.frequencyInDays = frequencyInDays;
         this.name = name;
         this.price = price;
+        this.stock = stock;
     }
 
-
-    // Validating that publication order id to make sure it meets the standarts
-    public static void validateOrderId(String order_id) throws PublicationException {
-        if (order_id.isEmpty() || order_id.length() != 7) {
-            throw new PublicationException("Publication Order Id must be exactly 7 characters long, it can not be empty");
+    public static void validateFrequencyInDays(String frequencyInDays) throws PublicationException{
+        if (frequencyInDays!="1" && frequencyInDays!="7" && frequencyInDays != "14" && frequencyInDays!= "30"){
+            throw new PublicationException("Frequency of the publication must be valid, 1-7-14-30.");
         }
-
     }
 
-    // Validating the price range, so it must not exceed three digits
-    public static void validatePrice(double price) throws PublicationException {
-        if (price == 0) {
-            throw new PublicationException("Publication price, must be above 0");
-        } else if (price >= 100) {
-            throw new PublicationException("Publication price, must be below 100");
+    public static void validateName(String name) throws PublicationException{
+        if(name.length() > 25){
+            throw new PublicationException("Name of Publication can not be larger than 25 characters.");
         }
-
-    }
-
-    // Validate length of the name, which can not be empty either
-    public static void validateName(String name) throws PublicationException {
-        if (name.isEmpty() || name.equals("")) {
-            throw new PublicationException("Publication name, must be from 1 to 15 characters.");
-        } else if (name.length() > 15) {
-            throw new PublicationException("Publication name, must be max of 15 characters");
+        if(name.isEmpty() || name.equals("")){
+            throw new PublicationException("Name of Publication can not be empty.");
         }
-
     }
 
+    public static void validatePrice(double price) throws PublicationException{
+        if(price <=0 || price >20.00){
+            throw new PublicationException("Price of the Publication can be 0 or larger than ?20.00.");
+        }
+    }
 
+    public static void validateStock(int stock) throws PublicationException{
+        if(stock < 0){
+            throw new PublicationException("Stock can not be less than 0.");
+        }
+    }
 }
