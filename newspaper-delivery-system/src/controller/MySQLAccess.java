@@ -280,46 +280,84 @@ public class MySQLAccess {
 	}
 
 	// Delivery Docket
-	public boolean insertDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
 
-		boolean insertSuccessful = true;
+	public boolean createDailyDeliveryDocket(){
+		boolean gotDailyPublication = false;
 
-		try {
-			preparedStatement = connect.prepareStatement(
-					"INSERT INTO DELIVERY_DOCKETS (publicationID, deliveryAreaID, customerID)" + "values (?, ?, ?)");
-			preparedStatement.setInt(1, deliveryDocket.getPublicationID());
-			preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
-			preparedStatement.setInt(3, deliveryDocket.getCustomerID());
-			preparedStatement.execute();
+		try{
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '1'");
 
-		} catch (Exception exception) {
-			insertSuccessful = false;
-			throw new DeliveryDocketException("Delivery Docket not added");
+			while(resultSet.next()){
+				int customerID = resultSet.getInt(1);
+				int publicationID = resultSet.getInt(2);
+				statement = connect.createStatement();
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+			}
+			gotDailyPublication = true;
+		} catch (Exception e){
 
 		}
-
-		return insertSuccessful;
+		return gotDailyPublication;
 	}
 
-	public boolean updateDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
 
-		boolean updateSuccessful = true;
+	public boolean createWeeklyDeliveryDocket(){
 
-		try {
-			preparedStatement = connect.prepareStatement(
-					"UPDATE DELIVERY_DOCKETS SET publicationID = ?, deliveryAreaID = ?, customerID = ? WHERE deliveryDocketID = ? ");
-			preparedStatement.setInt(1, deliveryDocket.getPublicationID());
-			preparedStatement.setInt(2, deliveryDocket.getDeliveryAreaID());
-			preparedStatement.setInt(3, deliveryDocket.getCustomerID());
-			preparedStatement.setInt(4, deliveryDocket.getDeliveryDocketID());
-			preparedStatement.execute();
 
-		} catch (Exception exception) {
-			updateSuccessful = false;
-			throw new DeliveryDocketException("Delivery Docket not updated");
+		try{
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '7'");
+
+			while(resultSet.next()){
+				int customerID = resultSet.getInt(1);
+				int publicationID = resultSet.getInt(2);
+				statement = connect.createStatement();
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+			}
+			return true;
+		} catch (Exception e){
+
 		}
+		return false;
+	}
+	public boolean createBiWeeklyDeliveryDocket(){
 
-		return updateSuccessful;
+
+		try{
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '14'");
+
+			while(resultSet.next()){
+				int customerID = resultSet.getInt(1);
+				int publicationID = resultSet.getInt(2);
+				statement = connect.createStatement();
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+			}
+			return true;
+		} catch (Exception e){
+
+		}
+		return false;
+	}
+	public boolean createMountlyDeliveryDocket(){
+
+
+		try{
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '30'");
+
+			while(resultSet.next()){
+				int customerID = resultSet.getInt(1);
+				int publicationID = resultSet.getInt(2);
+				statement = connect.createStatement();
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+			}
+			return true;
+		} catch (Exception e){
+
+		}
+		return false;
 	}
 
 	public boolean deleteDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
