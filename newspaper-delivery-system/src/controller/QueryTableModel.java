@@ -17,66 +17,52 @@ import model.DeliveryDocket;
 import model.Publication;
 import model.StaffMember;
 
-public class QueryTableModel 
-{
+public class QueryTableModel {
 	private Connection connect = null;
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet;
-	
+
 	private String user = "root";
 	private String password = "#Lekoso00";
-		
-	public boolean openConnection()
-	{
+
+	public boolean openConnection() {
 		boolean success = false;
-		try
-		{
-			//Change password, port and sql connector to run on your machine. 
+		try {
+			// Change password, port and sql connector to run on your machine.
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:6969/newsagent2021?serverTimezone=GMT";
 			connect = DriverManager.getConnection(url, user, password);
 			statement = connect.createStatement();
-			success=true;
-		}
-		catch(Exception e)
-		{
-			success=false;
+			success = true;
+		} catch (Exception e) {
+			success = false;
 			System.out.println("Failed to connect: " + e.getMessage());
 		}
 		return success;
 	}
-	public boolean closeConnection()
-	{
+
+	public boolean closeConnection() {
 		boolean success = false;
-		try 
-		{
+		try {
 			statement.close();
 			connect.close();
 			System.out.println("Conn Closed\n");
-			success=true;
-		} 
-		catch (SQLException e)
-		{
-			success=false;
+			success = true;
+		} catch (SQLException e) {
+			success = false;
 			System.out.println(e.getMessage());
 		}
 		return success;
 	}
-	
-	
-		
-	
-	
-	//Insert the publication
+
+	// Insert the publication
 	public boolean insertNewPublication(Publication p) throws PublicationException {
-
 		boolean insertSucessfull = true;
-
 		try {
-
-			preparedStatement = connect.prepareStatement(
-					"insert into publication (frequencyInDays, publicationName, priceInEuro, stock)" + "values (?, ?, ?, ?)");
+			preparedStatement = connect
+					.prepareStatement("insert into publication (frequencyInDays, publicationName, priceInEuro, stock)"
+							+ "values (?, ?, ?, ?)");
 			preparedStatement.setString(1, p.getFrequencyInDays());
 			preparedStatement.setString(2, p.getName());
 			preparedStatement.setDouble(3, p.getPrice());
@@ -86,19 +72,14 @@ public class QueryTableModel
 		} catch (Exception e) {
 			insertSucessfull = false;
 			throw new PublicationException("Publication is not added.");
-
 		}
-
 		return insertSucessfull;
-
 	}
-	//Insert Staff
+
+	// Insert Staff
 	public boolean insertNewStaff(StaffMember s) throws StaffException {
-
 		boolean insertSucessfull = true;
-
 		try {
-
 			preparedStatement = connect.prepareStatement(
 					"insert into STAFF_MEMBER (firstName, lastName, staffPassword, areaID)" + "values (?, ?, ?, ?)");
 			preparedStatement.setString(1, s.getfName());
@@ -110,18 +91,13 @@ public class QueryTableModel
 		} catch (Exception e) {
 			insertSucessfull = false;
 			throw new StaffException("Staff member is not added.");
-
 		}
-
 		return insertSucessfull;
-
 	}
+
 	public boolean updateStaff(StaffMember s) throws StaffException {
-
 		boolean update = true;
-
 		try {
-
 			preparedStatement = connect.prepareStatement(
 					"update STAFF_MEMBER set firstName= ?, lastName = ?, staffPassword = ?, areaID = ? where staffID = ? ");
 			preparedStatement.setString(1, s.getfName());
@@ -135,9 +111,7 @@ public class QueryTableModel
 			update = false;
 			throw new StaffException("Staff is not updated.");
 		}
-
 		return update;
-
 	}
 
 	public boolean updatePublication(Publication p) throws PublicationException {
@@ -182,6 +156,7 @@ public class QueryTableModel
 		return delete;
 
 	}
+
 	public boolean deleteStaff(StaffMember s) throws StaffException {
 
 		boolean delete = true;
@@ -226,7 +201,6 @@ public class QueryTableModel
 		}
 		return resultSet;
 	}
-
 
 	public boolean insertNewDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
 
@@ -302,80 +276,86 @@ public class QueryTableModel
 
 	// Delivery Docket
 
-	public boolean createDailyDeliveryDocket(){
+	public boolean createDailyDeliveryDocket() {
 		boolean gotDailyPublication = false;
 
-		try{
+		try {
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '1'");
+			resultSet = statement.executeQuery(
+					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '1'");
 
-			while(resultSet.next()){
+			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+						+ publicationID + ", default );");
 			}
 			gotDailyPublication = true;
-		} catch (Exception e){
+		} catch (Exception e) {
 
 		}
 		return gotDailyPublication;
 	}
 
+	public boolean createWeeklyDeliveryDocket() {
 
-	public boolean createWeeklyDeliveryDocket(){
-
-
-		try{
+		try {
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '7'");
+			resultSet = statement.executeQuery(
+					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '7'");
 
-			while(resultSet.next()){
+			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+						+ publicationID + ", default );");
 			}
 			return true;
-		} catch (Exception e){
+		} catch (Exception e) {
 
 		}
 		return false;
 	}
-	public boolean createBiWeeklyDeliveryDocket(){
 
+	public boolean createBiWeeklyDeliveryDocket() {
 
-		try{
+		try {
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '14'");
+			resultSet = statement.executeQuery(
+					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '14'");
 
-			while(resultSet.next()){
+			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+						+ publicationID + ", default );");
 			}
 			return true;
-		} catch (Exception e){
+		} catch (Exception e) {
 
 		}
 		return false;
 	}
-	public boolean createMountlyDeliveryDocket(){
 
+	public boolean createMountlyDeliveryDocket() {
 
-		try{
+		try {
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select customerID, publicationID from orders where isActive = true and frequencyInDays = '30'");
+			resultSet = statement.executeQuery(
+					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '30'");
 
-			while(resultSet.next()){
+			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, "+customerID+","+ publicationID+", default );");
+				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+						+ publicationID + ", default );");
 			}
 			return true;
-		} catch (Exception e){
+		} catch (Exception e) {
 
 		}
 		return false;
@@ -444,7 +424,6 @@ public class QueryTableModel
 
 	public boolean deleteCustomerById(Customers cus) throws CustomersException {
 		boolean deleteSuccessful = true;
-
 		try {
 			preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS WHERE CUSTOMER_ID = ?");
 			preparedStatement.setInt(1, cus.getId());
@@ -454,7 +433,6 @@ public class QueryTableModel
 			deleteSuccessful = false;
 			throw new CustomersException("Customer not deleted");
 		}
-
 		return deleteSuccessful;
 	}
 
@@ -478,7 +456,7 @@ public class QueryTableModel
 			preparedStatement.setString(2, cus.getfName());
 			preparedStatement.setString(3, cus.getlName());
 			preparedStatement.setString(4, cus.getNumber());
-			preparedStatement.setInt(5,cus.getId());
+			preparedStatement.setInt(5, cus.getId());
 			preparedStatement.execute();
 			updateSuccesful = true;
 		} catch (Exception e) {

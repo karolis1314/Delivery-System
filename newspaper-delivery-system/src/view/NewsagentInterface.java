@@ -62,7 +62,8 @@ class NewsagentInterface extends JFrame
 	
 	JPanel LoginPanel()
 	{
-		ImagePanel pnLogin = new ImagePanel("images\\maxresdefault.jpg");
+		JPanel pnLogin = new JPanel(null);
+		pnLogin.setBackground(Color.RED);
 		pnLogin.setBounds(0, 0, 500, 500);
 
 		txtUserName = new JTextField();
@@ -363,8 +364,6 @@ class NewsagentInterface extends JFrame
 		pnDA.add(crud);
 		return pnDA;
 	}
-	
-	
 	JPanel DeliveryDocket()
 	{
 		JPanel pnDD = new JPanel(null);	
@@ -392,7 +391,11 @@ class NewsagentInterface extends JFrame
 		pnDD.add(crud);
 		return pnDD;
 	}
-	
+	JPanel welcomePanel()
+	{
+		JPanel pnWelcome=new JPanel(null);
+		return pnWelcome;
+	}
 	
 	void setCustableDimension()
 	{
