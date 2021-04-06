@@ -55,6 +55,7 @@ class NewsagentInterface extends JFrame
 		setTitle(title);
 	
 		ct.add(LoginPanel());
+		//ct.add(choicPanel());
 		ct.add(MainMenu());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -144,7 +145,6 @@ class NewsagentInterface extends JFrame
 		menuPanel.add(tabs);
 		return menuPanel;
 	}
-	
 	
 	JPanel Customers()
 	{

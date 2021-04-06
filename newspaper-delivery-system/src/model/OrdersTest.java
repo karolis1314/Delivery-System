@@ -1,6 +1,6 @@
 package model;
 
-import exceptions.CustomersException;
+import exceptions.OrderException;
 import junit.framework.TestCase;
 
 public class OrdersTest extends TestCase 
@@ -13,7 +13,7 @@ public class OrdersTest extends TestCase
 		- a definition of expected outputs
 		- a definition of the test environment
 	*/
-	public void testStartDate001()
+	public void testCustomerId001()
 	{
 		/* 
 		 	Object: 
@@ -23,15 +23,15 @@ public class OrdersTest extends TestCase
 		*/			
 		try
 		{
-			Orders.validateStartDate(-20, "January", 2019);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Date Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate002()
+	public void testCustomerId002()
 	{
 		/* 
 		 	Object: 
@@ -41,15 +41,15 @@ public class OrdersTest extends TestCase
 		*/		
 		try
 		{
-			Orders.validateStartDate(38, "August", 2018);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Date Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate003()
+	public void testCustomerId003()
 	{
 		/* 
 		 	Object: 
@@ -59,15 +59,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			Orders.validateStartDate(12, "Marcjh", 2020);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Month Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate004()
+	public void testCustomerId004()
 	{
 		/* 
 		 	Object: 
@@ -77,15 +77,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			Orders.validateStartDate(22, "Sepetemeber", 2021);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Month Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate005()
+	public void testCustomerId005()
 	{
 		/* 
 		 	Object: 
@@ -95,33 +95,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			Orders.validateStartDate(17, "Ma", 2017);
-			fail("Exception Expected");	
-		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail: Invalid Month Detected", e.getMessage());
-		}
-	}
-	public void testStartDate006()
-	{
-		/* 
-		 	Object: 
-		 	Inputs: 
-		 	Output: 
-		 	Envmnt: Junit3 
-		*/	
-		try
-		{
-			Orders.validateStartDate(13, "June", 1990);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Year Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate007()
+	public void testCustomerId006()
 	{
 		/* 
 		 	Object: 
@@ -131,15 +113,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			Orders.validateStartDate(16, "December", 2025);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Year Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate008()
+	public void testCustomerId007()
 	{
 		/* 
 		 	Object: 
@@ -149,15 +131,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			Orders.validateStartDate(27, "May", -2121);
+			Orders.validateCustomerId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Year Detected", e.getMessage());
+			assertEquals("", e.getMessage());
 		}
 	}
-	public void testStartDate009()
+	public void testCustomerId008()
 	{
 		/* 
 		 	Object: 
@@ -167,14 +149,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			boolean res = Orders.validateStartDate(23, "May", 2018);
-			assertEquals(true, res);
+			boolean res =  Orders.validateCustomerId(0);
+			assertEquals(res, true);
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			fail("Exception Not Expected");
 		}
 	}
+
 	
 	/*
 	 	#Test 2: 
@@ -184,7 +167,7 @@ public class OrdersTest extends TestCase
 		- a definition of expected outputs
 		- a definition of the test environment
 	*/
-	public void testEndDate001()
+	public void testPublicationId001()
 	{
 		/* 
 		 	Object: 
@@ -194,15 +177,15 @@ public class OrdersTest extends TestCase
 		*/		
 		try
 		{
-			Orders.validateEndDate(-20, "January", 2022);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate002()
+	public void testPublicationId002()
 	{
 		/* 
 		 	Object: 
@@ -212,15 +195,15 @@ public class OrdersTest extends TestCase
 		*/	
 		try
 		{
-			Orders.validateEndDate(99, "February", 2024);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate003()
+	public void testPublicationId003()
 	{
 		/* 
 		 	Object: 
@@ -230,15 +213,15 @@ public class OrdersTest extends TestCase
 		*/		
 		try
 		{
-			Orders.validateEndDate(29, "Augustinet", 2027);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Month Not Valid", e.getMessage());
+			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate004()
+	public void testPublicationId004()
 	{
 		/* 
 		 	Object: 
@@ -248,15 +231,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateEndDate(20, "Ja", 2025);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Month Not Valid", e.getMessage());
+			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate005()
+	public void testPublicationId005()
 	{
 		/* 
 		 	Object: 
@@ -266,15 +249,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateEndDate(1, "Jury", 2029);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Month Not Valid", e.getMessage());
+			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate006()
+	public void testPublicationId006()
 	{
 		/* 
 		 	Object: 
@@ -284,15 +267,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateEndDate(11, "April", 2020);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Year Detected", e.getMessage());
+			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate007()
+	public void testPublicationId007()
 	{
 		/* 
 		 	Object: 
@@ -302,15 +285,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateEndDate(7, "October", 2035);
+			Orders.validatePublicationId(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
-			assertEquals("Fail: Invalid Year Detected", e.getMessage());
+			assertEquals("Fail: Invalid Date Detected", e.getMessage());
 		}
 	}
-	public void testEndDate008()
+	public void testPublicationId008()
 	{
 		/* 
 		 	Object: 
@@ -320,32 +303,16 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateEndDate(14, "January", -2020);
-			fail("Exception Expected");
+			boolean res = Orders.validatePublicationId(0);
+			assertEquals(res, true);
+			
 		}
-		catch(CustomersException e)
-		{
-			assertEquals("Fail: Invalid Year Detected", e.getMessage());
-		}
-	}
-	public void testEndDate009()
-	{
-		/* 
-		 	Object: 
-		 	Inputs: 
-		 	Output: 
-		 	Envmnt: Junit3 
-		*/
-		try
-		{
-			boolean res = Orders.validateEndDate(11, "September", 2023);
-			assertEquals(true, res);
-		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			fail("Exception Not Expected");
 		}
 	}
+
 	
 	/*
 	 	#Test 3: 
@@ -355,7 +322,7 @@ public class OrdersTest extends TestCase
 		- a definition of expected outputs
 		- a definition of the test environment
 	*/
-	public void testLimit001()
+	public void testOrderAmout001()
 	{
 		/* 
 		 	Object: 
@@ -365,15 +332,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateLimit(0);
+			Orders.validateOrderAmount(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testLimit002()
+	public void testOrderAmout002()
 	{
 		/* 
 		 	Object: 
@@ -383,15 +350,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateLimit(Integer.MIN_VALUE);
+			Orders.validateOrderAmount(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testLimit003()
+	public void testOrderAmout003()
 	{
 		/* 
 		 	Object: 
@@ -401,15 +368,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateLimit(11);
+			Orders.validateOrderAmount(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testLimit004()
+	public void testOrderAmout004()
 	{
 		/* 
 		 	Object: 
@@ -419,15 +386,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateLimit(Integer.MAX_VALUE);
+			Orders.validateOrderAmount(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testLimit005()
+	public void testOrderAmout005()
 	{
 		/* 
 		 	Object: 
@@ -437,15 +404,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateLimit(-10);
+			Orders.validateOrderAmount(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testLimit006()
+	public void testOrderAmout006()
 	{
 		/* 
 		 	Object: 
@@ -455,15 +422,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateLimit(120);
+			Orders.validateOrderAmount(0);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testLimit007()
+	public void testOrderAmout007()
 	{
 		/* 
 	 		Object: 
@@ -473,10 +440,10 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			boolean res = Orders.validateLimit(7);
+			boolean res = Orders.validateOrderAmount(7);
 			assertEquals(true, res);
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			fail("Exception Not Expected");
 		}
@@ -492,21 +459,8 @@ public class OrdersTest extends TestCase
 		- a definition of expected outputs
 		- a definition of the test environment
 	*/
-	public void testSubscription001()
-	{
-		
-	}
-	
-	
-	/*
-	 	#Test 5: 
-	 	- an object under test
-		- a test objective
-		- a definition of the inputs
-		- a definition of expected outputs
-		- a definition of the test environment
-	*/
-	public void testDayDelivered001()
+
+	public void testActiveOrders001()
 	{
 		/* 
 	 		Object: 
@@ -516,15 +470,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateDayDelivered("Fryday");
+			Orders.validateActiveOrders(false);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testDayDelivered002()
+	public void testActiveOrders002()
 	{
 		/* 
 	 		Object: 
@@ -534,15 +488,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateDayDelivered("");
+			Orders.validateActiveOrders(false);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testDayDelivered003()
+	public void testActiveOrders003()
 	{
 		/* 
 	 		Object: 
@@ -552,15 +506,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateDayDelivered("");
+			Orders.validateActiveOrders(false);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testDayDelivered004()
+	public void testActiveOrders004()
 	{
 		/* 
 	 		Object: 
@@ -570,15 +524,15 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			Orders.validateDayDelivered("");
+			Orders.validateActiveOrders(false);
 			fail("Exception Expected");
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			assertEquals("Fail", e.getMessage());
 		}
 	}
-	public void testDayDelivered005()
+	public void testActiveOrders005()
 	{
 		/* 
 	 		Object: 
@@ -588,10 +542,10 @@ public class OrdersTest extends TestCase
 		*/
 		try
 		{
-			boolean res = Orders.validateDayDelivered("");
-			assertEquals(true, res);
+			boolean res = Orders.validateActiveOrders(false);
+			assertEquals(res, true);
 		}
-		catch(CustomersException e)
+		catch(OrderException e)
 		{
 			fail("Exception Not Expected");
 		}

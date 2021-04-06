@@ -32,7 +32,7 @@ public class QueryTableModel
 		{
 			//Change password, port and sql connector to run on your machine. 
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:6969/newsagent2021";
+			String url = "jdbc:mysql://localhost:6969/newsagent2021?serverTimezone=GMT";
 			con = DriverManager.getConnection(url, user, password);
 			stmt = con.createStatement();
 			success=true;
@@ -254,7 +254,7 @@ public class QueryTableModel
 		catch (Exception e)
 		{
 			delete = false;
-			throw new DeliveryAreaException("DeliveryArea is not deleted.");
+			throw new DeliveryAreaException(e.getMessage());
 		}
 		return delete;
 	}
