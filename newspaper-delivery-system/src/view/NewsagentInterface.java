@@ -45,6 +45,7 @@ class NewsagentInterface extends JFrame
 		setTitle(title);
 	
 		ct.add(LoginPanel());
+		//ct.add(welcomePanel());
 		ct.add(MainMenu());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

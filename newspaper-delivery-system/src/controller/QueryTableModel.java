@@ -34,7 +34,7 @@ public class QueryTableModel
 		{
 			//Change password, port and sql connector to run on your machine. 
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:6969/newsagent2021?timeZone=GMT";
+			String url = "jdbc:mysql://localhost:6969/newsagent2021?serverTimezone=GMT";
 			connect = DriverManager.getConnection(url, user, password);
 			statement = connect.createStatement();
 			success=true;
