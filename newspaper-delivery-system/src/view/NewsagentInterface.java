@@ -30,8 +30,8 @@ class NewsagentInterface extends JFrame
 	private JMenuBar mb;
 	
 	private QueryTableModel qtm = new QueryTableModel();
-	private TableModel customers, publications, deliverydocket, deliveryarea, staffMem,printDoc;
-	private JTable custable, pubtable, ddtable, datable, staffTable, docPrintTable;
+	private TableModel customers, publications, deliveryarea, staffMem,printDoc;
+	private JTable custable, pubtable, datable, staffTable, docPrintTable;
 
 	private Container ct;
 	private CardLayout cl;
@@ -53,7 +53,7 @@ class NewsagentInterface extends JFrame
 		ct.add(MainMenu());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 500);
+		setBounds(100, 100, 700, 500);
 		setVisible(true);
 		requestFocus();
 		requestFocusInWindow();
@@ -134,10 +134,9 @@ class NewsagentInterface extends JFrame
 		tabs.addTab("Customers", Customers());
 		tabs.addTab("Publications", Publications());
 		tabs.addTab("Delivery Area", DeliveryArea());
-		tabs.addTab("Delivery Docket", DeliveryDocket());
-		tabs.add("Customer Orders", Orders());
+		tabs.addTab("Customer Orders", Orders());
 		tabs.addTab("Staff Member", StaffMember());
-		tabs.addTab("Docet Print", PrintDocket());
+		tabs.addTab("Delivery Docket", PrintDocket());
 		
 		menuPanel.add(tabs);
 		return menuPanel;
@@ -154,7 +153,7 @@ class NewsagentInterface extends JFrame
 			
 			pubtable = new JTable(publications);
 			JScrollPane sp  = new JScrollPane(pubtable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
+			sp.setBounds(10, 10, 670, 300);
 		
 			setPubtableDimension();
 			pnPub.add(sp);
@@ -164,7 +163,7 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
+		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
 		JButton insert, update, delete;
@@ -292,7 +291,7 @@ class NewsagentInterface extends JFrame
 			
 			staffTable = new JTable(staffMem);
 			JScrollPane sp  = new JScrollPane(staffTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
+			sp.setBounds(10, 10, 670, 300);
 		
 			setPubtableDimension();
 			mstaff.add(sp);
@@ -302,7 +301,7 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
+		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
 		JButton insert, update, delete;
@@ -430,7 +429,7 @@ class NewsagentInterface extends JFrame
 			
 			custable = new JTable(customers);
 			JScrollPane sp  = new JScrollPane(custable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
+			sp.setBounds(10, 10, 670, 300);
 			
 			setCustableDimension();
 			pnCus.add(sp);
@@ -440,7 +439,7 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
+		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
 		JButton insert, update, delete;
@@ -576,7 +575,7 @@ class NewsagentInterface extends JFrame
 			
 			docPrintTable = new JTable(printDoc);
 			JScrollPane sp  = new JScrollPane(docPrintTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
+			sp.setBounds(10, 10, 670, 300);
 		
 			setPubtableDimension();
 			docPri.add(sp);
@@ -586,7 +585,7 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
+		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
 		JButton insert,update,week2, monthly;
@@ -702,7 +701,7 @@ class NewsagentInterface extends JFrame
 			
 			datable = new JTable(deliveryarea);
 			JScrollPane sp  = new JScrollPane(datable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
+			sp.setBounds(10, 10, 670, 300);
 			
 			setDATableDimension();
 			pnDA.add(sp);
@@ -712,39 +711,13 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
+		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
 		pnDA.add(crud);
 		return pnDA;
 	}
-	JPanel DeliveryDocket()
-	{
-		JPanel pnDD = new JPanel(null);	
-		try
-		{	
-			ResultSet rs = qtm.retrieveAllDeliveryDockets();
-			deliverydocket = new TableModel();
-			deliverydocket.RefreshDatabase(rs);
-			
-			ddtable = new JTable(deliverydocket);
-			JScrollPane sp  = new JScrollPane(ddtable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
-			
-			setDDTableDimension();
-			pnDD.add(sp);
-		}
-		catch(Exception e)
-		{System.out.println(e.getMessage());}
-		
-		JPanel crud = new JPanel(new FlowLayout(0,1,5));
-		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
-		crud.setBackground(Color.RED);
-		
-		pnDD.add(crud);
-		return pnDD;
-	}
+
 	JPanel Orders()
 	{
 		JPanel pnOrders = new JPanel();
@@ -801,15 +774,7 @@ class NewsagentInterface extends JFrame
 		pubtable.getTableHeader().setPreferredSize(new Dimension(1, 25));
 		pubtable.getTableHeader().setBackground(Color.CYAN);
 	}
-	void setDDTableDimension()
-	{
-		for(int i=0; i<ddtable.getRowCount(); i++)
-		{
-			ddtable.setRowHeight(i, 20);
-		}
-		ddtable.getTableHeader().setPreferredSize(new Dimension(1, 25));
-		ddtable.getTableHeader().setBackground(Color.CYAN);
-	}
+
 	void setDATableDimension()
 	{
 		for(int i=0; i<datable.getRowCount(); i++)
