@@ -24,14 +24,14 @@ public class QueryTableModel {
 	private ResultSet resultSet;
 
 	private String user = "root";
-	private String password = "#Lekoso00";
+	private String password = "a00252699";
 
 	public boolean openConnection() {
 		boolean success = false;
 		try {
 			// Change password, port and sql connector to run on your machine.
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:6969/newsagent2021?serverTimezone=GMT";
+			String url = "jdbc:mysql://localhost:3306/newsagent2021?serverTimezone=GMT";
 			connect = DriverManager.getConnection(url, user, password);
 			statement = connect.createStatement();
 			success = true;
@@ -81,7 +81,7 @@ public class QueryTableModel {
 		boolean insertSucessfull = true;
 		try {
 			preparedStatement = connect.prepareStatement(
-					"insert into STAFF_MEMBER (firstName, lastName, staffPassword, areaID)" + "values (?, ?, ?, ?)");
+					"insert into STAFF_MEMBER (staffID, firstName, lastName, staffPassword, areaID)" + "values (DEFAULT,?, ?, ?, ?)");
 			preparedStatement.setString(1, s.getfName());
 			preparedStatement.setString(2, s.getlName());
 			preparedStatement.setString(3, s.getPassword());

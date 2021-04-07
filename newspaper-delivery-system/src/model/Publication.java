@@ -66,9 +66,15 @@ public class Publication {
     }
 
     public static void validateFrequencyInDays(String frequencyInDays) throws PublicationException{
-        if (frequencyInDays!="1" && Integer.parseInt(frequencyInDays)!=7 && frequencyInDays != "14" && frequencyInDays!= "30"){
-            throw new PublicationException("Frequency of the publication must be valid, 1-7-14-30.");
-        }
+        if (Integer.parseInt(frequencyInDays)==1) {
+        	System.out.println("Ok");
+        }else if(Integer.parseInt(frequencyInDays)==7) {
+        	System.out.println("Ok");
+        }else if(Integer.parseInt(frequencyInDays)==14) {
+        	System.out.println("Ok");
+        }else if(Integer.parseInt(frequencyInDays)==30){
+        	System.out.println("Ok");
+            }else   throw new PublicationException("Frequency of the publication must be valid, 1-7-14-30.");
     }
 
     public static void validateName(String name) throws PublicationException{

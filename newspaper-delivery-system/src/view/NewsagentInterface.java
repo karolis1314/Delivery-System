@@ -3,6 +3,7 @@ package view;
 import controller.QueryTableModel;
 import exceptions.CustomersException;
 import exceptions.PublicationException;
+import exceptions.StaffException;
 import model.Customers;
 import model.Publication;
 
@@ -18,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
+import model.StaffMember;
 
 @SuppressWarnings("serial")
 class NewsagentInterface extends JFrame
@@ -27,8 +29,8 @@ class NewsagentInterface extends JFrame
 	private JMenuBar mb;
 	
 	private QueryTableModel qtm = new QueryTableModel();
-	private TableModel customers, publications, deliverydocket, deliveryarea;
-	private JTable custable, pubtable, ddtable, datable;
+	private TableModel customers, publications, deliverydocket, deliveryarea, staffMem;
+	private JTable custable, pubtable, ddtable, datable, staffTable;
 
 	private Container ct;
 	private CardLayout cl;
@@ -133,9 +135,148 @@ class NewsagentInterface extends JFrame
 		tabs.addTab("Delivery Area", DeliveryArea());
 		tabs.addTab("Delivery Docket", DeliveryDocket());
 		tabs.add("Customer Orders", Orders());
+		tabs.addTab("Staff Member", StaffMember());
 		
 		menuPanel.add(tabs);
 		return menuPanel;
+	}
+	
+	
+	JPanel StaffMember()
+	{
+		JPanel mstaff = new JPanel(null);	
+		try
+		{	
+			ResultSet rs = qtm.retrieveAllStaff();
+			staffMem = new TableModel();
+			staffMem.RefreshDatabase(rs);
+			
+			staffTable = new JTable(staffMem);
+			JScrollPane sp  = new JScrollPane(staffTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			sp.setBounds(10, 10, 460, 300);
+		
+			setPubtableDimension();
+			mstaff.add(sp);
+		}
+		catch(Exception e)
+		{System.out.println(e.getMessage());}
+		
+		JPanel crud = new JPanel(new FlowLayout(0,1,5));
+		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		crud.setBounds(10, 320, 460, 100);
+		crud.setBackground(Color.RED);
+		
+		JButton insert, update, delete;
+		
+		String[] placeHolder = {"ID","Name","Surname","Password","Area ID"};
+		JTextField[] txtDetails = new JTextField[5];
+		
+		for(int i=0; i<txtDetails.length; i++)
+		{
+			txtDetails[i] = new JTextField(7);
+			crud.add(txtDetails[i]);
+			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
+			txtDetails[i].setText(placeHolder[i]);
+			txtDetails[i].addFocusListener(new FocusListener() 
+			{
+				public void focusLost(FocusEvent e) 
+				{
+					if(txtDetails[0].getText().isEmpty())
+						txtDetails[0].setText(placeHolder[0]);
+					if(txtDetails[1].getText().isEmpty())
+						txtDetails[1].setText(placeHolder[1]);
+					if(txtDetails[2].getText().isEmpty())
+						txtDetails[2].setText(placeHolder[2]);
+					if(txtDetails[3].getText().isEmpty())
+						txtDetails[3].setText(placeHolder[3]);
+					if(txtDetails[4].getText().isEmpty())
+						txtDetails[4].setText(placeHolder[4]);
+				}
+				public void focusGained(FocusEvent e) 
+				{
+					if(e.getSource()==txtDetails[0] && txtDetails[0].getText().equals(placeHolder[0]))
+						txtDetails[0].setText("");
+					if(e.getSource()==txtDetails[1] && txtDetails[1].getText().equals(placeHolder[1]))
+						txtDetails[1].setText("");
+					if(e.getSource()==txtDetails[2] && txtDetails[2].getText().equals(placeHolder[2]))
+						txtDetails[2].setText("");
+					if(e.getSource()==txtDetails[3] && txtDetails[3].getText().equals(placeHolder[3]))
+						txtDetails[3].setText("");
+					if(e.getSource()==txtDetails[4] && txtDetails[4].getText().equals(placeHolder[4]))
+						txtDetails[4].setText("");
+				}
+			});
+		}
+		insert = new JButton("Insert");
+		insert.setFont(new Font("Garamond", 1, 15));
+		insert.setPreferredSize(new Dimension(150,30));
+		insert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = txtDetails[1].getText();
+				String lName = txtDetails[2].getText();
+				String pass = txtDetails[3].getText();
+				int areaId = Integer.parseInt(txtDetails[4].getText());
+				try
+				{
+					StaffMember staff = new StaffMember(1, name, lName, pass, areaId);
+					qtm.insertNewStaff(staff);
+					
+					ResultSet rs = qtm.retrieveAllStaff();
+					staffMem.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(StaffException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		update = new JButton("Update");
+		update.setFont(new Font("Garamond", 1, 15));
+		update.setPreferredSize(new Dimension(150,30));
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				String name = txtDetails[1].getText();
+				String lName = txtDetails[2].getText();
+				String pass = txtDetails[3].getText();
+				int areaId = Integer.parseInt(txtDetails[4].getText());
+				try
+				{
+					StaffMember staff = new StaffMember(ID, name, lName, pass, areaId);
+					qtm.updateStaff(staff);
+					
+					ResultSet rs = qtm.retrieveAllStaff();
+					staffMem.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(StaffException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
+		delete = new JButton("Delete");
+		delete.setFont(new Font("Garamond", 1, 15));
+		delete.setPreferredSize(new Dimension(150,30));
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				try
+				{
+					StaffMember staff = new StaffMember(ID, "name", "surname", "password", 2);
+					qtm.deleteStaff(staff);
+					
+					ResultSet rs = qtm.retrieveAllStaff();
+					staffMem.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(StaffException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
+		
+		crud.add(insert);crud.add(update);crud.add(delete);
+		mstaff.add(crud);
+		return mstaff;
 	}
 	
 	
@@ -311,12 +452,12 @@ class NewsagentInterface extends JFrame
 		
 		JButton insert, update, delete;
 		
-		String[] placeHolder = {"Frequency","Pub_Name","Pub_Price","Stock"};
-		JTextField[] txtDetails = new JTextField[4];
+		String[] placeHolder = {"ID","Frequency","Name","Price","Stock"};
+		JTextField[] txtDetails = new JTextField[5];
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
-			txtDetails[i] = new JTextField(9);
+			txtDetails[i] = new JTextField(7);
 			crud.add(txtDetails[i]);
 			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
 			txtDetails[i].setText(placeHolder[i]);
@@ -332,6 +473,8 @@ class NewsagentInterface extends JFrame
 						txtDetails[2].setText(placeHolder[2]);
 					if(txtDetails[3].getText().isEmpty())
 						txtDetails[3].setText(placeHolder[3]);
+					if(txtDetails[4].getText().isEmpty())
+						txtDetails[4].setText(placeHolder[4]);
 				}
 				public void focusGained(FocusEvent e) 
 				{
@@ -343,6 +486,8 @@ class NewsagentInterface extends JFrame
 						txtDetails[2].setText("");
 					if(e.getSource()==txtDetails[3] && txtDetails[3].getText().equals(placeHolder[3]))
 						txtDetails[3].setText("");
+					if(e.getSource()==txtDetails[4] && txtDetails[4].getText().equals(placeHolder[4]))
+						txtDetails[4].setText("");
 				}
 			});
 		}
@@ -351,13 +496,13 @@ class NewsagentInterface extends JFrame
 		insert.setPreferredSize(new Dimension(150,30));
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String PID = txtDetails[0].getText();
-				String pName = txtDetails[1].getText();
-				double pPrice = Double.parseDouble(txtDetails[2].getText());
-				int stock = Integer.parseInt(txtDetails[3].getText());
+				String freq = txtDetails[1].getText();
+				String pName = txtDetails[2].getText();
+				double pPrice = Double.parseDouble(txtDetails[3].getText());
+				int stock = Integer.parseInt(txtDetails[4].getText());
 				try
 				{
-					Publication pub = new Publication(20, PID, pName, pPrice, stock);
+					Publication pub = new Publication(20, freq, pName, pPrice, stock);
 					qtm.insertNewPublication(pub);
 					
 					ResultSet rs = qtm.retrieveAllPublications();
@@ -371,10 +516,47 @@ class NewsagentInterface extends JFrame
 		update = new JButton("Update");
 		update.setFont(new Font("Garamond", 1, 15));
 		update.setPreferredSize(new Dimension(150,30));
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				String freq = txtDetails[1].getText();
+				String pName = txtDetails[2].getText();
+				double pPrice = Double.parseDouble(txtDetails[3].getText());
+				int stock = Integer.parseInt(txtDetails[4].getText());
+				try
+				{
+					Publication pub = new Publication(ID, freq, pName, pPrice, stock);
+					qtm.updatePublication(pub);
+					
+					ResultSet rs = qtm.retrieveAllPublications();
+					publications.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(PublicationException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
 		
 		delete = new JButton("Delete");
 		delete.setFont(new Font("Garamond", 1, 15));
 		delete.setPreferredSize(new Dimension(150,30));
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				try
+				{
+					Publication pub = new Publication(ID, "14", "dummy", 12.20, 2);
+					qtm.deletePublication(pub);
+					
+					ResultSet rs = qtm.retrieveAllPublications();
+					publications.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(PublicationException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
 		
 		crud.add(insert);crud.add(update);crud.add(delete);
 		pnPub.add(crud);
