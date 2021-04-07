@@ -61,8 +61,8 @@ public class QueryTableModel {
 		boolean insertSucessfull = true;
 		try {
 			preparedStatement = connect
-					.prepareStatement("insert into publication (frequencyInDays, publicationName, priceInEuro, stock)"
-							+ "values (?, ?, ?, ?)");
+					.prepareStatement("insert into publication (id, frequencyInDays, publicationName, priceInEuro, stock)"
+							+ "values (DEFAULT, ?, ?, ?, ?)");
 			preparedStatement.setString(1, p.getFrequencyInDays());
 			preparedStatement.setString(2, p.getName());
 			preparedStatement.setDouble(3, p.getPrice());
@@ -71,7 +71,7 @@ public class QueryTableModel {
 
 		} catch (Exception e) {
 			insertSucessfull = false;
-			throw new PublicationException("Publication is not added.");
+			throw new PublicationException(e.getMessage());
 		}
 		return insertSucessfull;
 	}
@@ -391,76 +391,76 @@ public class QueryTableModel {
 		return resultSet;
 	}
 
-	public boolean shutDownConnection() throws PublicationException {
-		try {
-			connect.close();
-			System.out.println("Connection closed");
-			return true;
-
-		} catch (SQLException e) {
-			throw new PublicationException("Connection not closed.");
-
-		}
-
-	}
-
+	
 	// Customers DBAO
 	public boolean insertCustomerInfo(Customers cus) throws CustomersException {
 		boolean insertSucessfull = true;
 		try {
-			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?)");
+			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?, ?)");
 			preparedStatement.setInt(1, cus.getId());
 			preparedStatement.setString(2, cus.getAddress());
 			preparedStatement.setString(3, cus.getfName());
 			preparedStatement.setString(4, cus.getlName());
 			preparedStatement.setString(5, cus.getNumber());
+			preparedStatement.setInt(6, 3);
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			insertSucessfull = false;
-			throw new CustomersException("Customer not inserted");
+			throw new CustomersException(e.getMessage());
 		}
 		return insertSucessfull;
 	}
 
-	public boolean deleteCustomerById(Customers cus) throws CustomersException {
+	public boolean deleteCustomerById(int id) throws CustomersException 
+	{
 		boolean deleteSuccessful = true;
-		try {
+		try 
+		{
 			preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS WHERE CUSTOMER_ID = ?");
-			preparedStatement.setInt(1, cus.getId());
+			preparedStatement.setInt(1, id);
 			preparedStatement.execute();
 
-		} catch (Exception exception) {
+		} 
+		catch (Exception e) 
+		{
 			deleteSuccessful = false;
-			throw new CustomersException("Customer not deleted");
+			throw new CustomersException(e.getMessage());
 		}
 		return deleteSuccessful;
 	}
-
-	public ResultSet displayCustomers() throws CustomersException {
-		try {
+	public ResultSet displayCustomers() throws CustomersException 
+	{
+		try 
+		{
 			statement = connect.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM CUSTOMERS");
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			resultSet = null;
-			throw new CustomersException("Cant get all customers");
+			throw new CustomersException(e.getMessage());
 		}
 		return resultSet;
 	}
-
-	public boolean updateCustomerDetails(Customers cus) throws CustomersException {
+	public boolean updateCustomerDetails(Customers cus) throws CustomersException 
+	{
 		boolean updateSuccesful = false;
-		try {
+		try 
+		{
 			preparedStatement = connect.prepareStatement(
-					"UPDATE CUSTOMERS SET ADDRESS = ?, FIRSTNAME = ?, LASTNAME = ?, MOBILENUMBER = ?  WHERE customer_id = ? ");
+					"UPDATE CUSTOMERS SET ADDRESS=?, FIRSTNAME=?, LASTNAME=?, MOBILENUMBER=?, areaID=?  WHERE customer_id =?");
 			preparedStatement.setString(1, cus.getAddress());
 			preparedStatement.setString(2, cus.getfName());
 			preparedStatement.setString(3, cus.getlName());
 			preparedStatement.setString(4, cus.getNumber());
-			preparedStatement.setInt(5, cus.getId());
+			preparedStatement.setInt(5, 5);
+			preparedStatement.setInt(6, cus.getId());
 			preparedStatement.execute();
 			updateSuccesful = true;
-		} catch (Exception e) {
-			throw new CustomersException("Customer not Updated");
+		}
+		catch (Exception e) 
+		{
+			throw new CustomersException(e.getMessage());
 		}
 		return updateSuccesful;
 	}

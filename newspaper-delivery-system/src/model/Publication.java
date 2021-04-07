@@ -56,7 +56,7 @@ public class Publication {
             validatePrice(price);
             validateStock(stock);
         }catch (PublicationException e){
-            throw new PublicationException("Failed to create.");
+            throw new PublicationException(e.getMessage());
         }
         this.id = id;
         this.frequencyInDays = frequencyInDays;
@@ -66,7 +66,7 @@ public class Publication {
     }
 
     public static void validateFrequencyInDays(String frequencyInDays) throws PublicationException{
-        if (frequencyInDays!="1" && frequencyInDays!="7" && frequencyInDays != "14" && frequencyInDays!= "30"){
+        if (frequencyInDays!="1" && Integer.parseInt(frequencyInDays)!=7 && frequencyInDays != "14" && frequencyInDays!= "30"){
             throw new PublicationException("Frequency of the publication must be valid, 1-7-14-30.");
         }
     }

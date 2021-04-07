@@ -24,6 +24,7 @@ class NewsagentInterface extends JFrame
 {
 	private JButton btnLogin;
 	private JTextField txtUserName, txtUserPass;
+	private JMenuBar mb;
 	
 	private QueryTableModel qtm = new QueryTableModel();
 	private TableModel customers, publications, deliverydocket, deliveryarea;
@@ -45,7 +46,7 @@ class NewsagentInterface extends JFrame
 		setTitle(title);
 	
 		ct.add(LoginPanel());
-		//ct.add(welcomePanel());
+		ct.add(welcomePanel());
 		ct.add(MainMenu());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,7 +66,7 @@ class NewsagentInterface extends JFrame
 		JPanel pnLogin = new JPanel(null);
 		pnLogin.setBackground(Color.RED);
 		pnLogin.setBounds(0, 0, 500, 500);
-
+	
 		txtUserName = new JTextField();
 		txtUserName.setBounds(150, 150, 200, 40);
 		txtUserName.setHorizontalAlignment(JTextField.CENTER);
@@ -110,6 +111,7 @@ class NewsagentInterface extends JFrame
 					if(txtUserName.getText().equals("root") && txtUserPass.getText().toString().equals("1234"))
 					{
 						setTitle(title);
+						setJMenuBar(mb);
 						cl.next(ct);
 					}
 			}
@@ -120,7 +122,6 @@ class NewsagentInterface extends JFrame
 		
 		return pnLogin;
 	}
-	
 	JPanel MainMenu()
 	{
 		qtm.openConnection();
@@ -131,6 +132,7 @@ class NewsagentInterface extends JFrame
 		tabs.addTab("Publications", Publications());
 		tabs.addTab("Delivery Area", DeliveryArea());
 		tabs.addTab("Delivery Docket", DeliveryDocket());
+		tabs.add("Customer Orders", Orders());
 		
 		menuPanel.add(tabs);
 		return menuPanel;
@@ -232,10 +234,51 @@ class NewsagentInterface extends JFrame
 		update = new JButton("Update");
 		update.setFont(new Font("Garamond", 1, 15));
 		update.setPreferredSize(new Dimension(150,30));
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int cus_id = Integer.parseInt(txtDetails[0].getText());
+				String add = txtDetails[1].getText();
+				String fname = txtDetails[2].getText();
+				String lname = txtDetails[3].getText();
+				String number = txtDetails[4].getText();
+				
+				String prefix = number.substring(0, 3);
+				String digits = number.substring(3, number.length());
+				try
+				{
+					Customers cus = new Customers(cus_id, add, fname, lname, prefix, digits);
+					qtm.updateCustomerDetails(cus);
+					ResultSet rs = qtm.displayCustomers();
+					customers.RefreshDatabase(rs);
+					setCustableDimension();
+				}
+				catch (Exception e1) 
+				{
+					System.out.println(e1.getMessage());
+				}
+				
+			}
+		});
 		
 		delete = new JButton("Delete");
 		delete.setFont(new Font("Garamond", 1, 15));
 		delete.setPreferredSize(new Dimension(150,30));
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int cus_id = Integer.parseInt(txtDetails[0].getText());
+				try
+				{
+					qtm.deleteCustomerById(cus_id);
+					ResultSet rs = qtm.displayCustomers();
+					customers.RefreshDatabase(rs);
+					setCustableDimension();
+				}
+				catch (Exception e1) 
+				{
+					System.out.println(e1.getMessage());
+				}
+			}
+		});
 		
 		crud.add(insert);crud.add(update);crud.add(delete);
 		pnCus.add(crud);
@@ -268,7 +311,7 @@ class NewsagentInterface extends JFrame
 		
 		JButton insert, update, delete;
 		
-		String[] placeHolder = {"Id","PID","PubName","Price"};
+		String[] placeHolder = {"Frequency","Pub_Name","Pub_Price","Stock"};
 		JTextField[] txtDetails = new JTextField[4];
 		
 		for(int i=0; i<txtDetails.length; i++)
@@ -308,12 +351,13 @@ class NewsagentInterface extends JFrame
 		insert.setPreferredSize(new Dimension(150,30));
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String PID = txtDetails[1].getText();
-				String pName = txtDetails[2].getText();
-				double pPrice = Double.parseDouble(txtDetails[3].getText());
+				String PID = txtDetails[0].getText();
+				String pName = txtDetails[1].getText();
+				double pPrice = Double.parseDouble(txtDetails[2].getText());
+				int stock = Integer.parseInt(txtDetails[3].getText());
 				try
 				{
-					Publication pub = new Publication(20, PID, pName, pPrice, 10);
+					Publication pub = new Publication(20, PID, pName, pPrice, stock);
 					qtm.insertNewPublication(pub);
 					
 					ResultSet rs = qtm.retrieveAllPublications();
@@ -391,9 +435,41 @@ class NewsagentInterface extends JFrame
 		pnDD.add(crud);
 		return pnDD;
 	}
+	JPanel Orders()
+	{
+		JPanel pnOrders = new JPanel();
+		pnOrders.setBackground(Color.BLACK);
+		
+		return pnOrders;
+	}
 	JPanel welcomePanel()
 	{
 		JPanel pnWelcome=new JPanel(null);
+		pnWelcome.setBackground(Color.ORANGE);
+		 
+		mb = new JMenuBar();
+		JMenu menu, submenu;
+		
+		menu = new JMenu("Menu");
+		submenu = new JMenu("Show");
+		String[] menuOptions = {"Users", "Publications", "Delivery Area", "Exit"};
+		for(String op: menuOptions)
+		{
+			submenu.add(op);
+		}
+		menu.add(submenu);
+		mb.add(menu);
+			
+		JButton next = new JButton("Next Panel");
+		next.setBounds(10, 50, 100, 50);
+		next.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.next(ct);
+			}
+		});
+		
+		pnWelcome.add(next);
 		return pnWelcome;
 	}
 	
@@ -449,25 +525,6 @@ class NewsagentInterface extends JFrame
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-	}
-
-	class ImagePanel extends JPanel {
-
-		private BufferedImage image;
-
-		public ImagePanel(String path) {
-			try {
-				image = ImageIO.read(new File(path));
-			} catch (IOException iOException) {
-				iOException.getMessage();
-			}
-		}
-
-		@Override
-		protected void paintComponent(Graphics graphics) {
-			super.paintComponent(graphics);
-			graphics.drawImage(image, 0, 0, this);
 		}
 	}
 }
