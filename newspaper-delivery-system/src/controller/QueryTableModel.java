@@ -24,14 +24,14 @@ public class QueryTableModel {
 	private ResultSet resultSet;
 
 	private String user = "root";
-	private String password = "a00252699";
+	private String password = "#Lekoso00";
 
 	public boolean openConnection() {
 		boolean success = false;
 		try {
 			// Change password, port and sql connector to run on your machine.
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/newsagent2021?serverTimezone=GMT";
+			String url = "jdbc:mysql://localhost:6969/newsagent2021?serverTimezone=GMT";
 			connect = DriverManager.getConnection(url, user, password);
 			statement = connect.createStatement();
 			success = true;
