@@ -281,14 +281,16 @@ public class QueryTableModel {
 
 		try {
 			statement = connect.createStatement();
+			statement.executeUpdate("delete from Delivery_Dockets;");
+			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
-					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '1'");
+					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '1'");
 
 			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+				statement.executeUpdate("insert into Delivery_Dockets values (default, default, " + customerID + ","
 						+ publicationID + ", default );");
 			}
 			gotDailyPublication = true;
@@ -302,14 +304,16 @@ public class QueryTableModel {
 
 		try {
 			statement = connect.createStatement();
+			statement.executeUpdate("delete from Delivery_Dockets;");
+			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
-					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '7'");
+					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '7'");
 
 			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+				statement.executeUpdate("insert into Delivery_Dockets values (default, default, " + customerID + ","
 						+ publicationID + ", default );");
 			}
 			return true;
@@ -323,14 +327,18 @@ public class QueryTableModel {
 
 		try {
 			statement = connect.createStatement();
+			statement.executeUpdate("delete from Delivery_Dockets;");
+			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
-					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '14'");
-
+					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '14'");
+			
 			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
+				System.out.println(customerID);
 				int publicationID = resultSet.getInt(2);
+				System.out.println(publicationID);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+				statement.executeUpdate("insert into Delivery_Dockets values (default, default, " + customerID + ","
 						+ publicationID + ", default );");
 			}
 			return true;
@@ -344,14 +352,17 @@ public class QueryTableModel {
 
 		try {
 			statement = connect.createStatement();
+			
+			statement.executeUpdate("delete from Delivery_Dockets;");
+			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
-					"select customerID, publicationID from orders where isActive = true and frequencyInDays = '30'");
+					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '30'");
 
 			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
-				statement.executeUpdate("insert into DeliveryDockets values (default, default, " + customerID + ","
+				statement.executeUpdate("insert into Delivery_Dockets values (default, default, " + customerID + ","
 						+ publicationID + ", default );");
 			}
 			return true;

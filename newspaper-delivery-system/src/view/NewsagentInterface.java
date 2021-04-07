@@ -2,6 +2,7 @@ package view;
 
 import controller.QueryTableModel;
 import exceptions.CustomersException;
+import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
 import exceptions.StaffException;
 import model.Customers;
@@ -29,8 +30,8 @@ class NewsagentInterface extends JFrame
 	private JMenuBar mb;
 	
 	private QueryTableModel qtm = new QueryTableModel();
-	private TableModel customers, publications, deliverydocket, deliveryarea, staffMem;
-	private JTable custable, pubtable, ddtable, datable, staffTable;
+	private TableModel customers, publications, deliverydocket, deliveryarea, staffMem,printDoc;
+	private JTable custable, pubtable, ddtable, datable, staffTable, docPrintTable;
 
 	private Container ct;
 	private CardLayout cl;
@@ -136,9 +137,147 @@ class NewsagentInterface extends JFrame
 		tabs.addTab("Delivery Docket", DeliveryDocket());
 		tabs.add("Customer Orders", Orders());
 		tabs.addTab("Staff Member", StaffMember());
+		tabs.addTab("Docet Print", PrintDocket());
 		
 		menuPanel.add(tabs);
 		return menuPanel;
+	}
+	
+	JPanel Publications()
+	{
+		JPanel pnPub = new JPanel(null);	
+		try
+		{	
+			ResultSet rs = qtm.retrieveAllPublications();
+			publications = new TableModel();
+			publications.RefreshDatabase(rs);
+			
+			pubtable = new JTable(publications);
+			JScrollPane sp  = new JScrollPane(pubtable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			sp.setBounds(10, 10, 460, 300);
+		
+			setPubtableDimension();
+			pnPub.add(sp);
+		}
+		catch(Exception e)
+		{System.out.println(e.getMessage());}
+		
+		JPanel crud = new JPanel(new FlowLayout(0,1,5));
+		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		crud.setBounds(10, 320, 460, 100);
+		crud.setBackground(Color.RED);
+		
+		JButton insert, update, delete;
+		
+		String[] placeHolder = {"ID","Frequency","Name","Price","Stock"};
+		JTextField[] txtDetails = new JTextField[5];
+		
+		for(int i=0; i<txtDetails.length; i++)
+		{
+			txtDetails[i] = new JTextField(7);
+			crud.add(txtDetails[i]);
+			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
+			txtDetails[i].setText(placeHolder[i]);
+			txtDetails[i].addFocusListener(new FocusListener() 
+			{
+				public void focusLost(FocusEvent e) 
+				{
+					if(txtDetails[0].getText().isEmpty())
+						txtDetails[0].setText(placeHolder[0]);
+					if(txtDetails[1].getText().isEmpty())
+						txtDetails[1].setText(placeHolder[1]);
+					if(txtDetails[2].getText().isEmpty())
+						txtDetails[2].setText(placeHolder[2]);
+					if(txtDetails[3].getText().isEmpty())
+						txtDetails[3].setText(placeHolder[3]);
+					if(txtDetails[4].getText().isEmpty())
+						txtDetails[4].setText(placeHolder[4]);
+				}
+				public void focusGained(FocusEvent e) 
+				{
+					if(e.getSource()==txtDetails[0] && txtDetails[0].getText().equals(placeHolder[0]))
+						txtDetails[0].setText("");
+					if(e.getSource()==txtDetails[1] && txtDetails[1].getText().equals(placeHolder[1]))
+						txtDetails[1].setText("");
+					if(e.getSource()==txtDetails[2] && txtDetails[2].getText().equals(placeHolder[2]))
+						txtDetails[2].setText("");
+					if(e.getSource()==txtDetails[3] && txtDetails[3].getText().equals(placeHolder[3]))
+						txtDetails[3].setText("");
+					if(e.getSource()==txtDetails[4] && txtDetails[4].getText().equals(placeHolder[4]))
+						txtDetails[4].setText("");
+				}
+			});
+		}
+		insert = new JButton("Insert");
+		insert.setFont(new Font("Garamond", 1, 15));
+		insert.setPreferredSize(new Dimension(150,30));
+		insert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String freq = txtDetails[1].getText();
+				String pName = txtDetails[2].getText();
+				double pPrice = Double.parseDouble(txtDetails[3].getText());
+				int stock = Integer.parseInt(txtDetails[4].getText());
+				try
+				{
+					Publication pub = new Publication(20, freq, pName, pPrice, stock);
+					qtm.insertNewPublication(pub);
+					
+					ResultSet rs = qtm.retrieveAllPublications();
+					publications.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(PublicationException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		update = new JButton("Update");
+		update.setFont(new Font("Garamond", 1, 15));
+		update.setPreferredSize(new Dimension(150,30));
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				String freq = txtDetails[1].getText();
+				String pName = txtDetails[2].getText();
+				double pPrice = Double.parseDouble(txtDetails[3].getText());
+				int stock = Integer.parseInt(txtDetails[4].getText());
+				try
+				{
+					Publication pub = new Publication(ID, freq, pName, pPrice, stock);
+					qtm.updatePublication(pub);
+					
+					ResultSet rs = qtm.retrieveAllPublications();
+					publications.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(PublicationException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
+		delete = new JButton("Delete");
+		delete.setFont(new Font("Garamond", 1, 15));
+		delete.setPreferredSize(new Dimension(150,30));
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				try
+				{
+					Publication pub = new Publication(ID, "14", "dummy", 12.20, 2);
+					qtm.deletePublication(pub);
+					
+					ResultSet rs = qtm.retrieveAllPublications();
+					publications.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(PublicationException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
+		
+		crud.add(insert);crud.add(update);crud.add(delete);
+		pnPub.add(crud);
+		return pnPub;
 	}
 	
 	
@@ -426,21 +565,21 @@ class NewsagentInterface extends JFrame
 		return pnCus;
 	}
 	
-	JPanel Publications()
+	JPanel PrintDocket()
 	{
-		JPanel pnPub = new JPanel(null);	
+		JPanel docPri = new JPanel(null);	
 		try
 		{	
-			ResultSet rs = qtm.retrieveAllPublications();
-			publications = new TableModel();
-			publications.RefreshDatabase(rs);
+			ResultSet rs = qtm.retrieveAllDeliveryDockets();
+			printDoc = new TableModel();
+			printDoc.RefreshDatabase(rs);
 			
-			pubtable = new JTable(publications);
-			JScrollPane sp  = new JScrollPane(pubtable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			docPrintTable = new JTable(printDoc);
+			JScrollPane sp  = new JScrollPane(docPrintTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			sp.setBounds(10, 10, 460, 300);
 		
 			setPubtableDimension();
-			pnPub.add(sp);
+			docPri.add(sp);
 		}
 		catch(Exception e)
 		{System.out.println(e.getMessage());}
@@ -450,10 +589,10 @@ class NewsagentInterface extends JFrame
 		crud.setBounds(10, 320, 460, 100);
 		crud.setBackground(Color.RED);
 		
-		JButton insert, update, delete;
+		JButton insert,update,week2, monthly;
 		
-		String[] placeHolder = {"ID","Frequency","Name","Price","Stock"};
-		JTextField[] txtDetails = new JTextField[5];
+		String[] placeHolder = {"Staff ID"};
+		JTextField[] txtDetails = new JTextField[1];
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
@@ -467,100 +606,89 @@ class NewsagentInterface extends JFrame
 				{
 					if(txtDetails[0].getText().isEmpty())
 						txtDetails[0].setText(placeHolder[0]);
-					if(txtDetails[1].getText().isEmpty())
-						txtDetails[1].setText(placeHolder[1]);
-					if(txtDetails[2].getText().isEmpty())
-						txtDetails[2].setText(placeHolder[2]);
-					if(txtDetails[3].getText().isEmpty())
-						txtDetails[3].setText(placeHolder[3]);
-					if(txtDetails[4].getText().isEmpty())
-						txtDetails[4].setText(placeHolder[4]);
 				}
 				public void focusGained(FocusEvent e) 
 				{
 					if(e.getSource()==txtDetails[0] && txtDetails[0].getText().equals(placeHolder[0]))
 						txtDetails[0].setText("");
-					if(e.getSource()==txtDetails[1] && txtDetails[1].getText().equals(placeHolder[1]))
-						txtDetails[1].setText("");
-					if(e.getSource()==txtDetails[2] && txtDetails[2].getText().equals(placeHolder[2]))
-						txtDetails[2].setText("");
-					if(e.getSource()==txtDetails[3] && txtDetails[3].getText().equals(placeHolder[3]))
-						txtDetails[3].setText("");
-					if(e.getSource()==txtDetails[4] && txtDetails[4].getText().equals(placeHolder[4]))
-						txtDetails[4].setText("");
 				}
 			});
 		}
-		insert = new JButton("Insert");
+		insert = new JButton("Daily");
 		insert.setFont(new Font("Garamond", 1, 15));
 		insert.setPreferredSize(new Dimension(150,30));
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String freq = txtDetails[1].getText();
-				String pName = txtDetails[2].getText();
-				double pPrice = Double.parseDouble(txtDetails[3].getText());
-				int stock = Integer.parseInt(txtDetails[4].getText());
 				try
 				{
-					Publication pub = new Publication(20, freq, pName, pPrice, stock);
-					qtm.insertNewPublication(pub);
+
+					qtm.createDailyDeliveryDocket();
 					
-					ResultSet rs = qtm.retrieveAllPublications();
-					publications.RefreshDatabase(rs);
+					ResultSet rs = qtm.retrieveAllDeliveryDockets();
+					printDoc.RefreshDatabase(rs);
 					setPubtableDimension();
 				}
-				catch(PublicationException e1)
+				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}
 			}
 		});
-		update = new JButton("Update");
+		
+		update = new JButton("Weekly");
 		update.setFont(new Font("Garamond", 1, 15));
 		update.setPreferredSize(new Dimension(150,30));
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ID = Integer.parseInt(txtDetails[0].getText());
-				String freq = txtDetails[1].getText();
-				String pName = txtDetails[2].getText();
-				double pPrice = Double.parseDouble(txtDetails[3].getText());
-				int stock = Integer.parseInt(txtDetails[4].getText());
 				try
 				{
-					Publication pub = new Publication(ID, freq, pName, pPrice, stock);
-					qtm.updatePublication(pub);
+					qtm.createWeeklyDeliveryDocket();
 					
-					ResultSet rs = qtm.retrieveAllPublications();
-					publications.RefreshDatabase(rs);
+					ResultSet rs = qtm.retrieveAllDeliveryDockets();
+					printDoc.RefreshDatabase(rs);
 					setPubtableDimension();
 				}
-				catch(PublicationException e1)
+				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}
 			}
 		});
 		
-		delete = new JButton("Delete");
-		delete.setFont(new Font("Garamond", 1, 15));
-		delete.setPreferredSize(new Dimension(150,30));
-		delete.addActionListener(new ActionListener() {
+		week2 = new JButton("2-Weeks");
+		week2.setFont(new Font("Garamond", 1, 15));
+		week2.setPreferredSize(new Dimension(150,30));
+		week2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ID = Integer.parseInt(txtDetails[0].getText());
 				try
 				{
-					Publication pub = new Publication(ID, "14", "dummy", 12.20, 2);
-					qtm.deletePublication(pub);
+					qtm.createBiWeeklyDeliveryDocket();
 					
-					ResultSet rs = qtm.retrieveAllPublications();
-					publications.RefreshDatabase(rs);
+					ResultSet rs = qtm.retrieveAllDeliveryDockets();
+					printDoc.RefreshDatabase(rs);
 					setPubtableDimension();
 				}
-				catch(PublicationException e1)
+				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}
 			}
 		});
-		
-		
-		crud.add(insert);crud.add(update);crud.add(delete);
-		pnPub.add(crud);
-		return pnPub;
+		monthly = new JButton("Monthly");
+		monthly.setFont(new Font("Garamond", 1, 15));
+		monthly.setPreferredSize(new Dimension(150,30));
+		monthly.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try
+				{
+					qtm.createMountlyDeliveryDocket();
+					
+					ResultSet rs = qtm.retrieveAllDeliveryDockets();
+					printDoc.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(DeliveryDocketException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+
+		crud.add(insert);crud.add(update);crud.add(week2);crud.add(monthly);
+		docPri.add(crud);
+		return docPri;
 	}
 	
 	JPanel DeliveryArea()
