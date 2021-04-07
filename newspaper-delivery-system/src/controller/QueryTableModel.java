@@ -139,9 +139,7 @@ public class QueryTableModel {
 	}
 
 	public boolean deletePublication(Publication p) throws PublicationException {
-
 		boolean delete = true;
-
 		try {
 
 			preparedStatement = connect.prepareStatement("delete from publication where id= ?");
