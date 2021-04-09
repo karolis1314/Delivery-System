@@ -9,10 +9,12 @@ import java.sql.Statement;
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
+import exceptions.OrdersException;
 import exceptions.PublicationException;
 import model.Customers;
 import model.DeliveryArea;
 import model.DeliveryDocket;
+import model.Orders;
 import model.Publication;
 
 public class QueryTableModel 
@@ -202,6 +204,71 @@ public class QueryTableModel
 			throw new CustomersException("Failed to update customer details: " + e.getMessage());
 		}
 		return updateSuccesful;
+	}
+	
+	//Orders DBAO
+	public ResultSet displayOrders() throws OrdersException
+	{
+		try 
+		{
+			rs = stmt.executeQuery("SELECT * FROM ORDERS");
+		}
+		catch (Exception e) 
+		{
+			rs = null;
+			throw new OrdersException("Failed to display orders: " + e.getMessage());
+		}
+		return rs;
+	}
+	public boolean insertOrder(Orders order) throws OrdersException
+	{
+		boolean insertSucessfull = true;	
+		try
+		{
+			pstmt = con.prepareStatement("INSERT INTO ORDERS VALUES (?, ?, ?)");
+			pstmt.setInt(1, order.getCustomerId());
+			pstmt.setInt(2, order.getPublicationId());
+			pstmt.setBoolean(3, order.isActive());
+			pstmt.executeUpdate();
+		}
+		catch (Exception e) 
+		{
+			insertSucessfull = false;
+			throw new OrdersException("Failed to insert order details: " + e.getMessage());
+		}
+		return insertSucessfull;
+	}
+	public boolean deleteOrder(boolean active) throws OrdersException
+	{
+		boolean deleteSuccess=true;
+		try 
+		{
+			pstmt = con.prepareStatement("DELETE FROM ORDERS WHERE isACTIVE=" + active);
+			pstmt.executeUpdate();
+		}
+		catch (Exception e)
+		{
+			deleteSuccess=false;
+			throw new OrdersException("Failed to delete order: " + e.getMessage());
+		}
+		return deleteSuccess;
+	}
+	public boolean updateOrder(Orders order) throws OrdersException
+	{
+		boolean updateSuccess=true;
+		try 
+		{
+			pstmt = con.prepareStatement("UPDATE ORDERS SET isACTIVE=?, PUBLICATIONID=? WHERE CUSTOMERID=?");
+			pstmt.setBoolean(1, order.isActive());
+			pstmt.setInt(2, order.getPublicationId());
+			pstmt.setInt(3, order.getCustomerId());
+		}
+		catch (Exception e)
+		{
+			updateSuccess=false;
+			throw new OrdersException("Failed to update order: " + e.getMessage());
+		}
+		return updateSuccess;
 	}
 	
 	//Delivery Area Access

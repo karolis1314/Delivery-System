@@ -1,11 +1,11 @@
 package exceptions;
 
 @SuppressWarnings("serial")
-public class OrderException extends Exception
+public class OrdersException extends Exception
 {
 	String msg;
 	
-	public OrderException(String msg)
+	public OrdersException(String msg)
 	{
 		this.msg = msg;
 	}
