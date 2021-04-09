@@ -10,7 +10,7 @@ public class Customers
 		The objective of this tests is to verify customer details before they can be added to database
 	*/
 	private int cus_id;
-	private String fName,lName,number, address;
+	private String fName,lName,number, address, areaId;
 
 	public Customers(int cus_id, String add, String firstName, String lastName, String prefix, String digits) throws CustomersException
 	{
@@ -48,17 +48,19 @@ public class Customers
 	{
 		return lName;
 	}
-	
 	public String getNumber()
 	{
 		return number;
 	}
-	
 	public String getAddress()
 	{
 		return address;
 	}
-	
+	public String getAreaId() 
+	{
+		return areaId;
+	}
+
 	public static boolean validateCustomerName(String firstName, String lastName) throws CustomersException
 	{
 		/*  
@@ -143,7 +145,7 @@ public class Customers
 	
 	public static boolean validateCustomerAddress(String address) throws CustomersException
 	{
-		if(address.length()<0)
+		if(address.length()<4)
 		{
 			throw new CustomersException("Address too short");
 		}
@@ -155,6 +157,11 @@ public class Customers
 		{
 			return true;
 		}
+	}
+	
+	public static boolean validateAreaId(int id)
+	{
+		return false;
 	}
 }
 

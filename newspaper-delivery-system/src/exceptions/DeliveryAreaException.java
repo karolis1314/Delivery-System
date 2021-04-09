@@ -1,13 +1,14 @@
 package exceptions;
 
-public class DeliveryAreaException extends Exception{
-    String message;
+@SuppressWarnings("serial")
+public class DeliveryAreaException extends Exception {
+    String errorMessage;
 
-    public DeliveryAreaException(String errMessage) {
-        this.message = errMessage;
+    public DeliveryAreaException(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public String getErrorMessage() {
-        return message;
+        return this.errorMessage;
     }
 }

@@ -12,11 +12,13 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
+import exceptions.OrdersException;
 import exceptions.PublicationException;
 import exceptions.StaffException;
 import model.Customers;
 import model.DeliveryArea;
 import model.DeliveryDocket;
+import model.Orders;
 import model.Publication;
 import model.StaffMember;
 
@@ -402,6 +404,70 @@ public class QueryTableModel {
 		return resultSet;
 	}
 
+	//Orders DBAO
+	public ResultSet displayOrders() throws OrdersException
+	{
+		try 
+		{
+			resultSet = statement.executeQuery("SELECT * FROM ORDERS");
+		}
+		catch (Exception e) 
+		{
+			resultSet = null;
+			throw new OrdersException("Failed to display orders: " + e.getMessage());
+		}
+		return resultSet;
+	}
+	public boolean insertOrder(Orders order) throws OrdersException
+	{
+		boolean insertSucessfull = true;	
+		try
+		{
+			preparedStatement = connect.prepareStatement("INSERT INTO ORDERS VALUES (?, ?, ?)");
+			preparedStatement.setInt(1, order.getCustomerId());
+			preparedStatement.setInt(2, order.getPublicationId());
+			preparedStatement.setBoolean(3, order.isActive());
+			preparedStatement.executeUpdate();
+		}
+		catch (Exception e) 
+		{
+			insertSucessfull = false;
+			throw new OrdersException("Failed to insert order details: " + e.getMessage());
+		}
+		return insertSucessfull;
+	}
+	public boolean deleteOrder(boolean active) throws OrdersException
+	{
+		boolean deleteSuccess=true;
+		try 
+		{
+			preparedStatement = connect.prepareStatement("DELETE FROM ORDERS WHERE isACTIVE=" + active);
+			preparedStatement.executeUpdate();
+		}
+		catch (Exception e)
+		{
+			deleteSuccess=false;
+			throw new OrdersException("Failed to delete order: " + e.getMessage());
+		}
+		return deleteSuccess;
+	}
+	public boolean updateOrder(Orders order) throws OrdersException
+	{
+		boolean updateSuccess=true;
+		try 
+		{
+			preparedStatement =  connect.prepareStatement("UPDATE ORDERS SET isACTIVE=?, PUBLICATIONID=? WHERE CUSTOMERID=?");
+			preparedStatement.setBoolean(1, order.isActive());
+			preparedStatement.setInt(2, order.getPublicationId());
+			preparedStatement.setInt(3, order.getCustomerId());
+		}
+		catch (Exception e)
+		{
+			updateSuccess=false;
+			throw new OrdersException("Failed to update order: " + e.getMessage());
+		}
+		return updateSuccess;
+	}
 	
 	// Customers DBAO
 	public boolean insertCustomerInfo(Customers cus) throws CustomersException {

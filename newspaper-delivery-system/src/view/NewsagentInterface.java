@@ -141,11 +141,109 @@ class NewsagentInterface extends JFrame
 		tabs.addTab("Customer Orders", Orders());
 		tabs.addTab("Staff Member", StaffMember());
 		tabs.addTab("Delivery Docket", PrintDocket());
+		tabs.addTab("Orders", ordersPanel());
 		
 		menuPanel.add(tabs);
 		return menuPanel;
 	}
 	
+	JPanel ordersPanel()
+	{
+		JPanel pnOrders = new JPanel(null);
+		try
+		{
+			ResultSet rs = qtm.displayOrders();
+			orders = new TableModel();
+			orders.RefreshDatabase(rs);
+			
+			ordersTable = new JTable(orders);
+			JScrollPane sp  = new JScrollPane(ordersTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			sp.setBounds(10, 10, 460, 300);
+			
+			setCustableDimension();
+			pnOrders.add(sp);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+		JPanel crud = new JPanel(new FlowLayout(0,1,5));
+		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		crud.setBounds(10, 320, 460, 100);
+		crud.setBackground(Color.RED);
+		
+		JButton insert, update, delete;
+		
+		String[] placeHolder = {"CustomerId","PublicationId","isActive"};
+		JTextField[] txtDetails = new JTextField[3];
+		
+		for(int i=0; i<txtDetails.length; i++)
+		{
+			txtDetails[i] = new JTextField(10);
+			crud.add(txtDetails[i]);
+			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
+			txtDetails[i].setText(placeHolder[i]);
+			txtDetails[i].addFocusListener(new FocusListener() 
+			{
+				public void focusLost(FocusEvent e) 
+				{
+					if(txtDetails[0].getText().isEmpty())
+						txtDetails[0].setText(placeHolder[0]);
+					if(txtDetails[1].getText().isEmpty())
+						txtDetails[1].setText(placeHolder[1]);
+					if(txtDetails[2].getText().isEmpty())
+						txtDetails[2].setText(placeHolder[2]);
+				}
+				public void focusGained(FocusEvent e) 
+				{
+					if(e.getSource()==txtDetails[0] && txtDetails[0].getText().equals(placeHolder[0]))
+						txtDetails[0].setText("");
+					if(e.getSource()==txtDetails[1] && txtDetails[1].getText().equals(placeHolder[1]))
+						txtDetails[1].setText("");
+					if(e.getSource()==txtDetails[2] && txtDetails[2].getText().equals(placeHolder[2]))
+						txtDetails[2].setText("");
+				}
+			});
+		}
+		insert = new JButton("Insert");
+		insert.setFont(new Font("Garamond", 1, 15));
+		insert.setPreferredSize(new Dimension(150,30));
+		insert .addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int cus_id = Integer.parseInt(txtDetails[0].getText());
+				String pub_id = txtDetails[1].getText();
+				int text = Integer.parseInt(txtDetails[2].getText());
+				boolean active;
+				
+				if(text==0)
+					active=false;
+				else if(text==1)
+					active=true;
+				
+				try
+				{
+					Orders order = new Orders(cus_id, cus_id, active);
+					qtm.insertOrder(order);
+		
+					ResultSet rs = qtm.displayOrders();
+					customers.RefreshDatabase(rs);
+				}
+				catch(OrdersException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		update = new JButton("Update");
+		update.setFont(new Font("Garamond", 1, 15));
+		update.setPreferredSize(new Dimension(150,30));
+		
+		delete = new JButton("Delete");
+		delete.setFont(new Font("Garamond", 1, 15));
+		delete.setPreferredSize(new Dimension(150,30));
+		
+		crud.add(insert);crud.add(update);crud.add(delete);
+		pnOrders.add(crud);
+		return pnOrders;
+	}
 	JPanel Publications()
 	{
 		JPanel pnPub = new JPanel(null);	

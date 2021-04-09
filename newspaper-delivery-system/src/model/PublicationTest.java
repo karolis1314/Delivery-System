@@ -1,11 +1,10 @@
-
 package model;
 
 import exceptions.PublicationException;
 import junit.framework.TestCase;
 
-public class PublicationTest extends TestCase {
-
+public class PublicationTest extends TestCase 
+{
 //	Test number: 1
 //  Objective: Create Publication Object.
 //  Test type: JUint
