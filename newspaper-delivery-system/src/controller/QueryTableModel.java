@@ -472,7 +472,8 @@ public class QueryTableModel
 	// Customers DBAO
 	public boolean insertCustomerInfo(Customers cus) throws CustomersException {
 		boolean insertSucessfull = true;
-		try {
+		try 
+		{
 			preparedStatement = connect.prepareStatement("INSERT INTO CUSTOMERS VALUES (?, ?, ?, ?, ?, ?)");
 			preparedStatement.setInt(1, cus.getId());
 			preparedStatement.setString(2, cus.getAddress());
@@ -481,7 +482,9 @@ public class QueryTableModel
 			preparedStatement.setString(5, cus.getNumber());
 			preparedStatement.setInt(6, cus.getAreaId());
 			preparedStatement.executeUpdate();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			insertSucessfull = false;
 			throw new CustomersException(e.getMessage());
 		}
@@ -496,7 +499,6 @@ public class QueryTableModel
 			preparedStatement = connect.prepareStatement("DELETE FROM CUSTOMERS WHERE CUSTOMER_ID = ?");
 			preparedStatement.setInt(1, id);
 			preparedStatement.execute();
-
 		} 
 		catch (Exception e) 
 		{
