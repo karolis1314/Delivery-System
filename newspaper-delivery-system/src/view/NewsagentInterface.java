@@ -163,7 +163,7 @@ class NewsagentInterface extends JFrame
 		}
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 460, 100);
+		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
 		JButton insert, update, delete;
@@ -173,7 +173,7 @@ class NewsagentInterface extends JFrame
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
-			txtDetails[i] = new JTextField(10);
+			txtDetails[i] = new JTextField(18);
 			crud.add(txtDetails[i]);
 			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
 			txtDetails[i].setText(placeHolder[i]);
