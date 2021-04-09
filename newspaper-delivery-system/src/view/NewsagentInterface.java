@@ -2,6 +2,7 @@ package view;
 
 import controller.QueryTableModel;
 import exceptions.CustomersException;
+import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
 import exceptions.PublicationException;
 import exceptions.StaffException;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import model.StaffMember;
+import model.DeliveryArea;
 
 @SuppressWarnings("serial")
 class NewsagentInterface extends JFrame
@@ -714,6 +716,101 @@ class NewsagentInterface extends JFrame
 		crud.setBounds(10, 320, 670, 100);
 		crud.setBackground(Color.RED);
 		
+		JButton insert, update, delete;
+		
+		String[] placeHolder = {"ID","Area Name"};
+		JTextField[] txtDetails = new JTextField[2];
+		
+		for(int i=0; i<txtDetails.length; i++)
+		{
+			txtDetails[i] = new JTextField(7);
+			crud.add(txtDetails[i]);
+			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
+			txtDetails[i].setText(placeHolder[i]);
+			txtDetails[i].addFocusListener(new FocusListener() 
+			{
+				public void focusLost(FocusEvent e) 
+				{
+					if(txtDetails[0].getText().isEmpty())
+						txtDetails[0].setText(placeHolder[0]);
+					if(txtDetails[1].getText().isEmpty())
+						txtDetails[1].setText(placeHolder[1]);
+			
+				}
+				public void focusGained(FocusEvent e) 
+				{
+					if(e.getSource()==txtDetails[0] && txtDetails[0].getText().equals(placeHolder[0]))
+						txtDetails[0].setText("");
+					if(e.getSource()==txtDetails[1] && txtDetails[1].getText().equals(placeHolder[1]))
+						txtDetails[1].setText("");
+				
+				}
+			});
+		}
+		insert = new JButton("Insert");
+		insert.setFont(new Font("Garamond", 1, 15));
+		insert.setPreferredSize(new Dimension(150,30));
+		insert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = txtDetails[1].getText();
+				
+				try
+				{
+					DeliveryArea area = new DeliveryArea(name);
+					qtm.insertNewDeliveryArea(area);
+					
+					ResultSet rs = qtm.retrieveAllDeliveryArea();
+					deliveryarea.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(DeliveryAreaException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		update = new JButton("Update");
+		update.setFont(new Font("Garamond", 1, 15));
+		update.setPreferredSize(new Dimension(150,30));
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				String name = txtDetails[1].getText();
+				
+				try
+				{
+					DeliveryArea area = new DeliveryArea(ID, name);
+					qtm.updateDeliveryArea(area);
+					
+					ResultSet rs = qtm.retrieveAllDeliveryArea();
+					deliveryarea.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(DeliveryAreaException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
+		delete = new JButton("Delete");
+		delete.setFont(new Font("Garamond", 1, 15));
+		delete.setPreferredSize(new Dimension(150,30));
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(txtDetails[0].getText());
+				try
+				{
+					DeliveryArea area = new DeliveryArea(ID, "Deleted");
+					qtm.deleteDeliveryArea(area);
+					
+					ResultSet rs = qtm.retrieveAllDeliveryArea();
+					deliveryarea.RefreshDatabase(rs);
+					setPubtableDimension();
+				}
+				catch(DeliveryAreaException e1)
+				{System.out.println(e1.getMessage());}
+			}
+		});
+		
+		
+		crud.add(insert);crud.add(update);crud.add(delete);
 		pnDA.add(crud);
 		return pnDA;
 	}

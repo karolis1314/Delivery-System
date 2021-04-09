@@ -42,7 +42,7 @@ public class DeliveryAreaTest extends TestCase {
         output: true
  */
         try {
-            DeliveryArea deliveryArea = new DeliveryArea("Area 1",56);
+            DeliveryArea deliveryArea = new DeliveryArea("Area 1");
             assertEquals("Area 1", deliveryArea.getName());
         } catch (DeliveryAreaException e) {
             fail();
@@ -57,7 +57,7 @@ public class DeliveryAreaTest extends TestCase {
         output: error
  */
         try {
-            DeliveryArea deliveryArea = new DeliveryArea("Area 1",56);
+            DeliveryArea deliveryArea = new DeliveryArea("Area 1");
         } catch (DeliveryAreaException e) {
             assertEquals("Invalid Delivery Area name", e.getErrorMessage());
         }
@@ -71,37 +71,11 @@ public class DeliveryAreaTest extends TestCase {
         output: error
  */
         try {
-            DeliveryArea deliveryArea = new DeliveryArea("asdfhjklasdfhjlasdfhjjjuehdhhdiekdpppesdkakebbhckajschbasjdhbcadshbcjcadsbcjkasbdchjsdabckjhasbdkcbryjsdkfjadskfadskjsdkjfljkfsajfsjaskdbfjsadbfrunfuasnfrusfnsjdnafljsdfnasdnfasdnflasdn",56);
+            DeliveryArea deliveryArea = new DeliveryArea("asdfhjklasdfhjlasdfhjjjuehdhhdiekdpppesdkakebbhckajschbasjdhbcadshbcjcadsbcjkasbdchjsdabckjhasbdkcbryjsdkfjadskfadskjsdkjfljkfsajfsjaskdbfjsadbfrunfuasnfrusfnsjdnafljsdfnasdnfasdnflasdn");
         } catch (DeliveryAreaException e) {
             assertEquals("Invalid Delivery Area name", e.getErrorMessage());
         }
     }
-    public void testDeliveryArea004(){
-          /*
-        test number: 004
-        objective: create a Delivery Area object with invalid size
-        Test type: JUint
-        input: name = "Area 3 , size = -1
-        output: error
- */
-        try {
-            DeliveryArea deliveryArea = new DeliveryArea("Area 3",-1);
-        } catch (DeliveryAreaException e) {
-            assertEquals("Area Delivery size below Zero", e.getErrorMessage());
-        }
-    }
-    public void testDeliveryArea005(){
-          /*
-        test number: 005
-        objective: create a Delivery Area object with invalid size
-        Test type: JUint
-        input: name = "Area 3 , size = 201
-        output: error
- */
-        try {
-            DeliveryArea deliveryArea = new DeliveryArea("Area 3",200);
-        } catch (DeliveryAreaException e) {
-            assertEquals("Area Delivery size below Zero", e.getErrorMessage());
-        }
-    }
+
+
 }

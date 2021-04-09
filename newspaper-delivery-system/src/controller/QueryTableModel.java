@@ -24,14 +24,14 @@ public class QueryTableModel {
 	private ResultSet resultSet;
 
 	private String user = "root";
-	private String password = "#Lekoso00";
+	private String password = "a00252699";
 
 	public boolean openConnection() {
 		boolean success = false;
 		try {
 			// Change password, port and sql connector to run on your machine.
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:6969/newsagent2021?serverTimezone=GMT";
+			String url = "jdbc:mysql://localhost:3306/newsagent2021?serverTimezone=GMT";
 			connect = DriverManager.getConnection(url, user, password);
 			statement = connect.createStatement();
 			success = true;
@@ -206,9 +206,8 @@ public class QueryTableModel {
 
 		try {
 
-			preparedStatement = connect.prepareStatement("insert into delivery_areas  values (default , ?, ?);");
+			preparedStatement = connect.prepareStatement("insert into delivery_areas  values (default , ?);");
 			preparedStatement.setString(1, da.getName());
-			preparedStatement.setInt(2, da.getSize());
 			preparedStatement.execute();
 
 		} catch (Exception e) {
@@ -225,10 +224,9 @@ public class QueryTableModel {
 
 		try {
 
-			preparedStatement = connect.prepareStatement("update delivery_areas set AName= ?, size = ? where id = ? ");
+			preparedStatement = connect.prepareStatement("update delivery_areas set AreaName= ? where id = ? ");
 			preparedStatement.setString(1, da.getName());
-			preparedStatement.setInt(2, da.getSize());
-			preparedStatement.setInt(3, da.getAreaId());
+			preparedStatement.setInt(2, da.getAreaId());
 			preparedStatement.execute();
 
 		} catch (Exception e) {
