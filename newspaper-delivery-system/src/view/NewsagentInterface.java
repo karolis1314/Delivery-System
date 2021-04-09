@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import model.StaffMember;
 import model.DeliveryArea;
 
@@ -32,7 +34,7 @@ class NewsagentInterface extends JFrame
 	private JMenuBar mb;
 	
 	private QueryTableModel qtm = new QueryTableModel();
-	private TableModel customers, publications, deliveryarea, staffMem,printDoc;
+	private TableModel customers, publications, deliveryarea, staffMem, printDoc;
 	private JTable custable, pubtable, datable, staffTable, docPrintTable;
 
 	private Container ct;
@@ -579,7 +581,6 @@ class NewsagentInterface extends JFrame
 			JScrollPane sp  = new JScrollPane(docPrintTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			sp.setBounds(10, 10, 670, 300);
 		
-			setPubtableDimension();
 			docPri.add(sp);
 		}
 		catch(Exception e)
@@ -627,7 +628,6 @@ class NewsagentInterface extends JFrame
 					
 					ResultSet rs = qtm.retrieveAllDeliveryDockets();
 					printDoc.RefreshDatabase(rs);
-					setPubtableDimension();
 				}
 				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}
@@ -642,10 +642,9 @@ class NewsagentInterface extends JFrame
 				try
 				{
 					qtm.createWeeklyDeliveryDocket();
-					
+
 					ResultSet rs = qtm.retrieveAllDeliveryDockets();
 					printDoc.RefreshDatabase(rs);
-					setPubtableDimension();
 				}
 				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}
@@ -663,7 +662,6 @@ class NewsagentInterface extends JFrame
 					
 					ResultSet rs = qtm.retrieveAllDeliveryDockets();
 					printDoc.RefreshDatabase(rs);
-					setPubtableDimension();
 				}
 				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}
@@ -677,10 +675,9 @@ class NewsagentInterface extends JFrame
 				try
 				{
 					qtm.createMountlyDeliveryDocket();
-					
+	
 					ResultSet rs = qtm.retrieveAllDeliveryDockets();
 					printDoc.RefreshDatabase(rs);
-					setPubtableDimension();
 				}
 				catch(DeliveryDocketException e1)
 				{System.out.println(e1.getMessage());}

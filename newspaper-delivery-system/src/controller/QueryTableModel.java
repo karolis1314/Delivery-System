@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
@@ -281,7 +284,6 @@ public class QueryTableModel {
 			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '1'");
-
 			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
@@ -291,32 +293,37 @@ public class QueryTableModel {
 			}
 			gotDailyPublication = true;
 		} catch (Exception e) {
-
+			System.out.println(e.getMessage());
 		}
 		return gotDailyPublication;
 	}
 
 	public boolean createWeeklyDeliveryDocket() {
-
-		try {
+		boolean gotWeekly=false;
+		try
+		{
 			statement = connect.createStatement();
 			statement.executeUpdate("delete from Delivery_Dockets;");
 			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '7'");
-
-			while (resultSet.next()) {
+			
+			while (resultSet.next()) 
+			{
 				int customerID = resultSet.getInt(1);
 				int publicationID = resultSet.getInt(2);
 				statement = connect.createStatement();
 				statement.executeUpdate("insert into Delivery_Dockets values (default, default, " + customerID + ","
 						+ publicationID + ", default );");
+			
 			}
-			return true;
-		} catch (Exception e) {
-
+			gotWeekly=true;
+		} 
+		catch (Exception e) 
+		{
+			System.out.println(e.getMessage());
 		}
-		return false;
+		return gotWeekly;
 	}
 
 	public boolean createBiWeeklyDeliveryDocket() {
@@ -327,19 +334,16 @@ public class QueryTableModel {
 			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '14'");
-			
 			while (resultSet.next()) {
 				int customerID = resultSet.getInt(1);
-				System.out.println(customerID);
 				int publicationID = resultSet.getInt(2);
-				System.out.println(publicationID);
 				statement = connect.createStatement();
 				statement.executeUpdate("insert into Delivery_Dockets values (default, default, " + customerID + ","
 						+ publicationID + ", default );");
 			}
 			return true;
 		} catch (Exception e) {
-
+			System.out.println(e.getMessage());
 		}
 		return false;
 	}
@@ -363,7 +367,7 @@ public class QueryTableModel {
 			}
 			return true;
 		} catch (Exception e) {
-
+			System.out.println(e.getMessage());
 		}
 		return false;
 	}
