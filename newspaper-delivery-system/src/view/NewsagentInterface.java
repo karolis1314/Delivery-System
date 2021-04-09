@@ -133,7 +133,6 @@ class NewsagentInterface extends JFrame
 		tabs.addTab("Customers", Customers());
 		tabs.addTab("Publications", Publications());
 		tabs.addTab("Delivery Area", DeliveryArea());
-		tabs.addTab("Customer Orders", Orders());
 		tabs.addTab("Staff Member", StaffMember());
 		tabs.addTab("Delivery Docket", PrintDocket());
 		tabs.addTab("Orders", ordersPanel());
@@ -927,14 +926,6 @@ class NewsagentInterface extends JFrame
 		crud.add(insert);crud.add(update);crud.add(delete);
 		pnDA.add(crud);
 		return pnDA;
-	}
-
-	JPanel Orders()
-	{
-		JPanel pnOrders = new JPanel();
-		pnOrders.setBackground(Color.BLACK);
-		
-		return pnOrders;
 	}
 	JPanel welcomePanel()
 	{
