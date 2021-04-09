@@ -6,9 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import com.mysql.cj.jdbc.result.ResultSetMetaData;
-
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
@@ -22,7 +19,8 @@ import model.Orders;
 import model.Publication;
 import model.StaffMember;
 
-public class QueryTableModel {
+public class QueryTableModel
+{
 	private Connection connect = null;
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
@@ -33,7 +31,8 @@ public class QueryTableModel {
 
 	public boolean openConnection() {
 		boolean success = false;
-		try {
+		try 
+		{
 			// Change password, port and sql connector to run on your machine.
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/newsagent2021?serverTimezone=GMT";
@@ -49,7 +48,8 @@ public class QueryTableModel {
 
 	public boolean closeConnection() {
 		boolean success = false;
-		try {
+		try
+		{
 			statement.close();
 			connect.close();
 			System.out.println("Conn Closed\n");
@@ -479,7 +479,7 @@ public class QueryTableModel {
 			preparedStatement.setString(3, cus.getfName());
 			preparedStatement.setString(4, cus.getlName());
 			preparedStatement.setString(5, cus.getNumber());
-			preparedStatement.setInt(6, 3);
+			preparedStatement.setInt(6, cus.getAreaId());
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			insertSucessfull = false;
@@ -530,7 +530,7 @@ public class QueryTableModel {
 			preparedStatement.setString(2, cus.getfName());
 			preparedStatement.setString(3, cus.getlName());
 			preparedStatement.setString(4, cus.getNumber());
-			preparedStatement.setInt(5, 5);
+			preparedStatement.setInt(5, cus.getAreaId());
 			preparedStatement.setInt(6, cus.getId());
 			preparedStatement.execute();
 			updateSuccesful = true;

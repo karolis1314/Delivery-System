@@ -396,4 +396,49 @@ public class CustomersTest extends TestCase
 //			
 //		}	
 //	}
+	
+//	public void testAreaId001()
+//	{
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}
+//	}
+//	public void testAreaId002()
+//	{
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}
+//	}
+//	public void testAreaId003()
+//	{
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}
+//	}
+//	public void testAreaId004()
+//	{
+//		try
+//		{
+//			
+//		}
+//		catch(CustomersException e)
+//		{
+//			
+//		}
+//	}
 }

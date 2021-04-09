@@ -4,12 +4,12 @@ import controller.QueryTableModel;
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
+import exceptions.OrdersException;
 import exceptions.PublicationException;
 import exceptions.StaffException;
 import model.Customers;
 import model.Publication;
-
-import javax.imageio.ImageIO;
+import model.Orders;
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.*;
@@ -17,12 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import model.StaffMember;
 import model.DeliveryArea;
 
@@ -34,8 +29,8 @@ class NewsagentInterface extends JFrame
 	private JMenuBar mb;
 	
 	private QueryTableModel qtm = new QueryTableModel();
-	private TableModel customers, publications, deliveryarea, staffMem, printDoc;
-	private JTable custable, pubtable, datable, staffTable, docPrintTable;
+	private TableModel customers, publications, deliveryarea, staffMem, printDoc, orders;
+	private JTable custable, pubtable, datable, staffTable, docPrintTable, ordersTable;
 
 	private Container ct;
 	private CardLayout cl;
@@ -158,7 +153,7 @@ class NewsagentInterface extends JFrame
 			
 			ordersTable = new JTable(orders);
 			JScrollPane sp  = new JScrollPane(ordersTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			sp.setBounds(10, 10, 460, 300);
+			sp.setBounds(10, 10, 670, 300);
 			
 			setCustableDimension();
 			pnOrders.add(sp);
@@ -211,22 +206,22 @@ class NewsagentInterface extends JFrame
 		insert .addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int cus_id = Integer.parseInt(txtDetails[0].getText());
-				String pub_id = txtDetails[1].getText();
+				int pub_id = Integer.parseInt(txtDetails[1].getText());
 				int text = Integer.parseInt(txtDetails[2].getText());
-				boolean active;
-				
-				if(text==0)
-					active=false;
-				else if(text==1)
-					active=true;
+				boolean active=false;
 				
 				try
 				{
-					Orders order = new Orders(cus_id, cus_id, active);
+					if(text==1)
+						active=true;
+					else
+						active=false;
+					
+					Orders order = new Orders(cus_id, pub_id, active);
 					qtm.insertOrder(order);
 		
 					ResultSet rs = qtm.displayOrders();
-					customers.RefreshDatabase(rs);
+					orders.RefreshDatabase(rs);
 				}
 				catch(OrdersException e1)
 				{System.out.println(e1.getMessage());}
@@ -239,6 +234,25 @@ class NewsagentInterface extends JFrame
 		delete = new JButton("Delete");
 		delete.setFont(new Font("Garamond", 1, 15));
 		delete.setPreferredSize(new Dimension(150,30));
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int res = Integer.parseInt(txtDetails[2].getText());
+				boolean active=false;
+				try
+				{
+					if(res==1)
+						active=true;
+					else
+						active=false;
+					qtm.deleteOrder(active);
+					ResultSet rs = qtm.displayOrders();
+					orders.RefreshDatabase(rs);
+				}
+				catch(OrdersException e1)
+				{System.out.println(e1.getMessage());}
+				
+			}
+		});
 		
 		crud.add(insert);crud.add(update);crud.add(delete);
 		pnOrders.add(crud);
@@ -519,7 +533,6 @@ class NewsagentInterface extends JFrame
 		return mstaff;
 	}
 	
-	
 	JPanel Customers()
 	{
 		JPanel pnCus = new JPanel(null);
@@ -546,8 +559,8 @@ class NewsagentInterface extends JFrame
 		
 		JButton insert, update, delete;
 		
-		String[] placeHolder = {"Id","Address","FirstName","LastName","Number"};
-		JTextField[] txtDetails = new JTextField[5];
+		String[] placeHolder = {"Id","Address","FirstName","LastName","Number","AreaID"};
+		JTextField[] txtDetails = new JTextField[6];
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
@@ -569,6 +582,8 @@ class NewsagentInterface extends JFrame
 						txtDetails[3].setText(placeHolder[3]);
 					if(txtDetails[4].getText().isEmpty())
 						txtDetails[4].setText(placeHolder[4]);
+					if(txtDetails[5].getText().isEmpty())
+						txtDetails[5].setText(placeHolder[5]);
 				}
 				public void focusGained(FocusEvent e) 
 				{
@@ -582,6 +597,8 @@ class NewsagentInterface extends JFrame
 						txtDetails[3].setText("");
 					if(e.getSource()==txtDetails[4] && txtDetails[4].getText().equals(placeHolder[4]))
 						txtDetails[4].setText("");
+					if(e.getSource()==txtDetails[5] && txtDetails[5].getText().equals(placeHolder[5]))
+						txtDetails[5].setText("");
 				}
 			});
 		}
@@ -596,12 +613,13 @@ class NewsagentInterface extends JFrame
 				String fname = txtDetails[2].getText();
 				String lname = txtDetails[3].getText();
 				String number = txtDetails[4].getText();
+				int areaId = Integer.parseInt(txtDetails[5].getText());
 				
 				String prefix = number.substring(0, 3);
 				String digits = number.substring(3, number.length());
 				try
 				{
-					Customers cus = new Customers(cus_id, add, fname, lname, prefix, digits);
+					Customers cus = new Customers(cus_id, add, fname, lname, prefix, digits, areaId);
 					qtm.insertCustomerInfo(cus);
 		
 					ResultSet rs = qtm.displayCustomers();
@@ -622,12 +640,13 @@ class NewsagentInterface extends JFrame
 				String fname = txtDetails[2].getText();
 				String lname = txtDetails[3].getText();
 				String number = txtDetails[4].getText();
+				int areaId = Integer.parseInt(txtDetails[5].getText());
 				
 				String prefix = number.substring(0, 3);
 				String digits = number.substring(3, number.length());
 				try
 				{
-					Customers cus = new Customers(cus_id, add, fname, lname, prefix, digits);
+					Customers cus = new Customers(cus_id, add, fname, lname, prefix, digits, areaId);
 					qtm.updateCustomerDetails(cus);
 					ResultSet rs = qtm.displayCustomers();
 					customers.RefreshDatabase(rs);

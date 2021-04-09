@@ -9,10 +9,10 @@ public class Customers
 	/*
 		The objective of this tests is to verify customer details before they can be added to database
 	*/
-	private int cus_id;
-	private String fName,lName,number, address, areaId;
+	private int cus_id,areaId;
+	private String fName,lName,number, address;
 
-	public Customers(int cus_id, String add, String firstName, String lastName, String prefix, String digits) throws CustomersException
+	public Customers(int cus_id, String add, String firstName, String lastName, String prefix, String digits, int area_id) throws CustomersException
 	{
 		try
 		{
@@ -20,6 +20,7 @@ public class Customers
 			validateCustomerAddress(add);
 			validateCustomerName(firstName, lastName);
 			validateCustomerNumber(prefix, digits);
+			validateAreaId(area_id);
 		}
 		catch(CustomersException e)
 		{
@@ -33,6 +34,7 @@ public class Customers
 			address=add;
 			fName=firstName; lName=lastName;
 			number = prefix+digits;
+			areaId=area_id;
 		}
 	}
 	
@@ -56,7 +58,7 @@ public class Customers
 	{
 		return address;
 	}
-	public String getAreaId() 
+	public int getAreaId() 
 	{
 		return areaId;
 	}
@@ -110,7 +112,6 @@ public class Customers
 		else
 			return true;
 	}
-	
 	public static boolean validateCustomerNumber(String prefix, String digits) throws CustomersException
 	{	
 		boolean pass = false;
@@ -142,7 +143,6 @@ public class Customers
 		}
 		return res;
 	}
-	
 	public static boolean validateCustomerAddress(String address) throws CustomersException
 	{
 		if(address.length()<4)
@@ -158,10 +158,14 @@ public class Customers
 			return true;
 		}
 	}
-	
-	public static boolean validateAreaId(int id)
+	public static boolean validateAreaId(int id) throws CustomersException
 	{
-		return false;
+		if(id<1)
+			throw new CustomersException("Area Id can't be less than 1");
+		else if(id>200)
+			throw new CustomersException("Area Id can't be greather than 200");
+		else
+			return true;
 	}
 }
 

@@ -28,7 +28,6 @@ public class Orders
 			active=isActive;
 		}
 	}
-	
 	static boolean validateCustomerId(int cus_id) throws OrdersException
 	{
 		if(cus_id<0)
@@ -51,7 +50,7 @@ public class Orders
 	static boolean validateActiveOrders(boolean active) throws OrdersException
 	{
 		if(!active)
-			throw new OrdersException("This order is inactive");
+			return false;
 		else
 			return true;
 	}
