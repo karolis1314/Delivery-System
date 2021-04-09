@@ -1,4 +1,5 @@
-import controller.QueryTableModel;
+package controller;
+
 import junit.framework.TestCase;
 import model.Publication;
 import model.StaffMember;
