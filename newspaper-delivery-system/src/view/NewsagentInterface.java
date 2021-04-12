@@ -1063,6 +1063,14 @@ class NewsagentInterface extends JFrame
 				cl.show(ct, "Area");
 			}
 		});
+		
+		JButton invoice = new JButton("Get Invoices");
+		invoice.setBounds(10, 350, 150, 50);
+		invoice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
 		JButton logOff = new JButton("Log Off");
 		logOff.setBounds(550, 350, 100, 50);
 		logOff.setBackground(Color.red);
@@ -1073,7 +1081,7 @@ class NewsagentInterface extends JFrame
 			}
 		});
 		
-		pnWelcome.add(pub); pnWelcome.add(cust);pnWelcome.add(staff);pnWelcome.add(doc);pnWelcome.add(area);pnWelcome.add(order);pnWelcome.add(logOff);
+		pnWelcome.add(pub); pnWelcome.add(cust);pnWelcome.add(staff);pnWelcome.add(doc);pnWelcome.add(area);pnWelcome.add(order); pnWelcome.add(invoice); pnWelcome.add(logOff);
 		return pnWelcome;
 	}
 	
