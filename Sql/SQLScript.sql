@@ -73,3 +73,10 @@ INSERT INTO CUSTOMERS (customer_id, address_id, firstName, lastName, mobileNumbe
 (NULL, 3, 'Kieron', 'Pavloski', '0872945875');
 
 SELECT * FROM CUSTOMERS;
+
+CREATE VIEW orders5 AS
+select customers.customer_id, customers.firstName, customers.lastName, publication.publicationName, publication.priceInEuro, Delivery_dockets.dateOfDelivery From Delivery_dockets
+                                                                                                                                                                      INNER JOIN publication
+                                                                                                                                                                                 on publication.id = Delivery_dockets.publicationID
+                                                                                                                                                                      INNER JOIN customers
+                                                                                                                                                                                 on customers.customer_id = Delivery_dockets.customerID;
