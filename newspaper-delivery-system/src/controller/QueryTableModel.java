@@ -282,8 +282,6 @@ public class QueryTableModel
 
 		try {
 			statement = connect.createStatement();
-			statement.executeUpdate("delete from Delivery_Dockets;");
-			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '1'");
 			while (resultSet.next()) {
@@ -305,8 +303,6 @@ public class QueryTableModel
 		try
 		{
 			statement = connect.createStatement();
-			statement.executeUpdate("delete from Delivery_Dockets;");
-			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '7'");
 			
@@ -332,8 +328,6 @@ public class QueryTableModel
 
 		try {
 			statement = connect.createStatement();
-			statement.executeUpdate("delete from Delivery_Dockets;");
-			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '14'");
 			while (resultSet.next()) {
@@ -354,9 +348,6 @@ public class QueryTableModel
 
 		try {
 			statement = connect.createStatement();
-			
-			statement.executeUpdate("delete from Delivery_Dockets;");
-			statement.executeUpdate("ALTER TABLE Delivery_Dockets AUTO_INCREMENT=1");
 			resultSet = statement.executeQuery(
 					"select customerID, publicationID from orders inner join publication on orders.publicationID = publication.id where isActive = true and frequencyInDays = '30'");
 
