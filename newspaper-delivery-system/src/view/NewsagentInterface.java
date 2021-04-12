@@ -1068,6 +1068,12 @@ class NewsagentInterface extends JFrame
 		invoice.setBounds(10, 350, 150, 50);
 		invoice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					qtm.createInvoice();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		

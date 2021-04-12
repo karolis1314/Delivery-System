@@ -34,7 +34,7 @@ public class QueryTableModel
 	private ResultSet resultSet;
 
 	private String user = "root";
-	private String password = "admin";
+	private String password = "a00252699";
 
 	public boolean openConnection() {
 		boolean success = false;
