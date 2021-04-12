@@ -265,7 +265,7 @@ class NewsagentInterface extends JFrame
 						active=true;
 					else
 						active=false;
-					qtm.deleteOrder(active);
+//					qtm.deleteOrder(active);
 					ResultSet rs = qtm.displayOrders();
 					orders.RefreshDatabase(rs);
 				}

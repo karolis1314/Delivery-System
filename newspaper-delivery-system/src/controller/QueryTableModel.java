@@ -34,7 +34,14 @@ public class QueryTableModel
 	private ResultSet resultSet;
 
 	private String user = "root";
-	private String password = "a00252699";
+	private String password = "admin";
+
+	public QueryTableModel() {
+	}
+
+	public QueryTableModel(String password) {
+		this.password = password;
+	}
 
 	public boolean openConnection() {
 		boolean success = false;
@@ -61,9 +68,8 @@ public class QueryTableModel
 			connect.close();
 			System.out.println("Conn Closed\n");
 			success = true;
-		} catch (SQLException e) {
-			success = false;
-			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			return false;
 		}
 		return success;
 	}
@@ -82,8 +88,7 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			insertSucessfull = false;
-			throw new PublicationException(e.getMessage());
+			return false;
 		}
 		return insertSucessfull;
 	}
@@ -101,8 +106,7 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			insertSucessfull = false;
-			throw new StaffException("Staff member is not added.");
+			return false;
 		}
 		return insertSucessfull;
 	}
@@ -120,8 +124,7 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			update = false;
-			throw new StaffException("Staff is not updated.");
+			return false;
 		}
 		return update;
 	}
@@ -142,8 +145,7 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			update = false;
-			throw new PublicationException("Publication is not updated.");
+			return false;
 		}
 
 		return update;
@@ -159,31 +161,22 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			delete = false;
-			throw new PublicationException("Publication is not deleted.");
+			return false;
 		}
-
 		return delete;
-
 	}
 
 	public boolean deleteStaff(StaffMember s) throws StaffException {
-
 		boolean delete = true;
-
 		try {
-
 			preparedStatement = connect.prepareStatement("delete from STAFF_MEMBER where staffID= ?");
 			preparedStatement.setInt(1, s.getStaffId());
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			delete = false;
-			throw new StaffException("Staff is not deleted.");
+			return false;
 		}
-
 		return delete;
-
 	}
 
 	public ResultSet retrieveAllPublications() throws PublicationException {
@@ -191,7 +184,6 @@ public class QueryTableModel
 		try {
 			statement = connect.createStatement();
 			resultSet = statement.executeQuery("select * from publication");
-
 		} catch (Exception e) {
 			resultSet = null;
 			throw new PublicationException("Publication is not retrieved.");
@@ -223,17 +215,13 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			insertSucessfull = false;
-			throw new DeliveryAreaException("DeliveryArea is not added.");
-
+			return  false;
 		}
 		return insertSucessfull;
 	}
 
 	public boolean updateDeliveryArea(DeliveryArea da) throws DeliveryAreaException {
-
 		boolean update = true;
-
 		try {
 
 			preparedStatement = connect.prepareStatement("update delivery_areas set AreaName= ? where id = ? ");
@@ -242,10 +230,8 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			update = false;
-			throw new DeliveryAreaException("DeliveryAreaE is not updated.");
+			return false;
 		}
-
 		return update;
 
 	}
@@ -261,8 +247,7 @@ public class QueryTableModel
 			preparedStatement.execute();
 
 		} catch (Exception e) {
-			delete = false;
-			throw new DeliveryAreaException("DeliveryArea is not deleted.");
+			return false;
 		}
 
 		return delete;
@@ -274,7 +259,6 @@ public class QueryTableModel
 		try {
 			statement = connect.createStatement();
 			resultSet = statement.executeQuery("select * from delivery_areas");
-
 		} catch (Exception e) {
 			resultSet = null;
 			throw new DeliveryAreaException("DeliveryAreas is not retrieved.");
@@ -300,7 +284,7 @@ public class QueryTableModel
 			}
 			gotDailyPublication = true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			return false;
 		}
 		return gotDailyPublication;
 	}
@@ -372,22 +356,22 @@ public class QueryTableModel
 		return false;
 	}
 
-	public boolean deleteDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
-
-		boolean deleteSuccessful = true;
-
-		try {
-			preparedStatement = connect.prepareStatement("DELETE FROM DELIVERY_DOCKETS WHERE deliveryDocketID = ?");
-			preparedStatement.setInt(1, deliveryDocket.getDeliveryDocketID());
-			preparedStatement.execute();
-
-		} catch (Exception exception) {
-			deleteSuccessful = false;
-			throw new DeliveryDocketException("Delivery Docket not deleted");
-		}
-
-		return deleteSuccessful;
-	}
+//	public boolean deleteDeliveryDocket(DeliveryDocket deliveryDocket) throws DeliveryDocketException {
+//
+//		boolean deleteSuccessful = true;
+//
+//		try {
+//			preparedStatement = connect.prepareStatement("DELETE FROM DELIVERY_DOCKETS WHERE deliveryDocketID = ?");
+//			preparedStatement.setInt(1, deliveryDocket.getDeliveryDocketID());
+//			preparedStatement.execute();
+//
+//		} catch (Exception exception) {
+//			deleteSuccessful = false;
+//			throw new DeliveryDocketException("Delivery Docket not deleted");
+//		}
+//
+//		return deleteSuccessful;
+//	}
 
 	public ResultSet retrieveAllDeliveryDockets() throws DeliveryDocketException {
 
@@ -412,7 +396,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			resultSet = null;
-			throw new OrdersException("Failed to display orders: " + e.getMessage());
+			throw new OrdersException("Failed to display orders: ");
 		}
 		return resultSet;
 	}
@@ -429,44 +413,43 @@ public class QueryTableModel
 		}
 		catch (Exception e) 
 		{
-			insertSucessfull = false;
-			throw new OrdersException("Failed to insert order details: " + e.getMessage());
+			return false;
 		}
 		return insertSucessfull;
 	}
-	public boolean deleteOrder(boolean active) throws OrdersException
-	{
-		boolean deleteSuccess=true;
-		try 
-		{
-			preparedStatement = connect.prepareStatement("DELETE FROM ORDERS WHERE isACTIVE=" + active);
-			preparedStatement.executeUpdate();
-		}
-		catch (Exception e)
-		{
-			deleteSuccess=false;
-			throw new OrdersException("Failed to delete order: " + e.getMessage());
-		}
-		return deleteSuccess;
-	}
-	public boolean updateOrder(Orders order) throws OrdersException
-	{
-		boolean updateSuccess=true;
-		try 
-		{
-			preparedStatement =  connect.prepareStatement("UPDATE ORDERS SET isACTIVE=?, PUBLICATIONID=? WHERE CUSTOMERID=?");
-			preparedStatement.setBoolean(1, order.isActive());
-			preparedStatement.setInt(2, order.getPublicationId());
-			preparedStatement.setInt(3, order.getCustomerId());
-		}
-		catch (Exception e)
-		{
-			updateSuccess=false;
-			throw new OrdersException("Failed to update order: " + e.getMessage());
-		}
-		return updateSuccess;
-	}
-	
+
+//	public boolean deleteOrder(int id) throws OrdersException
+//	{
+//		boolean deleteSuccess=true;
+//		try
+//		{
+//			preparedStatement = connect.prepareStatement("DELETE FROM ORDERS WHERE isACTIVE=" + active);
+//			preparedStatement.executeUpdate();
+//		}
+//		catch (Exception e)
+//		{
+//			return false;
+//		}
+//		return deleteSuccess;
+//	}
+//	public boolean updateOrder(Orders order) throws OrdersException
+//	{
+//		boolean updateSuccess=true;
+//		try
+//		{
+//			preparedStatement =  connect.prepareStatement("UPDATE ORDERS SET isACTIVE=?, PUBLICATIONID=? WHERE CUSTOMERID=?");
+//			preparedStatement.setBoolean(1, order.isActive());
+//			preparedStatement.setInt(2, order.getPublicationId());
+//			preparedStatement.setInt(3, order.getCustomerId());
+//		}
+//		catch (Exception e)
+//		{
+//			updateSuccess=false;
+//			throw new OrdersException("Failed to update order: " + e.getMessage());
+//		}
+//		return updateSuccess;
+//	}
+//
 	// Customers DBAO
 	public boolean insertCustomerInfo(Customers cus) throws CustomersException {
 		boolean insertSucessfull = true;
@@ -515,7 +498,7 @@ public class QueryTableModel
 		catch (Exception e) 
 		{
 			resultSet = null;
-			throw new CustomersException(e.getMessage());
+			throw new CustomersException("Failed to display Customers");
 		}
 		return resultSet;
 	}
@@ -537,7 +520,7 @@ public class QueryTableModel
 		}
 		catch (Exception e) 
 		{
-			throw new CustomersException(e.getMessage());
+			return false;
 		}
 		return updateSuccesful;
 	}
@@ -574,7 +557,6 @@ public class QueryTableModel
 				file.write(rowAsBytes);
 				file.close();
 			}
-
 		}
 	}
 }
