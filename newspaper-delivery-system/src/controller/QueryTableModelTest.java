@@ -260,5 +260,15 @@ public class QueryTableModelTest extends TestCase {
 		}
 	}
 
+	public void testCreateInvoice001() {
+		QueryTableModel testObj = new QueryTableModel();
+		testObj.openConnection();
+		try {
+			testObj.createInvoice();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		testObj.closeConnection();
+	}
 
 }

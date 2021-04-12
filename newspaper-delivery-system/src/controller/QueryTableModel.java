@@ -1,11 +1,18 @@
 package controller;
 
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import exceptions.CustomersException;
 import exceptions.DeliveryAreaException;
 import exceptions.DeliveryDocketException;
@@ -27,7 +34,7 @@ public class QueryTableModel
 	private ResultSet resultSet;
 
 	private String user = "root";
-	private String password = "a00252699";
+	private String password = "admin";
 
 	public boolean openConnection() {
 		boolean success = false;
@@ -533,5 +540,41 @@ public class QueryTableModel
 			throw new CustomersException(e.getMessage());
 		}
 		return updateSuccesful;
+	}
+
+	public void createInvoice() throws Exception{
+		List<Integer> IDs =  new ArrayList<>();
+		String row =  "";
+		Date date = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat ("E yyyy.MM ");
+		String dateAsString = (String) ft.format(date);
+
+
+
+		statement = connect.createStatement();
+		resultSet = statement.executeQuery(
+				"select customer_id from customers");
+
+		while (resultSet.next()) {
+			int customerID = resultSet.getInt(1);
+			IDs.add(customerID);
+			}
+
+		for (Integer custID: IDs) {
+			resultSet = statement.executeQuery("select * from orders5 where customer_id = " + custID);
+			while(resultSet.next()){
+				String firstName = resultSet.getString(2);
+				String lastName = resultSet.getString(3);
+				String pubName = resultSet.getString(4);
+				String price = resultSet.getString(5);
+				String dateDelivered = resultSet.getString(6);
+				row = pubName + "  " + dateDelivered + "   " + price + "\n";
+				FileOutputStream file = new FileOutputStream("invoice/" + firstName + " " + lastName + " " + dateAsString +".txt " ,true);
+				byte rowAsBytes[] = row.getBytes();
+				file.write(rowAsBytes);
+				file.close();
+			}
+
+		}
 	}
 }
