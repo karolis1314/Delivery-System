@@ -79,6 +79,49 @@ public class DeliveryAreaTest extends TestCase {
             assertEquals("Invalid Delivery Area name", e.getErrorMessage());
         }
     }
+    public void testDeliveryArea004(){
+ /*
+        test number: 004
+        objective: create a Delivery Area object with invalid name and invalid id
+        Test type: JUint
+        input: id = 400 name = asdfhjklasdfhjlasdfhjjjuehdhhdiekdpppesdkakebbhckajschbasjdhbcadshbcjcadsbcjkasbdchjsdabckjhasbdkcbry , size = 56
+        output: error
+ */
+        try {
+            DeliveryArea deliveryArea = new DeliveryArea(-1,"asdfhjklasdfhjlasdfhjjjuehdhhdiekdpppesdkakebbhckajschbasjdhbcadshbcjcadsbcjkasbdchjsdabckjhasbdkcbryjsdkfjadskfadskjsdkjfljkfsajfsjaskdbfjsadbfrunfuasnfrusfnsjdnafljsdfnasdnfasdnflasdn");
+        } catch (DeliveryAreaException e) {
+            assertEquals("Invalid Delivery Area", e.getErrorMessage());
+        }
+    }
+    public void testDeliveryArea005(){
+ /*
+        test number: 005
+        objective: create a Delivery Area object with invalid name and invalid id
+        Test type: JUint
+        input: id = 3 name = area3
+        output: error
+ */
+        try {
+            DeliveryArea deliveryArea = new DeliveryArea(3,"area3");
+        } catch (DeliveryAreaException e) {
+            assertEquals("Invalid Delivery Area", e.getErrorMessage());
+        }
+    }
+    public void testDeliveryArea006(){
+ /*
+        test number: 006
+        objective: getting the ID
+        Test type: JUint
+        input: id = 3 name = area3
+        output: error
+ */
+        try {
+            DeliveryArea deliveryArea = new DeliveryArea(3,"area3");
+            assertEquals(3,deliveryArea.getAreaId());
+        } catch (DeliveryAreaException e) {
+           fail();
+        }
+    }
 
 
 }

@@ -10,6 +10,8 @@ import exceptions.StaffException;
 import model.Customers;
 import model.Publication;
 import model.Orders;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.*;
@@ -17,6 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.ResultSet;
 import model.StaffMember;
 import model.DeliveryArea;
@@ -24,7 +30,7 @@ import model.DeliveryArea;
 @SuppressWarnings("serial")
 class NewsagentInterface extends JFrame
 {
-	private JButton btnLogin;
+	private JButton btnLogin, back;
 	private JTextField txtUserName, txtUserPass;
 	private JMenuBar mb;
 	
@@ -46,10 +52,30 @@ class NewsagentInterface extends JFrame
 		
 		setLayout(cl);
 		setTitle(title);
+		
+		mb = new JMenuBar();
+		JMenu menu, submenu;
+		
+		menu = new JMenu("Menu");
+		back = new JButton("Exit");
+		
+		menu.add(back);
+		mb.add(menu);
 	
-		ct.add(LoginPanel());
-		ct.add(welcomePanel());
-		ct.add(MainMenu());
+		ct.add("LogIn",LoginPanel());
+		ct.add("Welcome",welcomePanel());
+		ct.add("Publication", Publications());
+		ct.add("Customers",Customers());
+		ct.add("Staff",StaffMember());
+		ct.add("Docket",PrintDocket());
+		ct.add("Orders",ordersPanel());
+		ct.add("Area",DeliveryArea());
+		
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
@@ -67,7 +93,7 @@ class NewsagentInterface extends JFrame
 	{
 		JPanel pnLogin = new JPanel(null);
 		pnLogin.setBackground(Color.RED);
-		pnLogin.setBounds(0, 0, 500, 500);
+		pnLogin.setBounds(0, 0, 700, 500);
 	
 		txtUserName = new JTextField();
 		txtUserName.setBounds(150, 150, 200, 40);
@@ -115,31 +141,27 @@ class NewsagentInterface extends JFrame
 						setTitle(title);
 						setJMenuBar(mb);
 						cl.next(ct);
+						txtUserName.setText("Username");
+						txtUserPass.setText("********");
 					}
+			}
+		});
+		JButton exitNow = new JButton("Exit");
+		exitNow.setBounds(175, 300, 150, 40);
+		exitNow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(0);
 			}
 		});
 		pnLogin.add(txtUserName);
 		pnLogin.add(txtUserPass);
 		pnLogin.add(btnLogin);
+		pnLogin.add(exitNow);
 		
 		return pnLogin;
 	}
-	JPanel MainMenu()
-	{
-		qtm.openConnection();
-		JPanel menuPanel = new JPanel(new BorderLayout());
-		
-		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("Customers", Customers());
-		tabs.addTab("Publications", Publications());
-		tabs.addTab("Delivery Area", DeliveryArea());
-		tabs.addTab("Staff Member", StaffMember());
-		tabs.addTab("Delivery Docket", PrintDocket());
-		tabs.addTab("Orders", ordersPanel());
-		
-		menuPanel.add(tabs);
-		return menuPanel;
-	}
+
 	
 	JPanel ordersPanel()
 	{
@@ -163,10 +185,10 @@ class NewsagentInterface extends JFrame
 		}
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 670, 100);
-		crud.setBackground(Color.RED);
+		crud.setBounds(10, 320, 670, 130);
+		crud.setBackground(Color.gray);
 		
-		JButton insert, update, delete;
+		JButton insert, update, delete, goBack;
 		
 		String[] placeHolder = {"CustomerId","PublicationId","isActive"};
 		JTextField[] txtDetails = new JTextField[3];
@@ -243,7 +265,7 @@ class NewsagentInterface extends JFrame
 						active=true;
 					else
 						active=false;
-					qtm.deleteOrder(active);
+//					qtm.deleteOrder(active);
 					ResultSet rs = qtm.displayOrders();
 					orders.RefreshDatabase(rs);
 				}
@@ -252,8 +274,17 @@ class NewsagentInterface extends JFrame
 				
 			}
 		});
+		goBack = new JButton("Back");
+		goBack.setFont(new Font("Garamond", 1, 15));
+		goBack.setBackground(Color.red);
+		goBack.setPreferredSize(new Dimension(150,30));
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.show(ct, "Welcome" );
+			}
+		});
 		
-		crud.add(insert);crud.add(update);crud.add(delete);
+		crud.add(insert);crud.add(update);crud.add(delete);crud.add(goBack);
 		pnOrders.add(crud);
 		return pnOrders;
 	}
@@ -278,17 +309,17 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 670, 100);
-		crud.setBackground(Color.RED);
+		crud.setBounds(10, 320, 670, 130);
+		crud.setBackground(Color.gray);
 		
-		JButton insert, update, delete;
+		JButton insert, update, delete, goBack;
 		
 		String[] placeHolder = {"ID","Frequency","Name","Price","Stock"};
 		JTextField[] txtDetails = new JTextField[5];
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
-			txtDetails[i] = new JTextField(7);
+			txtDetails[i] = new JTextField(10);
 			crud.add(txtDetails[i]);
 			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
 			txtDetails[i].setText(placeHolder[i]);
@@ -387,9 +418,19 @@ class NewsagentInterface extends JFrame
 				{System.out.println(e1.getMessage());}
 			}
 		});
+		goBack = new JButton("Back");
+		goBack.setFont(new Font("Garamond", 1, 15));
+		goBack.setBackground(Color.red);
+		goBack.setPreferredSize(new Dimension(150,30));
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.show(ct, "Welcome" );
+			}
+		});
 		
 		
-		crud.add(insert);crud.add(update);crud.add(delete);
+		
+		crud.add(insert);crud.add(update);crud.add(delete);crud.add(goBack);
 		pnPub.add(crud);
 		return pnPub;
 	}
@@ -416,17 +457,17 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 670, 100);
-		crud.setBackground(Color.RED);
+		crud.setBounds(10, 320, 670, 130);
+		crud.setBackground(Color.gray);
 		
-		JButton insert, update, delete;
+		JButton insert, update, delete, goBack;
 		
 		String[] placeHolder = {"ID","Name","Surname","Password","Area ID"};
 		JTextField[] txtDetails = new JTextField[5];
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
-			txtDetails[i] = new JTextField(7);
+			txtDetails[i] = new JTextField(10);
 			crud.add(txtDetails[i]);
 			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
 			txtDetails[i].setText(placeHolder[i]);
@@ -525,9 +566,18 @@ class NewsagentInterface extends JFrame
 				{System.out.println(e1.getMessage());}
 			}
 		});
+		goBack = new JButton("Back");
+		goBack.setFont(new Font("Garamond", 1, 15));
+		goBack.setBackground(Color.red);
+		goBack.setPreferredSize(new Dimension(150,30));
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.show(ct, "Welcome" );
+			}
+		});
 		
 		
-		crud.add(insert);crud.add(update);crud.add(delete);
+		crud.add(insert);crud.add(update);crud.add(delete);crud.add(goBack);
 		mstaff.add(crud);
 		return mstaff;
 	}
@@ -553,10 +603,10 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 670, 100);
-		crud.setBackground(Color.RED);
+		crud.setBounds(10, 320, 670, 130);
+		crud.setBackground(Color.gray);
 		
-		JButton insert, update, delete;
+		JButton insert, update, delete, goBack;
 		
 		String[] placeHolder = {"Id","Address","FirstName","LastName","Number","AreaID"};
 		JTextField[] txtDetails = new JTextField[6];
@@ -678,8 +728,17 @@ class NewsagentInterface extends JFrame
 				}
 			}
 		});
+		goBack = new JButton("Back");
+		goBack.setFont(new Font("Garamond", 1, 15));
+		goBack.setBackground(Color.red);
+		goBack.setPreferredSize(new Dimension(150,30));
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.show(ct, "Welcome" );
+			}
+		});
 		
-		crud.add(insert);crud.add(update);crud.add(delete);
+		crud.add(insert);crud.add(update);crud.add(delete);crud.add(goBack);
 		pnCus.add(crud);
 		return pnCus;
 	}
@@ -704,17 +763,17 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 670, 100);
-		crud.setBackground(Color.RED);
+		crud.setBounds(10, 320, 670, 130);
+		crud.setBackground(Color.gray);
 		
-		JButton insert,update,week2, monthly;
+		JButton insert,update,week2, monthly, goBack;
 		
 		String[] placeHolder = {"Staff ID"};
 		JTextField[] txtDetails = new JTextField[1];
 		
 		for(int i=0; i<txtDetails.length; i++)
 		{
-			txtDetails[i] = new JTextField(7);
+			txtDetails[i] = new JTextField(4);
 			crud.add(txtDetails[i]);
 			txtDetails[i].setHorizontalAlignment(JTextField.CENTER);
 			txtDetails[i].setText(placeHolder[i]);
@@ -799,8 +858,17 @@ class NewsagentInterface extends JFrame
 				{System.out.println(e1.getMessage());}
 			}
 		});
+		goBack = new JButton("Back");
+		goBack.setFont(new Font("Garamond", 1, 15));
+		goBack.setBackground(Color.red);
+		goBack.setPreferredSize(new Dimension(150,30));
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.show(ct, "Welcome" );
+			}
+		});
 
-		crud.add(insert);crud.add(update);crud.add(week2);crud.add(monthly);
+		crud.add(insert);crud.add(update);crud.add(week2);crud.add(monthly);crud.add(goBack);
 		docPri.add(crud);
 		return docPri;
 	}
@@ -826,10 +894,10 @@ class NewsagentInterface extends JFrame
 		
 		JPanel crud = new JPanel(new FlowLayout(0,1,5));
 		crud.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		crud.setBounds(10, 320, 670, 100);
-		crud.setBackground(Color.RED);
+		crud.setBounds(10, 320, 670, 130);
+		crud.setBackground(Color.gray);
 		
-		JButton insert, update, delete;
+		JButton insert, update, delete, goBack;
 		
 		String[] placeHolder = {"ID","Area Name"};
 		JTextField[] txtDetails = new JTextField[2];
@@ -921,40 +989,105 @@ class NewsagentInterface extends JFrame
 				{System.out.println(e1.getMessage());}
 			}
 		});
+		goBack = new JButton("Back");
+		goBack.setFont(new Font("Garamond", 1, 15));
+		goBack.setBackground(Color.red);
+		goBack.setPreferredSize(new Dimension(150,30));
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.show(ct, "Welcome" );
+			}
+		});
 		
 		
-		crud.add(insert);crud.add(update);crud.add(delete);
+		crud.add(insert);crud.add(update);crud.add(delete);crud.add(goBack);
 		pnDA.add(crud);
 		return pnDA;
 	}
 	JPanel welcomePanel()
 	{
-		JPanel pnWelcome=new JPanel(null);
-		pnWelcome.setBackground(Color.ORANGE);
-		 
-		mb = new JMenuBar();
-		JMenu menu, submenu;
 		
-		menu = new JMenu("Menu");
-		submenu = new JMenu("Show");
-		String[] menuOptions = {"Users", "Publications", "Delivery Area", "Exit"};
-		for(String op: menuOptions)
-		{
-			submenu.add(op);
-		}
-		menu.add(submenu);
-		mb.add(menu);
+		qtm.openConnection();
+		JPanel pnWelcome=new JPanel(null);
+		pnWelcome.setBackground(Color.CYAN);
+		
 			
-		JButton next = new JButton("Next Panel");
-		next.setBounds(10, 50, 100, 50);
-		next.addActionListener(new ActionListener() {
+		 
+		
+			
+		JButton pub = new JButton("Publications");
+		pub.setBounds(10, 50, 150, 50);
+		pub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setJMenuBar(null);
-				cl.next(ct);
+				cl.show(ct, "Publication");
+			}
+		});
+		JButton cust = new JButton("Customer");
+		cust.setBounds(10, 100, 150, 50);
+		cust.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.show(ct, "Customers");
+			}
+		});
+		JButton order = new JButton("Order");
+		order.setBounds(10, 150, 150, 50);
+		order.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.show(ct, "Orders");
+			}
+		});
+		JButton staff = new JButton("Staff Member");
+		staff.setBounds(10, 200, 150, 50);
+		staff.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.show(ct, "Staff");
+			}
+		});
+		JButton doc = new JButton("Delivery Docket");
+		doc.setBounds(10, 250, 150, 50);
+		doc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.show(ct, "Docket");
+			}
+		});
+		JButton area = new JButton("Delivery Area");
+		area.setBounds(10, 300, 150, 50);
+		area.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.show(ct, "Area");
 			}
 		});
 		
-		pnWelcome.add(next);
+		JButton invoice = new JButton("Get Invoices");
+		invoice.setBounds(10, 350, 150, 50);
+		invoice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					qtm.createInvoice();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		JButton logOff = new JButton("Log Off");
+		logOff.setBounds(550, 350, 100, 50);
+		logOff.setBackground(Color.red);
+		logOff.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setJMenuBar(null);
+				cl.show(ct, "LogIn");
+			}
+		});
+		
+		pnWelcome.add(pub); pnWelcome.add(cust);pnWelcome.add(staff);pnWelcome.add(doc);pnWelcome.add(area);pnWelcome.add(order); pnWelcome.add(invoice); pnWelcome.add(logOff);
 		return pnWelcome;
 	}
 	
