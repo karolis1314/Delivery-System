@@ -260,5 +260,14 @@ public class QueryTableModelTest extends TestCase {
 		}
 	}
 
-
+	public void testCreateDailyDeliveryDocket001() {
+		try {
+			QueryTableModel queryTableModel = new QueryTableModel();
+			queryTableModel.openConnection();
+			queryTableModel.createDailyDeliveryDocket();
+			assertEquals(true, queryTableModel.closeConnection());
+		} catch (Exception exception) {
+			fail();
+		}
+	}
 }

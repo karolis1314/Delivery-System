@@ -1,23 +1,9 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import exceptions.CustomersException;
-import exceptions.DeliveryAreaException;
-import exceptions.DeliveryDocketException;
-import exceptions.OrdersException;
-import exceptions.PublicationException;
-import exceptions.StaffException;
-import model.Customers;
-import model.DeliveryArea;
-import model.DeliveryDocket;
-import model.Orders;
-import model.Publication;
-import model.StaffMember;
+import exceptions.*;
+import model.*;
+
+import java.sql.*;
 
 public class QueryTableModel
 {
@@ -350,7 +336,7 @@ public class QueryTableModel
 		return false;
 	}
 
-	public boolean createMountlyDeliveryDocket() {
+	public boolean createMonthlyDeliveryDocket() {
 
 		try {
 			statement = connect.createStatement();

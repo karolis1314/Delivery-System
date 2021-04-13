@@ -790,7 +790,7 @@ class NewsagentInterface extends JFrame
 			public void actionPerformed(ActionEvent e) {
 				try
 				{
-					qtm.createMountlyDeliveryDocket();
+					qtm.createMonthlyDeliveryDocket();
 	
 					ResultSet rs = qtm.retrieveAllDeliveryDockets();
 					printDoc.RefreshDatabase(rs);
