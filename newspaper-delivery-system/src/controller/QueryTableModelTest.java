@@ -673,7 +673,7 @@ public class QueryTableModelTest extends TestCase {
 		try {
 			QueryTableModel testObj = new QueryTableModel();
 			testObj.openConnection();
-			assertEquals(true, testObj.createMountlyDeliveryDocket());
+			assertEquals(true, testObj.createMonthlyDeliveryDocket());
 			testObj.closeConnection();
 		} catch (Exception e) {
 			fail("Not expected");
@@ -688,7 +688,7 @@ public class QueryTableModelTest extends TestCase {
 	public void testCreateMountlyDeliveryDocket002() {
 		try {
 			QueryTableModel testObj = new QueryTableModel();
-			assertEquals(false, testObj.createMountlyDeliveryDocket());
+			assertEquals(false, testObj.createMonthlyDeliveryDocket());
 		} catch (Exception e) {
 			fail("Not expected");
 		}
