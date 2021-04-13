@@ -47,16 +47,10 @@ public class DeliveryArea {
             return areaId;
         }
 
-        public void setAreaId(int areaId) {
-            this.areaId = areaId;
-        }
 
         public String getName() {
             return name;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
 
 }
